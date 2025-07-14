@@ -9,50 +9,119 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
+  useSidebar,
 } from "./ui/sidebar";
-import { Bot, Bug, LayoutDashboard, Settings } from "lucide-react";
+import {
+  BarChart3,
+  Bot,
+  LayoutDashboard,
+  Settings,
+  Bug,
+  PlusCircle,
+  User,
+  PlayCircle,
+  Flame,
+} from "lucide-react";
+
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
+import { ChevronRight, ChevronDown, Folder } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { NavLink, useLocation } from "react-router-dom";
+import SideBarProjectMenuItem from "./SideBarProjectMenuItem";
 
-const sidebarMenuItems = [
+export const overviewMenu = [
   {
-    title: "DashBoard",
+    title: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "Issues",
+    title: "Analytics & Reports",
+    url: "/analytics-reports",
+    icon: BarChart3,
+  },
+];
+
+export const bugManagementMenu = [
+  {
+    title: "All Issues",
     url: "/issues",
     icon: Bug,
   },
   {
-    title: "Settings",
-    url: "/project-settings",
-    icon: Settings,
+    title: "In Progress",
+    url: "/in-progress",
+    icon: PlayCircle,
+  },
+  {
+    title: "High Priority",
+    url: "/high-priority",
+    icon: Flame,
+  },
+  {
+    title: "Report New Bug",
+    url: "/report-bug",
+    icon: PlusCircle,
+  },
+  {
+    title: "Assigned to Me",
+    url: "/assigned",
+    icon: User,
   },
 ];
-
 const projects = [
-  { id: 1, name: "project1", url: "/project/1" },
-  { id: 2, name: "project 2", url: "/project/2" },
-  { id: 3, name: "project 3", url: "/project/3" },
+  {
+    id: 1,
+    name: "Project Alpha",
+    url: "/project/1",
+    subItems: [
+      { title: "Dashboard", url: "/project/1/dashboard" },
+      { title: "Issues", url: "/project/1/issues" },
+      { title: "Team & Assignments", url: "/project/1/team" },
+      { title: "Project Settings", url: "/project/1/settings" },
+    ],
+  },
+  {
+    id: 2,
+    name: "Project Beta",
+    url: "/project/2",
+    subItems: [
+      { title: "Dashboard", url: "/project/2/dashboard" },
+      { title: "Issues", url: "/project/2/issues" },
+      { title: "Team & Assignments", url: "/project/2/team" },
+      { title: "Project Settings", url: "/project/2/settings" },
+    ],
+  },
+  {
+    id: 3,
+    name: "Project Gamma",
+    url: "/project/3",
+    subItems: [
+      { title: "Dashboard", url: "/project/3/dashboard" },
+      { title: "Issues", url: "/project/3/issues" },
+      { title: "Team & Assignments", url: "/project/3/team" },
+      { title: "Project Settings", url: "/project/3/settings" },
+    ],
+  },
 ];
 
 const SideBar = () => {
   const pathname = useLocation();
+  const {open : isSidebarOpen} = useSidebar();
   return (
-    <Sidebar
-      collapsible="icon"
-      className="fixed left-0 top-[4rem] "
-    >
+    <Sidebar collapsible="icon" className="fixed left-0 h-[calc(100vh-4rem)] top-[3.6rem]">
       <SidebarContent>
         {/* group 1 */}
         <SidebarGroup>
-          <SidebarGroupLabel>General</SidebarGroupLabel>
+          <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarMenuItems.map((item) => (
+              {overviewMenu.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink
@@ -74,27 +143,26 @@ const SideBar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        {/* group2 */}
+        {/* group 2 */}
         <SidebarGroup>
-          <SidebarGroupLabel>Projects</SidebarGroupLabel>
+          <SidebarGroupLabel>Bug Management</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {projects.map((project) => (
-                <SidebarMenuItem key={project.id}>
+              {bugManagementMenu.map((item) => (
+                <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={project.url} className="flex items-center">
-                      <div
-                        className={cn(
-                          "font-bold rounded-sm border size-6 flex justify-center items-center text-primary bg-primary-foreground text-sm",
-                          {
-                            "bg-primary text-primary-foreground ":
-                              location.pathname === project.url,
-                          }
-                        )}
-                      >
-                        {project.name.slice(0, 1).toUpperCase()}
-                      </div>
-                      {project.name}
+                    <NavLink
+                      to={item.url}
+                      className={cn(
+                        {
+                          "!bg-primary !text-primary-foreground":
+                            location.pathname === item.url,
+                        },
+                        "list-none"
+                      )}
+                    >
+                      <item.icon />
+                      <span>{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -102,6 +170,19 @@ const SideBar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* group3 */}
+        { isSidebarOpen && <SidebarGroup>
+          <SidebarGroupLabel>Projects</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {projects.map((project) => (
+                <SideBarProjectMenuItem key={project.id} project={project} />
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>}
+
       </SidebarContent>
     </Sidebar>
   );
