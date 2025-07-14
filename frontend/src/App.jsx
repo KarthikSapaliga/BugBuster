@@ -6,7 +6,7 @@ function App() {
   return (
     <div>
       <TopBar />
-      <h1 className='text-5xl font-bold text-purple-600 flex items-center justify-center min-h-screen -translate-y-10'>
+      <h1 className='text-5xl font-bold text-purple-600 flex items-center justify-center min-h-screen'>
         BugBuster
       </h1>
     </div>
