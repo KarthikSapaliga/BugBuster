@@ -1,3 +1,5 @@
+# BugBuster
+
 ## 🤝 How to Contribute
 
 ### 📋 Prerequisites
