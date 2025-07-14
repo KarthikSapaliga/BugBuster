@@ -11,7 +11,7 @@ export default function TopBar() {
 
 
     return (
-        <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3 shadow-sm">
+        <header className="flex items-center justify-between border-b border-border bg-sidebar px-4 py-3 shadow-sm">
             <div className="flex items-center gap-2 text-xl font-bold text-foreground">
                 <span className="text-lg mr-4 cursor-pointer" onClick={toggleSidebar}>
                     <FaBars />
