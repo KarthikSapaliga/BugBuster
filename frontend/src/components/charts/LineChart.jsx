@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { LineChart as LChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const data = [
     { day: "Mon", pending: 3, completed: 2 },
@@ -13,7 +13,7 @@ const data = [
 export default function LineChart() {
     return (
         <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={data}>
+            <LChart data={data}>
                 <CartesianGrid stroke="#eee" />
                 <XAxis dataKey="day" />
                 <YAxis />
@@ -21,7 +21,7 @@ export default function LineChart() {
                 <Legend />
                 <Line type="monotone" dataKey="pending" stroke="#8884d8" />
                 <Line type="monotone" dataKey="completed" stroke="#82ca9d" />
-            </LineChart>
+            </LChart>
         </ResponsiveContainer>
     );
 }
