@@ -42,7 +42,10 @@ const projects = [
 const SideBar = () => {
   const pathname = useLocation();
   return (
-    <Sidebar collapsible='none'>
+    <Sidebar
+      collapsible="icon"
+      className="fixed left-0 top-[4rem] "
+    >
       <SidebarContent>
         {/* group 1 */}
         <SidebarGroup>
@@ -84,8 +87,8 @@ const SideBar = () => {
                         className={cn(
                           "font-bold rounded-sm border size-6 flex justify-center items-center text-primary bg-primary-foreground text-sm",
                           {
-                            "bg-primary text-primary-foreground ": location.pathname === project.url,
-                            
+                            "bg-primary text-primary-foreground ":
+                              location.pathname === project.url,
                           }
                         )}
                       >
