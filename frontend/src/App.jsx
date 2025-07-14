@@ -7,10 +7,23 @@ import Dashboard from './pages/Dashboard'
 import SideBar from './components/SideBar'
 import { SidebarProvider } from './components/ui/sidebar'
 
+import { useState } from 'react'
+
 function App() {
+
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+
+    const toggleSidebar = () => {
+        if (sidebarOpen) {
+            setSidebarOpen(false)
+        } else {
+            setSidebarOpen(true)
+        }
+    }
+
     return (
         <div className="w-screen h-screen flex flex-col overflow-hidden">
-            <TopBar />
+            <TopBar toggleSidebar={toggleSidebar} />
             <div className="flex flex-1">
                 <SidebarProvider>
                     <SideBar />
