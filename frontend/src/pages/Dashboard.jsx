@@ -1,10 +1,10 @@
 import React from 'react'
-import LineChart from '@/components/charts/LineChart'
+import WeeklyProgressChart from '@/components/charts/WeeklyProgressChart'
 
 function Dashboard() {
     return (
         <div>
-            <LineChart />
+            <WeeklyProgressChart />
         </div>
     )
 }
