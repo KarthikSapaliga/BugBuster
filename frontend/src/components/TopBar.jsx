@@ -17,14 +17,14 @@ export default function TopBar() {
                 <span>BugBuster</span>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-4">
                 <button
                     onClick={toggleTheme}
-                    className="w-8 h-8 rounded-full bg-muted flex items-center justify-center p-2 hover:bg-muted/80 transition"
+                    className="w-8 h-8 rounded-full bg-muted flex items-center justify-center p-2 hover:bg-muted/80 transition cursor-pointer"
                 >
                     {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
                 </button>
-                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center p-2">
+                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center p-2 cursor-pointer">
                     <UserRound size={16} />
                 </div>
             </div>
