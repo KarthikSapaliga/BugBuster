@@ -9,18 +9,23 @@ import { SidebarProvider } from './components/ui/sidebar'
 
 function App() {
     return (
-        <div className='max-w-screen max-h-screen w-screen h-screen overflow-auto relative'>
+        <div className="w-screen h-screen flex flex-col overflow-hidden">
             <TopBar />
-            <SidebarProvider>
-                <SideBar />
-            </SidebarProvider>
-            <Routes>
-                <Route path='/dashboard' element={<Dashboard />} />
-                <Route />
-                <Route />
-            </Routes>
+            <div className="flex flex-1">
+                <SidebarProvider>
+                    <SideBar />
+                </SidebarProvider>
+
+                <main className="flex-1 overflow-auto bg-background">
+                    <Routes>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/issues" element={<div>Issues Page</div>} />
+                        <Route path="/project-settings" element={<div>Settings</div>} />
+                    </Routes>
+                </main>
+            </div>
         </div>
-    )
+    );
 }
 
 export default App
