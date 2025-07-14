@@ -6,7 +6,6 @@ import TopBar from './components/TopBar'
 import Dashboard from './pages/Dashboard'
 import SideBar from './components/SideBar'
 import { SidebarProvider } from './components/ui/sidebar'
-
 import { useState } from 'react'
 
 function App() {
@@ -27,15 +26,15 @@ function App() {
             <div className="flex flex-1">
                 <SidebarProvider>
                     <SideBar />
-                </SidebarProvider>
 
-                <main className="flex-1 overflow-auto bg-background">
-                    <Routes>
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/issues" element={<div>Issues Page</div>} />
-                        <Route path="/project-settings" element={<div>Settings</div>} />
-                    </Routes>
-                </main>
+                    <main className="flex-1 overflow-auto bg-background">
+                        <Routes>
+                            <Route path="/dashboard" element={<Dashboard />} />
+                            <Route path="/issues" element={<div>Issues Page</div>} />
+                            <Route path="/project-settings" element={<div>Settings</div>} />
+                        </Routes>
+                    </main>
+                </SidebarProvider>
             </div>
         </div>
     );
