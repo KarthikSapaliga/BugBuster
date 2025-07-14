@@ -1,5 +1,8 @@
 # BugBuster
 
+## 📊 GitHub Stats
+![Alt](https://repobeats.axiom.co/api/embed/9477545ffd7b42c5f0c0b6bed17b5c9c166b37fa.svg "Repobeats analytics image")
+
 ## 🤝 How to Contribute
 
 ### 📋 Prerequisites
