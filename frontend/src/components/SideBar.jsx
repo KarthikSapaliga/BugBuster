@@ -60,7 +60,7 @@ const SideBar = () => {
                       to={item.url}
                       className={cn(
                         {
-                          "!bg-primary !text-white":
+                          "!bg-primary !text-primary-foreground":
                             location.pathname === item.url,
                         },
                         "list-none"
@@ -86,9 +86,9 @@ const SideBar = () => {
                     <NavLink to={project.url} className="flex items-center">
                       <div
                         className={cn(
-                          "rounded-sm border size-6 flex justify-center items-center text-primary bg-white text-sm",
+                          "font-bold rounded-sm border size-6 flex justify-center items-center text-primary bg-primary-foreground text-sm",
                           {
-                            "bg-primary text-white ": location.pathname === project.url,
+                            "bg-primary text-primary-foreground ": location.pathname === project.url,
                             
                           }
                         )}
