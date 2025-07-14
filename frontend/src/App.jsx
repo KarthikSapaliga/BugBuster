@@ -1,4 +1,6 @@
 import React from 'react'
+import SideBar from './components/SideBar'
+import { SidebarProvider } from './components/ui/sidebar'
 
 import TopBar from './components/TopBar'
 
@@ -6,9 +8,10 @@ function App() {
   return (
     <div>
       <TopBar />
-      <h1 className='text-5xl font-bold text-purple-600 flex items-center justify-center min-h-screen'>
+      <SideBar/>
+      <main className='text-5xl font-bold text-purple-600 flex items-center justify-center min-h-screen'>
         BugBuster
-      </h1>
+      </main>
     </div>
   )
 }

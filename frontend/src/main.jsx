@@ -9,5 +9,5 @@ import { ThemeProvider } from './contexts/ThemeContext'
 createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <App />
-  </ThemeProvider>,
+  </ThemeProvider>
 )
