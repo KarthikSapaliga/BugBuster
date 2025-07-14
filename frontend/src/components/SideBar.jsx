@@ -24,7 +24,7 @@ const sidebarMenuItems = [
   {
     title: "Issues",
     url: "/issues",
-    icon: LayoutDashboard,
+    icon: Bug,
   },
   {
     title: "Settings",
@@ -42,11 +42,7 @@ const projects = [
 const SideBar = () => {
   const pathname = useLocation();
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <Bug />
-      </SidebarHeader>
-
+    <Sidebar collapsible='none'>
       <SidebarContent>
         {/* group 1 */}
         <SidebarGroup>
