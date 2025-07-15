@@ -1,7 +1,7 @@
 import React from 'react'
 import IssuesTable from '@/components/IssuesTable'
 
-import { AllIssues } from '@/lib/dummy-all-issues'
+import { AllIssues } from '@/lib/DummyData/all-issues'
 
 function AllIsues() {
     return (
