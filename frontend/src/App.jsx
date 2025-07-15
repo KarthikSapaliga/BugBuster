@@ -15,7 +15,6 @@ import HighPriority from "./pages/HighPriority";
 import AssignedMe from "./pages/AssignedMe";
 import BugReportingForm from "./pages/BugReportingForm";
 import BugReport from "./pages/BugReport";
-import { bugData } from "./lib/DummyData/bug-data";
 
 function App() {
   return (
@@ -116,7 +115,7 @@ function App() {
           path="/bug/:id"
           element={
             <ProtectedRoute>
-              <BugReport bugData={bugData}/>
+              <BugReport/>
             </ProtectedRoute>
           }
         />

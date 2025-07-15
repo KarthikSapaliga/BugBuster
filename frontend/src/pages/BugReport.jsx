@@ -8,9 +8,10 @@ import {
   Paperclip,
   Triangle,
 } from "lucide-react";
-const BugReport = ({bugData}) => {
-  
 
+import { bugData } from "@/lib/DummyData/bug-data";
+
+const BugReport = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case "Resolved":
@@ -118,11 +119,10 @@ const BugReport = ({bugData}) => {
               {bugData.attachments.map((attachment, index) => (
                 <div
                   key={index}
-                  className={`w-24 h-24 rounded-lg flex items-center justify-center ${
-                    attachment.fileName.includes(".png")
+                  className={`w-24 h-24 rounded-lg flex items-center justify-center ${attachment.fileName.includes(".png")
                       ? "bg-gray-800"
                       : "bg-teal-400"
-                  }`}
+                    }`}
                 >
                   <div className="text-white text-center">
                     {attachment.fileName.includes(".png") ? (
