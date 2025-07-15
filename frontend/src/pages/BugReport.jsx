@@ -1,12 +1,6 @@
 import React from "react";
 import {
-    CheckCircle,
-    AlertCircle,
-    User,
-    Calendar,
-    Clock,
     Paperclip,
-    Triangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +8,7 @@ import { bugData } from "@/lib/DummyData/bug-data";
 import { comments } from "@/lib/DummyData/comments";
 
 import CommentsContainer from "@/components/CommentsContainer";
+import ActivityLog from "@/components/BugActivityLog";
 
 const severityColor = {
     Critical: "bg-red-500 text-red-900",
@@ -23,21 +18,6 @@ const severityColor = {
 };
 
 const BugReport = () => {
-
-    const getStatusIcon = (status) => {
-        switch (status) {
-            case "Reported":
-                return <AlertCircle className="w-4 h-4 text-yellow-600" />;
-            case "Assigned":
-                return <User className="w-4 h-4 text-purple-600" />;
-            case "In Progress":
-                return <Clock className="w-4 h-4 text-blue-600" />;
-            case "Resolved":
-                return <CheckCircle className="w-4 h-4 text-green-600" />;
-            default:
-                return <AlertCircle className="w-4 h-4 text-muted-foreground" />;
-        }
-    };
 
     return (
         <main className="min-h-full w-full p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
@@ -150,26 +130,7 @@ const BugReport = () => {
                         </div>
 
                         {/* Activity Log */}
-                        <div className="pt-4 border-t border-border">
-                            <p className="text-xs mb-2">Activity Log</p>
-                            <div className="flex flex-col gap-3">
-                                {bugData.statusHistory.map((activity, index) => (
-                                    <div key={index} className="flex items-center gap-3">
-                                        {getStatusIcon(activity.status)}
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="font-medium text-sm">
-                                                    {activity.status}
-                                                </span>
-                                            </div>
-                                            <p className="text-xs text-gray-600">
-                                                {activity.date} by {activity.by}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                        <ActivityLog/>
                     </div>
                 </div>
                 <CommentsContainer comments={comments} />
