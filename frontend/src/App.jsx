@@ -9,6 +9,9 @@ import { Navigate } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
 import AllIsues from "./pages/AllIsues";
+import InProgress from "./pages/InProgress";
+import HighPriority from "./pages/HighPriority";
+import AssignedMe from "./pages/AssignedMe";
 
 function App() {
   return (
@@ -61,7 +64,7 @@ function App() {
           path="/in-progress"
           element={
             <ProtectedRoute>
-              <div>In progress</div>
+              <InProgress />
             </ProtectedRoute>
           }
         />
@@ -69,7 +72,7 @@ function App() {
           path="/high-priority"
           element={
             <ProtectedRoute>
-              <div>High priority</div>
+              <HighPriority />
             </ProtectedRoute>
           }
         />
@@ -77,7 +80,7 @@ function App() {
           path="/assigned-me"
           element={
             <ProtectedRoute>
-              <div>Assigned to me</div>
+              <AssignedMe />
             </ProtectedRoute>
           }
         />
