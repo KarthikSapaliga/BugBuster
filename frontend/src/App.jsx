@@ -14,6 +14,7 @@ import InProgress from "./pages/InProgress";
 import HighPriority from "./pages/HighPriority";
 import AssignedMe from "./pages/AssignedMe";
 import BugReportingForm from "./pages/BugReportingForm";
+import BugReport from "./pages/BugReport";
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
           path="*"
           element={
             <ProtectedRoute>
-              <Navigate to='/dashboard' />
+              <Navigate to="/dashboard" />
             </ProtectedRoute>
           }
         />
@@ -107,6 +108,14 @@ function App() {
           element={
             <ProtectedRoute>
               <div>Settings</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bug/:id"
+          element={
+            <ProtectedRoute>
+              <BugReport/>
             </ProtectedRoute>
           }
         />
