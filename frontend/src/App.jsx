@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { Navigate } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
+import Analytics from "./pages/Analytics";
 import AllIsues from "./pages/AllIsues";
 import InProgress from "./pages/InProgress";
 import HighPriority from "./pages/HighPriority";
@@ -49,6 +50,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics-reports"
+          element={
+            <ProtectedRoute>
+              <Analytics />
             </ProtectedRoute>
           }
         />
