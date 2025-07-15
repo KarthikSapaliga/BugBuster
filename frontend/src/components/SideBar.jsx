@@ -65,7 +65,7 @@ export const bugManagementMenu = [
   },
   {
     title: "Assigned to Me",
-    url: "/assigned-to-me",
+    url: "/assigned-me",
     icon: User,
   },
   {

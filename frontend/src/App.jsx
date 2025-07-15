@@ -74,7 +74,7 @@ function App() {
           }
         />
         <Route
-          path="/assigned-to-me"
+          path="/assigned-me"
           element={
             <ProtectedRoute>
               <div>Assigned to me</div>
