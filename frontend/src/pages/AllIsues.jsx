@@ -1,4 +1,3 @@
-import React from 'react'
 import IssuesTable from '@/components/IssuesTable'
 
 import { AllIssues } from '@/lib/DummyData/all-issues'
