@@ -1,4 +1,4 @@
-export const AllIssues = [
+export const AllIssuesTasks = [
     {
         id: "BUG-101",
         title: "Login button unresponsive",

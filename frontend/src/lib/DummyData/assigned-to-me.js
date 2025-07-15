@@ -1,4 +1,4 @@
-export const AssignedToMe = [
+export const AssignedToMeTasks = [
     {
         id: "BUG-101",
         title: "Login button unresponsive",

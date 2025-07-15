@@ -1,4 +1,4 @@
-export const InProgress = [
+export const InProgressTasks = [
     {
         id: "BUG-101",
         title: "Login button unresponsive",
