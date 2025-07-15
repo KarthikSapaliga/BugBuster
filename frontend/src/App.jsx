@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { Navigate } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
+import AllIsues from "./pages/AllIsues";
 
 function App() {
   return (
@@ -49,10 +50,42 @@ function App() {
           }
         />
         <Route
-          path="/issues"
+          path="/all-issues"
           element={
             <ProtectedRoute>
-              <div>Issues Page</div>
+              <AllIsues />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/in-progress"
+          element={
+            <ProtectedRoute>
+              <div>In progress</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/high-priority"
+          element={
+            <ProtectedRoute>
+              <div>High priority</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/assigned-to-me"
+          element={
+            <ProtectedRoute>
+              <div>Assigned to me</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/report-bug"
+          element={
+            <ProtectedRoute>
+              <div>Report bug</div>
             </ProtectedRoute>
           }
         />
