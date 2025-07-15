@@ -8,57 +8,8 @@ import {
   Paperclip,
   Triangle,
 } from "lucide-react";
-
-const BugReport = () => {
-  const bugData = {
-    bugId: 98765,
-    status: "In Progress",
-    priority: "Critical",
-    module: "Payment Gateway",
-    reporter: "Emily Carter",
-    assignee: "John Doe",
-    dateCreated: "2025-07-12",
-    dateResolved: null,
-    description: {
-      stepsToReproduce: [
-        "Go to the checkout page.",
-        "Select credit card as payment option.",
-        "Enter invalid card details and submit.",
-        "Try to refresh the page during processing.",
-      ],
-      expectedResult:
-        "User should see a clear error message and stay on the payment page.",
-      actualResult:
-        "Payment spinner freezes, user is charged twice, and no confirmation is shown.",
-    },
-    attachments: [
-      {
-        fileName: "payment-error.png",
-        fileUrl: "/uploads/payment-error.png",
-      },
-      {
-        fileName: "console-log.txt",
-        fileUrl: "/uploads/console-log.txt",
-      },
-    ],
-    statusHistory: [
-      {
-        status: "Reported",
-        date: "2025-07-12",
-        by: "Emily Carter",
-      },
-      {
-        status: "Assigned",
-        date: "2025-07-13",
-        by: "Project Manager",
-      },
-      {
-        status: "In Progress",
-        date: "2025-07-14",
-        by: "John Doe",
-      },
-    ],
-  };
+const BugReport = ({bugData}) => {
+  
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -106,7 +57,7 @@ const BugReport = () => {
   };
 
   return (
-    <div className="flex  overflow-auto">
+    <div className="flex h-full w-full">
       {/* Main Content Area */}
       <div className="flex-1 p-6 ">
         <div className="max-w-4xl">
@@ -194,7 +145,7 @@ const BugReport = () => {
       </div>
 
       {/* Metadata Sidebar */}
-      <div className="w-70 flex-shrink-0 bg-sidebar border-l border-gray-200 p-6">
+      <div className="w-80 h-full bg-sidebar border-l border-gray-200 p-6">
         <div className="space-y-3">
           <div>
             <h2 className="text-xl font-bold mb-4">Metadata</h2>
@@ -251,6 +202,7 @@ const BugReport = () => {
             </p>
           </div>
         </div>
+
         <div className="mt-6">
           <h3 className="text-lg font-bold mb-4">Activity Log</h3>
           <div className="space-y-6">
