@@ -31,7 +31,8 @@ const resolvedBugs = [
 ];
 
 const severityColor = {
-    High: "bg-destructive/10 text-destructive",
+    Critical: "bg-red-500 text-red-900",
+    High: "bg-red-100 text-red-500",
     Medium: "bg-yellow-100 text-yellow-700",
     Low: "bg-emerald-100 text-emerald-700",
 };

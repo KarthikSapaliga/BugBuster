@@ -50,7 +50,7 @@ export const overviewMenu = [
 export const bugManagementMenu = [
   {
     title: "All Issues",
-    url: "/issues",
+    url: "/all-issues",
     icon: Bug,
   },
   {
@@ -64,16 +64,17 @@ export const bugManagementMenu = [
     icon: Flame,
   },
   {
+    title: "Assigned to Me",
+    url: "/assigned-me",
+    icon: User,
+  },
+  {
     title: "Report New Bug",
     url: "/report-bug",
     icon: PlusCircle,
   },
-  {
-    title: "Assigned to Me",
-    url: "/assigned",
-    icon: User,
-  },
 ];
+
 const projects = [
   {
     id: 1,
@@ -112,7 +113,7 @@ const projects = [
 
 const SideBar = () => {
   const pathname = useLocation();
-  const {open : isSidebarOpen} = useSidebar();
+  const { open: isSidebarOpen } = useSidebar();
   return (
     <Sidebar collapsible="icon" className="fixed left-0 h-[calc(100vh-4rem)] top-[3.6rem]">
       <SidebarContent>
@@ -172,7 +173,7 @@ const SideBar = () => {
         </SidebarGroup>
 
         {/* group3 */}
-        { isSidebarOpen && <SidebarGroup>
+        {isSidebarOpen && <SidebarGroup>
           <SidebarGroupLabel>Projects</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
