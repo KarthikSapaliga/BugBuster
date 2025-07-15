@@ -1,231 +1,175 @@
 import React from "react";
 import {
-  CheckCircle,
-  AlertCircle,
-  User,
-  Calendar,
-  Clock,
-  Paperclip,
-  Triangle,
+    CheckCircle,
+    AlertCircle,
+    User,
+    Calendar,
+    Clock,
+    Paperclip,
+    Triangle,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 import { bugData } from "@/lib/DummyData/bug-data";
 
+const severityColor = {
+    Critical: "bg-red-500 text-red-900",
+    High: "bg-red-100 text-red-500",
+    Medium: "bg-yellow-100 text-yellow-700",
+    Low: "bg-emerald-100 text-emerald-700",
+};
+
 const BugReport = () => {
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Resolved":
-        return "bg-green-100 text-green-800";
-      case "In Progress":
-        return "bg-blue-100 text-blue-800";
-      case "Reported":
-        return "bg-yellow-100 text-yellow-800";
-      case "Assigned":
-        return "bg-purple-100 text-purple-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "Critical":
-        return "text-red-600";
-      case "High":
-        return "text-orange-600";
-      case "Medium":
-        return "text-yellow-600";
-      case "Low":
-        return "text-green-600";
-      default:
-        return "text-gray-600";
-    }
-  };
+    const getStatusIcon = (status) => {
+        switch (status) {
+            case "Reported":
+                return <AlertCircle className="w-4 h-4 text-yellow-600" />;
+            case "Assigned":
+                return <User className="w-4 h-4 text-purple-600" />;
+            case "In Progress":
+                return <Clock className="w-4 h-4 text-blue-600" />;
+            case "Resolved":
+                return <CheckCircle className="w-4 h-4 text-green-600" />;
+            default:
+                return <AlertCircle className="w-4 h-4 text-muted-foreground" />;
+        }
+    };
 
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "Reported":
-        return <AlertCircle className="w-4 h-4 text-yellow-600" />;
-      case "Assigned":
-        return <User className="w-4 h-4 text-purple-600" />;
-      case "In Progress":
-        return <Clock className="w-4 h-4 text-blue-600" />;
-      case "Resolved":
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
-      default:
-        return <AlertCircle className="w-4 h-4 text-gray-600" />;
-    }
-  };
+    return (
+        <main className="min-h-full w-full p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
+            <div className="w-full bg-background dark:sidebar border border-border shadow-md rounded-xl p-6 flex flex-col lg:flex-row gap-6">
+                <div className="flex-1 flex flex-col gap-6">
+                    {/* Header */}
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-2xl font-semibold tracking-tight">
+                            Bug ID: {bugData.bugId}
+                        </h1>
+                        <span
+                            className={`px-3 py-1 rounded-full text-sm font-medium`}
+                        >
+                            {bugData.status}
+                        </span>
+                    </div>
 
-  return (
-    <div className="flex h-full w-full">
-      {/* Main Content Area */}
-      <div className="flex-1 p-6 ">
-        <div className="max-w-4xl">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold">Bug ID: {bugData.bugId}</h1>
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                  bugData.status
-                )}`}
-              >
-                {bugData.status}
-              </span>
-            </div>
-          </div>
+                    {/* Description */}
+                    <div>
+                        <h2 className="text-lg font-semibold mb-2">Description</h2>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                            {bugData.description}
+                        </p>
+                    </div>
 
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold mb-3">Description</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Payment processing issue causing double charges and frozen UI
-              during checkout process.
-            </p>
-          </div>
+                    {/* Steps to Reproduce */}
+                    <div>
+                        <h2 className="text-lg font-semibold mb-2">Steps to Reproduce</h2>
+                        <ul className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
+                            {bugData.stepsToReproduce.map((step, index) => (
+                                <li key={index}>{step}</li>
+                            ))}
+                        </ul>
+                    </div>
 
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold mb-3">Steps to Reproduce</h2>
-            <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
-              {bugData.description.stepsToReproduce.map((step, index) => (
-                <li key={index}>{step}</li>
-              ))}
-            </ol>
-          </div>
+                    {/* Expected vs Actual Result */}
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <div className="flex-1">
+                            <h2 className="text-lg font-semibold mb-2">Expected Result</h2>
+                            <p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
+                                {bugData.expectedResult}
+                            </p>
+                        </div>
+                        <div className="flex-1">
+                            <h2 className="text-lg font-semibold mb-2">Actual Result</h2>
+                            <p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
+                                {bugData.actualResult}
+                            </p>
+                        </div>
+                    </div>
 
-          <div className="mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold mb-3">Expected Result</h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-muted-foreground text-sm">
-                    {bugData.description.expectedResult}
-                  </p>
+                    {/* Attachments */}
+                    <div>
+                        <h2 className="text-lg font-semibold mb-2">Attachments</h2>
+                        <div className="flex gap-4 flex-wrap">
+                            {bugData.attachments.map((attachment, index) => (
+                                <div
+                                    key={index}
+                                    className={`w-24 h-24 rounded-lg flex items-center justify-center ${attachment.fileName.includes(".png")
+                                        ? "bg-muted"
+                                        : "bg-secondary"
+                                        }`}
+                                >
+                                    <div className="text-xs text-center text-muted-foreground">
+                                        {attachment.fileName.includes(".png") ? (
+                                            <>
+                                                <div className="w-8 h-6 bg-border rounded mb-1 mx-auto" />
+                                                <span>Screenshot</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Paperclip className="w-6 h-6 mx-auto mb-1" />
+                                                <span>Log File</span>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-3">Actual Result</h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-muted-foreground text-sm">
-                    {bugData.description.actualResult}
-                  </p>
+
+                {/* Metadata */}
+                <div className="bg-muted text-muted-foreground rounded-lg border flex flex-col p-4 min-w-[30%] gap-2">
+                    <h2 className="text-lg font-semibold">Metadata</h2>
+                    <div className="mb-1">
+                        <p className="text-xs mb-1">Priority</p>
+                        <h2 className={cn("py-1 px-3 inline text-sm rounded-lg", severityColor[bugData.priority])}>{bugData.priority}</h2>
+                    </div>
+                    <div>
+                        <p className="text-xs mb-1">Module/Feature</p>
+                        <h2 className="text-foreground">{bugData.module}</h2>
+                    </div>
+                    <div>
+                        <p className="text-xs mb-1">Reporter</p>
+                        <h2 className="text-foreground">{bugData.reporter}</h2>
+                    </div>
+                    <div>
+                        <p className="text-xs mb-1">Assignee</p>
+                        <h2 className="text-foreground">{bugData.assignee}</h2>
+                    </div>
+                    <div>
+                        <p className="text-xs mb-1">Date Created</p>
+                        <h2 className="text-foreground">{bugData.dateCreated}</h2>
+                    </div>
+                    <div className="mb-2">
+                        <p className="text-xs mb-1">Date Resolved</p>
+                        <h2 className="text-foreground">{bugData.dateResolved || "Not resolved yet"}</h2>
+                    </div>
+
+                    {/* Activity Log */}
+                    <div className="pt-4 border-t border-border">
+                        <p className="text-xs mb-2">Activity Log</p>
+                        <div className="flex flex-col gap-3">
+                            {bugData.statusHistory.map((activity, index) => (
+                                <div key={index} className="flex items-center gap-3">
+                                    {getStatusIcon(activity.status)}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="font-medium text-sm">
+                                                {activity.status}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-gray-600">
+                                            {activity.date} by {activity.by}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold mb-3">Attachments</h2>
-            <div className="flex gap-4">
-              {bugData.attachments.map((attachment, index) => (
-                <div
-                  key={index}
-                  className={`w-24 h-24 rounded-lg flex items-center justify-center ${attachment.fileName.includes(".png")
-                      ? "bg-gray-800"
-                      : "bg-teal-400"
-                    }`}
-                >
-                  <div className="text-white text-center">
-                    {attachment.fileName.includes(".png") ? (
-                      <div className="text-xs">
-                        <div className="w-8 h-6 bg-muted-foreground rounded mb-1 mx-auto"></div>
-                        <div>Screenshot</div>
-                      </div>
-                    ) : (
-                      <>
-                        <Paperclip className="w-6 h-6 mx-auto mb-1" />
-                        <div className="text-xs">Log File</div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Metadata Sidebar */}
-      <div className="w-80 h-full bg-sidebar border-l border-gray-200 p-6">
-        <div className="space-y-3">
-          <div>
-            <h2 className="text-xl font-bold mb-4">Metadata</h2>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">
-              Priority
-            </h3>
-            <div
-              className={`flex items-center gap-2 ${getPriorityColor(
-                bugData.priority
-              )}`}
-            >
-              <Triangle className="w-4 h-4 fill-current" />
-              <span className="font-semibold">{bugData.priority}</span>
-            </div>
-          </div>
-
-          <div>
-            <p className="text-sm font-medium text-muted-foreground mb-1">
-              Module/Feature
-            </p>
-            <p className="font-semibold">{bugData.module}</p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Reporter
-            </h3>
-            <p className="font-semibold">{bugData.reporter}</p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Assignee
-            </h3>
-            <p className="font-semibold">{bugData.assignee}</p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Date Created
-            </h3>
-            <p className="font-semibold">{bugData.dateCreated}</p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-1">
-              Date Resolved
-            </h3>
-            <p className="font-semibold">
-              {bugData.dateResolved || "Not resolved yet"}
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-6">
-          <h3 className="text-lg font-bold mb-4">Activity Log</h3>
-          <div className="space-y-6">
-            {bugData.statusHistory.map((activity, index) => (
-              <div key={index} className="flex items-start gap-3">
-                {getStatusIcon(activity.status)}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-sm">
-                      {activity.status}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-600">
-                    {activity.date} by {activity.by}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+        </main>
+    );
 };
 
 export default BugReport;
