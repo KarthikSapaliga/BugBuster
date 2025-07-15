@@ -39,7 +39,7 @@ export default function ActivityLog() {
   return (
     <div className="pt-4 border-t border-border">
       <div className="mb-4">
-        <h3 className="text-xs font-semibold mb-1">Activity Log</h3>
+        <h3 className="text-md text-foreground font-semibold mb-1">Activity Log</h3>
       </div>
       
       <div className="relative">
