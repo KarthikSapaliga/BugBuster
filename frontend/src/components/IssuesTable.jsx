@@ -1,6 +1,7 @@
 import { Eye, Pencil, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 const severityColor = {
     Critical: "bg-red-500 text-red-900",
@@ -49,10 +50,12 @@ function IssuesTable({ data }) {
                                 </span>
                             </td>
                             <td className="flex gap-2 py-3 justify-center items-center">
-                                <Button variant="ghost" size="sm" className="text-primary">
-                                    <Eye size={16} />
-                                    View
-                                </Button>
+                                <Link to="/bug/98765">
+                                    <Button variant="ghost" size="sm" className="text-primary">
+                                        <Eye size={16} />
+                                        View
+                                    </Button>
+                                </Link>
                                 <Button variant="ghost" size="sm" className="text-primary">
                                     <Pencil size={16} />
                                     Edit

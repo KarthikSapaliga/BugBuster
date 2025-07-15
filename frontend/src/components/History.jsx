@@ -2,6 +2,7 @@ import React from "react";
 import { Eye, Pencil, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 const resolvedBugs = [
     {
@@ -77,10 +78,12 @@ export default function History() {
                                     </span>
                                 </td>
                                 <td className="px-4 py-3 text-center">
-                                    <Button variant="ghost" size="sm" className="text-primary">
-                                        <Eye size={16} />
-                                        View
-                                    </Button>
+                                    <Link to="/bug/98765">
+                                        <Button variant="ghost" size="sm" className="text-primary">
+                                            <Eye size={16} />
+                                            View
+                                        </Button>
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
