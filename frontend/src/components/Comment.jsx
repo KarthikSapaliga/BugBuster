@@ -4,7 +4,7 @@ import { formatDistanceToNow } from "date-fns"
 
 export default function Comment({ comment }) {
     return (
-        <div className="flex items-start gap-4 p-4 bg-muted rounded-lg shadow-sm">
+        <div className="flex items-start gap-4 p-4 bg-muted rounded-lg shadow-sm border border-border">
             <Avatar className="h-10 w-10">
                 <AvatarImage src={comment.user.avatar} alt={comment.user.name} />
                 <AvatarFallback>{comment.user.name[0]}</AvatarFallback>

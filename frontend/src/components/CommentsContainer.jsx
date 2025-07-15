@@ -18,12 +18,6 @@ export default function CommentsContainer({ bugId, comments, onAddComment }) {
         <div className="mt-6 space-y-6">
             <h2 className="text-xl font-semibold">Comments</h2>
 
-            {comments.length > 0 ? (
-                comments.map((cmt, idx) => <Comment key={idx} comment={cmt} />)
-            ) : (
-                <p className="text-sm text-muted-foreground">No comments yet. Be the first to comment!</p>
-            )}
-
             <div className="border-t pt-4 mt-4">
                 <Textarea
                     value={newComment}
@@ -35,6 +29,12 @@ export default function CommentsContainer({ bugId, comments, onAddComment }) {
                     <Button onClick={handleSubmit}>Comment</Button>
                 </div>
             </div>
+
+            {comments.length > 0 ? (
+                comments.map((cmt, idx) => <Comment key={idx} comment={cmt} />)
+            ) : (
+                <p className="text-sm text-muted-foreground">No comments yet. Be the first to comment!</p>
+            )}
         </div>
     )
 }
