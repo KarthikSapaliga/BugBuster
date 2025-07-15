@@ -13,6 +13,7 @@ import AllIsues from "./pages/AllIsues";
 import InProgress from "./pages/InProgress";
 import HighPriority from "./pages/HighPriority";
 import AssignedMe from "./pages/AssignedMe";
+import BugReportingForm from "./pages/BugReportingForm";
 
 function App() {
   return (
@@ -97,7 +98,7 @@ function App() {
           path="/report-bug"
           element={
             <ProtectedRoute>
-              <div>Report bug</div>
+              <BugReportingForm />
             </ProtectedRoute>
           }
         />
