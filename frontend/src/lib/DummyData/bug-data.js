@@ -32,7 +32,7 @@ export const bugData = {
     ],
     statusHistory: [
         {
-            status: "Reported",
+            status: "Resolved",
             date: "2025-07-12",
             by: "Emily Carter",
         },
@@ -46,5 +46,10 @@ export const bugData = {
             date: "2025-07-14",
             by: "John Doe",
         },
+        ,{
+            status: "Open",
+            date: "2025-07-13",
+            by: "Tony Stark"
+        }
     ],
 };
