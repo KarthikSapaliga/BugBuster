@@ -66,9 +66,9 @@ const BugReport = () => {
             </div>
 
             {/* Attachments */}
-            <div className="w-full">
+            <div>
               <h2 className="text-lg font-semibold mb-2">Attachments</h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex gap-4 flex-wrap">
                 {bugData.attachments.map((attachment, index) => (
                   <div
                     key={index}
