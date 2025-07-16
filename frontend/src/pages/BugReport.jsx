@@ -66,13 +66,13 @@ const BugReport = () => {
             </div>
 
             {/* Attachments */}
-            <div>
+            <div className="w-full">
               <h2 className="text-lg font-semibold mb-2">Attachments</h2>
-              <div className="flex gap-4 flex-wrap">
+              <div className="grid grid-cols-2 gap-4">
                 {bugData.attachments.map((attachment, index) => (
                   <div
                     key={index}
-                    className={`w-24 h-24 rounded-lg flex items-center justify-center ${
+                    className={`w-full min-h-48 max-h-full p-5 rounded-lg flex items-center justify-center ${
                       attachment.fileName.includes(".png")
                         ? "bg-muted"
                         : "bg-secondary"
@@ -94,7 +94,9 @@ const BugReport = () => {
                   </div>
                 ))}
               </div>
+
             </div>
+
           </div>
 
           {/* Metadata */}
