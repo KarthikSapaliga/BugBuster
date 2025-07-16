@@ -129,7 +129,19 @@ public class DBUtil {
                                         FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
                                         UNIQUE(project_id, user_id)
                                     );
-                                    """
+                                    """,
+                            """
+                                    CREATE TABLE IF NOT EXISTS bug_comments (
+                                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        bug_id INTEGER NOT NULL,
+                                        user_id INTEGER NOT NULL,
+                                        comment TEXT NOT NULL,
+                                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+                                        FOREIGN KEY (bug_id) REFERENCES bug(id) ON DELETE CASCADE,
+                                        FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+                                    );
+                                    """,
                     };
 
                     for (String sql : schemaStatements) {
