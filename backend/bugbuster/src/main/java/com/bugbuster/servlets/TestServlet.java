@@ -10,6 +10,7 @@ public class TestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         DBUtil.initDatabase();
         String message = DBUtil.fetchMessage();
+        DBUtil.listTables();
 
         res.setContentType("text/html");
         res.getWriter().println("Server is running..");
