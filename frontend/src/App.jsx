@@ -144,7 +144,7 @@ function App() {
           path="projects/vcs/:projectId"
           element={
             <ProtectedRoute>
-              <div>version control</div>
+              <VersionControl/>
             </ProtectedRoute>
           }
         />
