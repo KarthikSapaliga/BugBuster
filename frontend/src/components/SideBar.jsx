@@ -40,13 +40,13 @@ export const overviewMenu = [
     title: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboard,
-    roles: ["Manager", "Tester", "Developer"],
+    roles: ["MANAGER", "TESTER", "DEVELOPER"],
   },
   {
     title: "Analytics & Reports",
     url: "/analytics-reports",
     icon: BarChart3,
-    roles: ["Manager", "Tester", "Developer"],
+    roles: ["MANAGER", "TESTER", "DEVELOPER"],
   },
 ];
 
@@ -55,31 +55,31 @@ export const bugManagementMenu = [
     title: "All Issues",
     url: "/all-issues",
     icon: Bug,
-    roles: ["Manager", "Tester", "Developer"],
+    roles: ["MANAGER", "TESTER", "DEVELOPER"],
   },
   {
     title: "In Progress",
     url: "/in-progress",
     icon: PlayCircle,
-    roles: ["Manager", "Tester", "Developer"],
+    roles: ["MANAGER", "TESTER", "DEVELOPER"],
   },
   {
     title: "High Priority",
     url: "/high-priority",
     icon: Flame,
-    roles: ["Manager", "Tester", "Developer"],
+    roles: ["MANAGER", "TESTER", "DEVELOPER"],
   },
   {
     title: "Assigned to Me",
     url: "/assigned-me",
     icon: User,
-    roles: ["Developer"],
+    roles: ["DEVELOPER"],
   },
   {
     title: "Report New Bug",
     url: "/report-bug",
     icon: PlusCircle,
-    roles: ["Tester"],
+    roles: ["TESTER"],
   },
 ];
 
@@ -92,22 +92,22 @@ const projects = [
       {
         title: "Issues",
         url: "/project/1/issues",
-        roles: ["Manager", "Tester", "Developer"],
+        roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
         title: "Version Control Integration",
         url: "/project/1/vci",
-        roles: ["Manager", "Tester", "Developer"],
+        roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
         title: "Team Members",
         url: "/project/1/team",
-        roles: ["Manager", "Tester", "Developer"],
+        roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
         title: "Project Settings",
         url: "/project/1/settings",
-        roles: ["Manager"],
+        roles: ["MANAGER"],
       },
     ],
   },
@@ -119,22 +119,22 @@ const projects = [
       {
         title: "Issues",
         url: "/project/1/issues",
-        roles: ["Manager", "Tester", "Developer"],
+        roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
         title: "Version Control Integration",
         url: "/project/1/vci",
-        roles: ["Manager", "Tester", "Developer"],
+        roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
         title: "Team Members",
         url: "/project/1/team",
-        roles: ["Manager", "Tester", "Developer"],
+        roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
         title: "Project Settings",
         url: "/project/1/settings",
-        roles: ["Manager"],
+        roles: ["MANAGER"],
       },
     ],
   },
@@ -146,22 +146,22 @@ const projects = [
       {
         title: "Issues",
         url: "/project/1/issues",
-        roles: ["Manager", "Tester", "Developer"],
+        roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
         title: "Version Control Integration",
         url: "/project/1/vci",
-        roles: ["Manager", "Tester", "Developer"],
+        roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
         title: "Team Members",
         url: "/project/1/team",
-        roles: ["Manager", "Tester", "Developer"],
+        roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
         title: "Project Settings",
         url: "/project/1/settings",
-        roles: ["Manager"],
+        roles: ["MANAGER"],
       },
     ],
   },
