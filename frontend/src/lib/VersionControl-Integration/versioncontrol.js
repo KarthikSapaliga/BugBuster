@@ -2,11 +2,14 @@ import { Octokit } from "@octokit/rest";
 import dotenv from "dotenv";
 dotenv.config();
 
-const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN,
-});
 
-async function fetchIssues(owner, repo) {
+function initOctokit({ GITHUB_TOKEN }) {
+   return new Octokit({
+    auth: process.env.GITHUB_TOKEN,
+  });
+}
+
+async function fetchIssues(octokit,owner, repo) {
   try {
     const response = await octokit.rest.issues.listForRepo({
       owner: owner,
@@ -62,7 +65,7 @@ async function fetchIssues(owner, repo) {
   }
 }
 
-async function closeIssue(owner, repo, issue_number) {
+async function closeIssue(octokit,owner, repo, issue_number) {
   try {
     const response = await octokit.rest.issues.update({
       owner: owner,
