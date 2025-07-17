@@ -3,7 +3,8 @@ export const HOST = import.meta.env.VITE_SERVER_URL;
 export const SIGNIN_ROUTE = "/api/auth/signin";
 export const SIGNUP_ROUTE = "/api/auth/signup";
 
-export const GET_DEVELOPERS_ROUTE = '/api/users/developers'         // GET - get all developers
+export const GET_DEVELOPERS_ROUTE = "/api/users/developers"         // GET - get all developers
+export const GET_DEVELOPERS_AND_TESTERS_ROUTE = "/api/users/devs-and-testers"
 
 export const CREATE_PROJECT_ROUTE = "/api/projects/create-project";
 
