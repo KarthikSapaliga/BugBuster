@@ -1,14 +1,13 @@
 import { Octokit } from "@octokit/rest";
 import dotenv from "dotenv";
-dotenv.config();
 
-function initOctokit(GITHUB_TOKEN) {
+export function initOctokit(GITHUB_TOKEN) {
     return new Octokit({
         auth: GITHUB_TOKEN,
     });
 }
 
-async function fetchIssues(octokit, owner, repo) {
+export async function fetchIssues(octokit, owner, repo) {
     try {
         const response = await octokit.rest.issues.listForRepo({
             owner: owner,
@@ -59,11 +58,20 @@ async function fetchIssues(octokit, owner, repo) {
             };
         });
 
-        console.log(JSON.stringify(extractedIssues, null, 2));
+        // console.log(JSON.stringify(extractedIssues, null, 2));
+        return JSON.stringify(extractedIssues,null,2);
     } catch (error) {
         console.error("Error fetching issues:", error);
     }
 }
+
+// Helper function to extract section between headings
+function extractSection(body, sectionTitle) {
+  const regex = new RegExp(`### ${sectionTitle}[\\s\\S]*?\\n+([\\s\\S]*?)(?=\\n###|$)`, 'i');
+  const match = body.match(regex);
+  return match ? match[1].trim() : "";
+}
+
 
 async function closeIssue(octokit, owner, repo, issue_number) {
     try {

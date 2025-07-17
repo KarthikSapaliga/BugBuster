@@ -19,6 +19,7 @@ import BugReportingForm from "./pages/BugReportingForm";
 import BugReport from "./pages/BugReport";
 import CreateProjectForm from "./pages/CreateProjectForm";
 import UpdateProjectForm from "./pages/UpdateProjectForm";
+import VersionControl from "./pages/VersionControl";
 
 function App() {
   return (

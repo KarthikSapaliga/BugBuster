@@ -1,0 +1,34 @@
+.# Node.js dependencies
+node_modules/
+
+# Production build output
+dist/
+
+# Vite cache
+.vite/
+
+# Local env files
+.env
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE/editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Mac OS files
+.DS_Store
+
+# Misc
+*.local
+*.cache
+
