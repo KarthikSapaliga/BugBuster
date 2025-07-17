@@ -98,7 +98,7 @@ const projects = [
       },
       {
         title: "Version Control Integration",
-        url: "/project/1/vci",
+        url: "/project/1/version-control",
         roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
@@ -125,7 +125,7 @@ const projects = [
       },
       {
         title: "Version Control Integration",
-        url: "/project/1/vci",
+        url: "/project/2/version-control",
         roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
@@ -152,7 +152,7 @@ const projects = [
       },
       {
         title: "Version Control Integration",
-        url: "/project/1/vci",
+        url: "/project/3/version-control",
         roles: ["MANAGER", "TESTER", "DEVELOPER"],
       },
       {
