@@ -146,10 +146,10 @@ function formatDate(dateString) {
 
 function getSeverityColor(severity) {
   const map = {
-    low: "bg-green-100 text-green-800",
-    medium: "bg-yellow-100 text-yellow-800",
-    high: "bg-orange-100 text-orange-800",
-    critical: "bg-red-100 text-red-800",
+    Low: "bg-green-100 text-green-800",
+    Medium: "bg-yellow-100 text-yellow-800",
+    High: "bg-orange-100 text-orange-800",
+    Critical: "bg-red-100 text-red-800",
   };
   return map[severity] || "bg-gray-100 text-gray-800";
 }
@@ -232,11 +232,11 @@ export default function VersionControl() {
     setFilteredIssues(filtered);
   };
 
-    const  handleRefresh = async() => {
-      setLoading(true);
-      await loadIssues();
-      setLoading(false);
-    };
+  const handleRefresh = async () => {
+    setLoading(true);
+    await loadIssues();
+    setLoading(false);
+  };
 
   const openIssueModal = (issue) => {
     setSelectedIssue(issue);
@@ -345,14 +345,12 @@ export default function VersionControl() {
                       </div>
                     </div>
                     <div className="flex gap-2 ">
-                      <Badge className={getSeverityColor(issue.severity)}>
+                      <Badge
+                        className={`${getSeverityColor(issue.severity)} text-xs`}
+                      >
                         {issue.severity.toUpperCase()}
                       </Badge>
-                      <Badge
-                        variant={
-                          issue.state === "open" ? "destructive" : "secondary"
-                        }
-                      >
+                      <Badge variant="outline" className="text-xs">
                         {issue.state.toUpperCase()}
                       </Badge>
                     </div>
@@ -385,10 +383,7 @@ export default function VersionControl() {
                     <Link
                       to={`/bugs/${issue.issueId.toString().toLowerCase()}`}
                     >
-                      <Button
-                        size="sm"
-                        variant="outline"
-                      >
+                      <Button size="sm" variant="outline">
                         <Eye className="w-4 h-4 mr-1" />
                         View Details
                       </Button>
