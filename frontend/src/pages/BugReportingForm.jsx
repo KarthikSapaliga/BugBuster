@@ -3,10 +3,31 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import toast from 'react-hot-toast'
 
 function BugReportingForm() {
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        steps: '',
+        expected: '',
+        actual: '',
+        severity: '',
+        urgency: '',
+    })
+
     const [screenshot, setScreenshot] = useState(null)
     const [previewURL, setPreviewURL] = useState(null)
+
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        setFormData((prev) => ({ ...prev, [name]: value }))
+    }
+
+    const handleSelectChange = (field, value) => {
+        setFormData((prev) => ({ ...prev, [field]: value }))
+    }
 
     const handleFileChange = (e) => {
         const file = e.target.files?.[0]
@@ -14,6 +35,37 @@ function BugReportingForm() {
             setScreenshot(file)
             setPreviewURL(URL.createObjectURL(file))
         }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        // Example: Validate required fields
+        if (!formData.title || !formData.description || !formData.severity || !formData.urgency) {
+            toast.error("Please fill in all required fields.")
+            return
+        }
+
+        // Submit logic here (e.g. using axios)
+        console.log({
+            ...formData,
+            screenshot,
+        })
+
+        toast.success("Bug reported successfully!")
+
+        // Reset form (optional)
+        setFormData({
+            title: '',
+            description: '',
+            steps: '',
+            expected: '',
+            actual: '',
+            severity: '',
+            urgency: '',
+        })
+        setScreenshot(null)
+        setPreviewURL(null)
     }
 
     return (
@@ -25,11 +77,18 @@ function BugReportingForm() {
                         Please fill out the form below to report a bug.
                     </p>
                 </div>
-                <form action="" method="post" className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Title */}
                     <div className="space-y-2">
                         <Label htmlFor="title">Title</Label>
-                        <Input id="title" name="title" placeholder="Short summary of the bug" required />
+                        <Input
+                            id="title"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            placeholder="Short summary of the bug"
+                            required
+                        />
                     </div>
 
                     {/* Description */}
@@ -38,6 +97,8 @@ function BugReportingForm() {
                         <Textarea
                             id="description"
                             name="description"
+                            value={formData.description}
+                            onChange={handleChange}
                             placeholder="Describe the bug in detail..."
                             rows={5}
                             required
@@ -50,6 +111,8 @@ function BugReportingForm() {
                         <Textarea
                             id="steps"
                             name="steps"
+                            value={formData.steps}
+                            onChange={handleChange}
                             placeholder="Step-by-step instructions to reproduce the bug..."
                             rows={4}
                         />
@@ -61,6 +124,8 @@ function BugReportingForm() {
                         <Textarea
                             id="expected"
                             name="expected"
+                            value={formData.expected}
+                            onChange={handleChange}
                             placeholder="What did you expect to happen?"
                             rows={3}
                         />
@@ -72,9 +137,51 @@ function BugReportingForm() {
                         <Textarea
                             id="actual"
                             name="actual"
+                            value={formData.actual}
+                            onChange={handleChange}
                             placeholder="What actually happened?"
                             rows={3}
                         />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Severity Dropdown */}
+                        <div className="space-y-2">
+                            <Label htmlFor="severity">Severity</Label>
+                            <Select
+                                value={formData.severity}
+                                onValueChange={(value) => handleSelectChange("severity", value)}
+                            >
+                                <SelectTrigger id="severity">
+                                    <SelectValue placeholder="Select severity" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="low">Low</SelectItem>
+                                    <SelectItem value="medium">Medium</SelectItem>
+                                    <SelectItem value="high">High</SelectItem>
+                                    <SelectItem value="critical">Critical</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {/* Urgency Dropdown */}
+                        <div className="space-y-2">
+                            <Label htmlFor="urgency">Urgency</Label>
+                            <Select
+                                value={formData.urgency}
+                                onValueChange={(value) => handleSelectChange("urgency", value)}
+                            >
+                                <SelectTrigger id="urgency">
+                                    <SelectValue placeholder="Select priority" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="low">Low</SelectItem>
+                                    <SelectItem value="medium">Medium</SelectItem>
+                                    <SelectItem value="high">High</SelectItem>
+                                    <SelectItem value="urgent">Urgent</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
 
                     {/* Screenshot Upload */}
