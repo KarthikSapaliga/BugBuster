@@ -78,7 +78,7 @@ export default function History() {
                                     </span>
                                 </td>
                                 <td className="px-4 py-3 text-center">
-                                    <Link to="/bug/98765">
+                                    <Link to={`/bugs/${bug.id}`}>
                                         <Button variant="ghost" size="sm" className="text-primary">
                                             <Eye size={16} />
                                             View
