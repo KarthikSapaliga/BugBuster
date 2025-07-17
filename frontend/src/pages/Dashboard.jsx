@@ -3,11 +3,14 @@ import { useAppStore } from '@/store/store'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 
+import RecentBugs from '@/components/RecentBugs'
+import QuickActions from '@/components/QuickActions'
+
 const status = [
     { label: 'Projects', value: '01' },
     { label: 'Assigned', value: '12' },
     { label: 'Completed', value: '04' },
-    { label: 'Pending', value: '08' },
+    { label: 'In Progress', value: '08' },
 ]
 
 function Dashboard() {
@@ -47,6 +50,11 @@ function Dashboard() {
                         <p className="text-5xl font-bold text-foreground">{value}</p>
                     </div>
                 ))}
+            </div>
+
+            <div className='flex flex-col md:flex-row md:gap-4 lg:gap-6'>
+                <RecentBugs />
+                <QuickActions />
             </div>
         </main>
     )
