@@ -5,6 +5,9 @@ import com.bugbuster.model.Project;
 import com.bugbuster.service.ProjectService;
 import com.bugbuster.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,4 +39,14 @@ public class ProjectController {
 
         return projectService.createProject(req, userId);
     }
+
+    @GetMapping("/my-projects")
+    public List<Project> getMyProjects(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        Claims claims = jwtUtil.extractAllClaims(token);
+        String userId = claims.getSubject();
+
+        return projectService.getProjectsByUserId(userId);
+    }
+
 }

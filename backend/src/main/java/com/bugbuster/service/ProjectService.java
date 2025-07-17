@@ -5,6 +5,7 @@ import com.bugbuster.model.Project;
 import com.bugbuster.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class ProjectService {
@@ -21,5 +22,9 @@ public class ProjectService {
         project.setCreatedBy(managerId);
 
         return projectRepo.save(project);
+    }
+
+    public List<Project> getProjectsByUserId(String userId) {
+        return projectRepo.findByTeamMembersContaining(userId);
     }
 }
