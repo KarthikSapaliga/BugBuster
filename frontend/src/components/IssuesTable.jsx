@@ -50,7 +50,7 @@ function IssuesTable({ data }) {
                                 </span>
                             </td>
                             <td className="flex gap-2 py-3 justify-center items-center">
-                                <Link to="/bug/98765">
+                                <Link to={`/bugs/${bug.id}`}>
                                     <Button variant="ghost" size="sm" className="text-primary">
                                         <Eye size={16} />
                                         View
