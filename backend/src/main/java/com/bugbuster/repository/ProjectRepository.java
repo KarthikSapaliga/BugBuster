@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ProjectRepository extends MongoRepository<Project, String> {
     List<Project> findByTeamMembersContaining(String userId);
+    List<Project> findByCreatedBy(String userId);
 }

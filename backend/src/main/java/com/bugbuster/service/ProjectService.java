@@ -6,6 +6,9 @@ import com.bugbuster.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.List;
 
 @Service
@@ -40,7 +43,20 @@ public class ProjectService {
     }
 
     public List<Project> getProjectsByUserId(String userId) {
-        return projectRepo.findByTeamMembersContaining(userId);
+        List<Project> memberProjects = projectRepo.findByTeamMembersContaining(userId);
+        List<Project> createdProjects = projectRepo.findByCreatedBy(userId);
+
+        Map<String, Project> uniqueProjects = new LinkedHashMap<>();
+
+        for (Project project : memberProjects) {
+            uniqueProjects.put(project.getId(), project);
+        }
+
+        for (Project project : createdProjects) {
+            uniqueProjects.put(project.getId(), project);
+        }
+
+        return new ArrayList<>(uniqueProjects.values());
     }
 
     public Project getProjectById(String projectId) {
