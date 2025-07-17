@@ -6,6 +6,9 @@ import com.bugbuster.utils.JwtUtil;
 import com.bugbuster.dto.SignupRequest;
 import com.bugbuster.dto.AuthResponse;
 import com.bugbuster.dto.SigninRequest;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,4 +52,9 @@ public class UserService {
 
         return new AuthResponse(token, savedUser);
     }
+
+    public List<User> getDevelopers() {
+        return userRepo.findByRole("DEVELOPER");
+    }
+
 }
