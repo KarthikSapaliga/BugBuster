@@ -1,13 +1,13 @@
-import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import { Navigate } from "react-router-dom";
+import { useAppStore } from "@/store/store";
 
 export default function ProtectedRoute({ children }) {
+    const { isAuthenticated } = useAppStore();
+
     return (
         <>
-            <SignedIn>{children}</SignedIn>
-            <SignedOut>
-                <Navigate to="/signin" />
-            </SignedOut>
+            {isAuthenticated && <>{children}</>}
+            {!isAuthenticated && Navigate("/login")}
         </>
     );
 }

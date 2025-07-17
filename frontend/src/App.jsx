@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { SignIn, SignUp } from "@clerk/clerk-react";
+
+import SignUpPage from "./components/SignupPage";
+import SignInPage from "./components/SigninPage";
 
 import Layout from "./components/Layout";
 import Modal from "./components/Modal";
@@ -15,6 +17,7 @@ import HighPriority from "./pages/HighPriority";
 import AssignedMe from "./pages/AssignedMe";
 import BugReportingForm from "./pages/BugReportingForm";
 import BugReport from "./pages/BugReport";
+import CreateProjectForm from "./pages/CreateProjectForm";
 
 function App() {
   return (
@@ -25,7 +28,7 @@ function App() {
           path="/signin"
           element={
             <Modal>
-              <SignIn signUpUrl="/signup" />
+              <SignInPage />
             </Modal>
           }
         />
@@ -33,7 +36,7 @@ function App() {
           path="/signup"
           element={
             <Modal>
-              <SignUp signInUrl="/signin" />
+              <SignUpPage />
             </Modal>
           }
         />
@@ -115,7 +118,15 @@ function App() {
           path="/bug/:id"
           element={
             <ProtectedRoute>
-              <BugReport/>
+              <BugReport />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-project"
+          element={
+            <ProtectedRoute>
+              <CreateProjectForm />
             </ProtectedRoute>
           }
         />
