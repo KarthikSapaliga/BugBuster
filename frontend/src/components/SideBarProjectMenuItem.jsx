@@ -8,8 +8,10 @@ import { ChevronRight, ChevronDown, Folder } from "lucide-react";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
+import { useAppStore } from "@/store/store";
 
 const SideBarProjectMenuItem = ({ project }) => {
+  const { user } = useAppStore();
   const [open, setOpen] = React.useState(false);
   return (
     <Collapsible
@@ -37,24 +39,28 @@ const SideBarProjectMenuItem = ({ project }) => {
       </CollapsibleTrigger>
 
       <CollapsibleContent className="pl-6">
-        {project.subItems.map((sub) => (
-          <SidebarMenuItem key={sub.url}>
-            <SidebarMenuButton asChild>
-              <NavLink
-                to={sub.url}
-                className={cn(
-                  {
-                    "!bg-primary !text-primary-foreground":
-                      location.pathname === sub.url,
-                  },
-                  "list-none"
-                )}
-              >
-                {sub.title}
-              </NavLink>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
+        {project.subItems
+          .filter((item) =>
+            item.roles.some((role) => user?.role.includes(role))
+          )
+          .map((sub) => (
+            <SidebarMenuItem key={sub.url}>
+              <SidebarMenuButton asChild>
+                <NavLink
+                  to={sub.url}
+                  className={cn(
+                    {
+                      "!bg-primary !text-primary-foreground":
+                        location.pathname === sub.url,
+                    },
+                    "list-none"
+                  )}
+                >
+                  {sub.title}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
       </CollapsibleContent>
     </Collapsible>
   );
