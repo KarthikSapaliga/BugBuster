@@ -251,7 +251,7 @@ const SideBar = () => {
                 {projects.map((project) => (
                   <SideBarProjectMenuItem key={project.id} project={project} />
                 ))}
-                {user.role == "MANAGER" && (
+                {user?.role == "MANAGER" && (
                   <SidebarMenuItem>
                     <NavLink to="/create-project">
                       <Button variant="outline" className="w-fit mt-3">
