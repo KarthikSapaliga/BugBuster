@@ -115,7 +115,7 @@ function App() {
           }
         />
         <Route
-          path="/bug/:id"
+          path="/bugs/:id"
           element={
             <ProtectedRoute>
               <BugReport />
