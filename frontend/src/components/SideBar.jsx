@@ -21,6 +21,7 @@ import {
   User,
   PlayCircle,
   Flame,
+  Plus,
 } from "lucide-react";
 
 import {
@@ -34,6 +35,7 @@ import { cn } from "@/lib/utils";
 import { NavLink, useLocation } from "react-router-dom";
 import SideBarProjectMenuItem from "./SideBarProjectMenuItem";
 import { useAppStore } from "@/store/store";
+import { Button } from "./ui/button";
 
 export const overviewMenu = [
   {
@@ -167,7 +169,6 @@ const projects = [
   },
 ];
 
-
 const SideBar = () => {
   const { user } = useAppStore();
   const pathname = useLocation();
@@ -250,6 +251,16 @@ const SideBar = () => {
                 {projects.map((project) => (
                   <SideBarProjectMenuItem key={project.id} project={project} />
                 ))}
+                {user.role == "MANAGER" && (
+                  <SidebarMenuItem>
+                    <NavLink to="/create-project">
+                      <Button variant="outline" className="w-fit mt-3">
+                        <Plus />
+                        Create Project
+                      </Button>
+                    </NavLink>
+                  </SidebarMenuItem>
+                )}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
