@@ -18,6 +18,8 @@ import AssignedMe from "./pages/AssignedMe";
 import BugReportingForm from "./pages/BugReportingForm";
 import BugReport from "./pages/BugReport";
 import CreateProjectForm from "./pages/CreateProjectForm";
+import UpdateProjectForm from "./pages/UpdateProjectForm";
+import VersionControl from "./pages/VersionControl";
 
 function App() {
   return (
@@ -127,6 +129,14 @@ function App() {
           element={
             <ProtectedRoute>
               <CreateProjectForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/project/:projectId/version-control"
+          element={
+            <ProtectedRoute>
+              <VersionControl />
             </ProtectedRoute>
           }
         />
