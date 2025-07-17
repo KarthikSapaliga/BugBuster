@@ -33,17 +33,20 @@ import { ChevronRight, ChevronDown, Folder } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink, useLocation } from "react-router-dom";
 import SideBarProjectMenuItem from "./SideBarProjectMenuItem";
+import { useAppStore } from "@/store/store";
 
 export const overviewMenu = [
   {
     title: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboard,
+    roles: ["Manager", "Tester", "Developer"],
   },
   {
     title: "Analytics & Reports",
     url: "/analytics-reports",
     icon: BarChart3,
+    roles: ["Manager", "Tester", "Developer"],
   },
 ];
 
@@ -52,26 +55,31 @@ export const bugManagementMenu = [
     title: "All Issues",
     url: "/all-issues",
     icon: Bug,
+    roles: ["Manager", "Tester", "Developer"],
   },
   {
     title: "In Progress",
     url: "/in-progress",
     icon: PlayCircle,
+    roles: ["Manager", "Tester", "Developer"],
   },
   {
     title: "High Priority",
     url: "/high-priority",
     icon: Flame,
+    roles: ["Manager", "Tester", "Developer"],
   },
   {
     title: "Assigned to Me",
     url: "/assigned-me",
     icon: User,
+    roles: ["Developer"],
   },
   {
     title: "Report New Bug",
     url: "/report-bug",
     icon: PlusCircle,
+    roles: ["Tester"],
   },
 ];
 
@@ -81,10 +89,26 @@ const projects = [
     name: "Project Alpha",
     url: "/project/1",
     subItems: [
-      { title: "Issues", url: "/project/1/issues" },
-      { title: "Version Control Integration", url: "/project/1/vci" },
-      { title: "Team Members", url: "/project/1/team" },
-      { title: "Project Settings", url: "/project/1/settings" },
+      {
+        title: "Issues",
+        url: "/project/1/issues",
+        roles: ["Manager", "Tester", "Developer"],
+      },
+      {
+        title: "Version Control Integration",
+        url: "/project/1/vci",
+        roles: ["Manager", "Tester", "Developer"],
+      },
+      {
+        title: "Team Members",
+        url: "/project/1/team",
+        roles: ["Manager", "Tester", "Developer"],
+      },
+      {
+        title: "Project Settings",
+        url: "/project/1/settings",
+        roles: ["Manager"],
+      },
     ],
   },
   {
@@ -92,10 +116,26 @@ const projects = [
     name: "Project Beta",
     url: "/project/2",
     subItems: [
-      { title: "Issues", url: "/project/2/issues" },
-      { title: "Version Control Integration", url: "/project/2/vci" },
-      { title: "Team Members", url: "/project/2/team" },
-      { title: "Project Settings", url: "/project/2/settings" },
+      {
+        title: "Issues",
+        url: "/project/1/issues",
+        roles: ["Manager", "Tester", "Developer"],
+      },
+      {
+        title: "Version Control Integration",
+        url: "/project/1/vci",
+        roles: ["Manager", "Tester", "Developer"],
+      },
+      {
+        title: "Team Members",
+        url: "/project/1/team",
+        roles: ["Manager", "Tester", "Developer"],
+      },
+      {
+        title: "Project Settings",
+        url: "/project/1/settings",
+        roles: ["Manager"],
+      },
     ],
   },
   {
@@ -103,44 +143,69 @@ const projects = [
     name: "Project Gamma",
     url: "/project/3",
     subItems: [
-      { title: "Issues", url: "/project/3/issues" },
-      { title: "Version Control Integration", url: "/project/3/vci" },
-      { title: "Team Members", url: "/project/3/team" },
-      { title: "Project Settings", url: "/project/3/settings" },
+      {
+        title: "Issues",
+        url: "/project/1/issues",
+        roles: ["Manager", "Tester", "Developer"],
+      },
+      {
+        title: "Version Control Integration",
+        url: "/project/1/vci",
+        roles: ["Manager", "Tester", "Developer"],
+      },
+      {
+        title: "Team Members",
+        url: "/project/1/team",
+        roles: ["Manager", "Tester", "Developer"],
+      },
+      {
+        title: "Project Settings",
+        url: "/project/1/settings",
+        roles: ["Manager"],
+      },
     ],
   },
 ];
 
+
 const SideBar = () => {
+  const { user } = useAppStore();
   const pathname = useLocation();
   const { open: isSidebarOpen } = useSidebar();
   return (
-    <Sidebar collapsible="icon" className="fixed left-0 h-[calc(100vh-4rem)] top-[3.6rem]">
+    <Sidebar
+      collapsible="icon"
+      className="fixed left-0 h-[calc(100vh-4rem)] top-[3.6rem]"
+    >
       <SidebarContent>
         {/* group 1 */}
         <SidebarGroup>
           <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {overviewMenu.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      className={cn(
-                        {
-                          "!bg-primary !text-primary-foreground":
-                            location.pathname === item.url,
-                        },
-                        "list-none"
-                      )}
-                    >
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {overviewMenu
+                .filter((item) =>
+                  item.roles.some((role) => user?.role.includes(role))
+                )
+                .map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <NavLink
+                        to={item.url}
+                        className={cn(
+                          {
+                            "!bg-primary !text-primary-foreground":
+                              location.pathname === item.url,
+                          },
+                          "list-none"
+                        )}
+                      >
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -149,41 +214,46 @@ const SideBar = () => {
           <SidebarGroupLabel>Bug Management</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {bugManagementMenu.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      className={cn(
-                        {
-                          "!bg-primary !text-primary-foreground":
-                            location.pathname === item.url,
-                        },
-                        "list-none"
-                      )}
-                    >
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {bugManagementMenu
+                .filter((item) =>
+                  item.roles.some((role) => user?.role.includes(role))
+                )
+                .map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <NavLink
+                        to={item.url}
+                        className={cn(
+                          {
+                            "!bg-primary !text-primary-foreground":
+                              location.pathname === item.url,
+                          },
+                          "list-none"
+                        )}
+                      >
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         {/* group3 */}
-        {isSidebarOpen && <SidebarGroup>
-          <SidebarGroupLabel>Projects</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {projects.map((project) => (
-                <SideBarProjectMenuItem key={project.id} project={project} />
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>}
-
+        {isSidebarOpen && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Projects</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {projects.map((project) => (
+                  <SideBarProjectMenuItem key={project.id} project={project} />
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
     </Sidebar>
   );
