@@ -39,8 +39,7 @@ async function fetchIssues(octokit,owner, repo) {
       }
 
       return {
-        id: issue.id,
-        number: issue.number,
+        id: issue.number,
         title: issue.title,
         state: issue.state,
         createdAt: issue.created_at,
