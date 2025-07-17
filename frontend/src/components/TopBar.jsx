@@ -8,9 +8,7 @@ import { useAppStore } from "@/store/store";
 
 
 export default function TopBar() {
-
     const { user, logout } = useAppStore()
-    console.log({ user })
 
     const navigate = useNavigate();
     const handleLogout = () => {

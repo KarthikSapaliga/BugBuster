@@ -1,4 +1,6 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { apiClient } from "@/lib/axios";
+import { GET_MY_PROJECTS_ROUTE } from "@/lib/routes";
 import {
   Sidebar,
   SidebarContent,
@@ -85,94 +87,30 @@ export const bugManagementMenu = [
   },
 ];
 
-const projects = [
-  {
-    id: 1,
-    name: "Project Alpha",
-    url: "/project/1",
-    subItems: [
-      {
-        title: "Issues",
-        url: "/project/1/issues",
-        roles: ["MANAGER", "TESTER", "DEVELOPER"],
-      },
-      {
-        title: "Version Control Integration",
-        url: "/project/1/version-control",
-        roles: ["MANAGER", "TESTER", "DEVELOPER"],
-      },
-      {
-        title: "Team Members",
-        url: "/project/1/team",
-        roles: ["MANAGER", "TESTER", "DEVELOPER"],
-      },
-      {
-        title: "Project Settings",
-        url: "/project/1/settings",
-        roles: ["MANAGER"],
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Project Beta",
-    url: "/project/2",
-    subItems: [
-      {
-        title: "Issues",
-        url: "/project/1/issues",
-        roles: ["MANAGER", "TESTER", "DEVELOPER"],
-      },
-      {
-        title: "Version Control Integration",
-        url: "/project/2/version-control",
-        roles: ["MANAGER", "TESTER", "DEVELOPER"],
-      },
-      {
-        title: "Team Members",
-        url: "/project/1/team",
-        roles: ["MANAGER", "TESTER", "DEVELOPER"],
-      },
-      {
-        title: "Project Settings",
-        url: "/project/1/settings",
-        roles: ["MANAGER"],
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "Project Gamma",
-    url: "/project/3",
-    subItems: [
-      {
-        title: "Issues",
-        url: "/project/1/issues",
-        roles: ["MANAGER", "TESTER", "DEVELOPER"],
-      },
-      {
-        title: "Version Control Integration",
-        url: "/project/3/version-control",
-        roles: ["MANAGER", "TESTER", "DEVELOPER"],
-      },
-      {
-        title: "Team Members",
-        url: "/project/1/team",
-        roles: ["MANAGER", "TESTER", "DEVELOPER"],
-      },
-      {
-        title: "Project Settings",
-        url: "/project/1/settings",
-        roles: ["MANAGER"],
-      },
-    ],
-  },
-];
-
 const SideBar = () => {
-  const { user } = useAppStore();
+  const { user, token } = useAppStore();
   const pathname = useLocation();
   const { open: isSidebarOpen } = useSidebar();
+
+  const location = useLocation();
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await apiClient.get(GET_MY_PROJECTS_ROUTE, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setProjects(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch projects", err);
+      }
+    };
+    if (user) {
+      fetchProjects();
+    }
+  }, [user]);
+
   return (
     <Sidebar
       collapsible="icon"
@@ -250,6 +188,7 @@ const SideBar = () => {
               <SidebarMenu>
                 {projects.map((project) => (
                   <SideBarProjectMenuItem key={project.id} project={project} />
+                  // <p>hello</p>
                 ))}
                 {user?.role == "MANAGER" && (
                   <SidebarMenuItem>

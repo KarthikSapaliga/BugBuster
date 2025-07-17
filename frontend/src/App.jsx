@@ -133,18 +133,34 @@ function App() {
           }
         />
         <Route
-          path="/update-project/:projectId"
+          path="projects/bugs/:projectId"
           element={
             <ProtectedRoute>
-              <UpdateProjectForm />
+              <div>issues</div>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/project/:projectId/version-control"
+          path="projects/vcs/:projectId"
           element={
             <ProtectedRoute>
-              <VersionControl />
+              <div>version control</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="projects/team/:projectId"
+          element={
+            <ProtectedRoute>
+              <div>teams</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="projects/update-project/:projectId"
+          element={
+            <ProtectedRoute>
+              <UpdateProjectForm />
             </ProtectedRoute>
           }
         />
