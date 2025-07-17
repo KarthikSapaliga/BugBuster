@@ -7,6 +7,7 @@ import java.util.List;
 public class ProjectRequest {
     private String name;
     private String description;
-    private String versionControl;
+    private String githubLink;
+    private String githubToken;
     private List<String> teamMembers;
 }

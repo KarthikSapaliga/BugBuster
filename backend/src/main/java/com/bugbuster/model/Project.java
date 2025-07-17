@@ -16,7 +16,9 @@ public class Project {
 
     private String name;
     private String description;
-    private String versionControl;
-    private List<String> teamMembers; // list of user IDs
-    private String createdBy; // manager's user ID
+    private String githubLink;
+    private String githubToken;
+
+    private List<String> teamMembers;
+    private String createdBy;
 }

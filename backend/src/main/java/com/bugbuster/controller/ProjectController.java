@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/projects")
+@CrossOrigin(origins = "*")
 public class ProjectController {
 
     @Autowired
@@ -31,7 +32,6 @@ public class ProjectController {
         String role = claims.get("role", String.class);
         String userId = claims.getSubject();
 
-        // Only allow managers to create projects
         if (!"MANAGER".equalsIgnoreCase(role)) {
             throw new RuntimeException("Access denied: only MANAGER can create projects.");
         }
@@ -48,4 +48,21 @@ public class ProjectController {
         return projectService.getProjectsByUserId(userId);
     }
 
+    @PutMapping("/update-project/{projectId}")
+    public Project updateProject(
+            @PathVariable String projectId,
+            @RequestBody ProjectRequest req,
+            @RequestHeader("Authorization") String authHeader) {
+
+        String token = authHeader.replace("Bearer ", "");
+        Claims claims = jwtUtil.extractAllClaims(token);
+
+        String role = claims.get("role", String.class);
+
+        if (!"MANAGER".equalsIgnoreCase(role)) {
+            throw new RuntimeException("Access denied: only MANAGER can update projects.");
+        }
+
+        return projectService.updateProject(projectId, req);
+    }
 }

@@ -5,6 +5,7 @@ import com.bugbuster.model.Project;
 import com.bugbuster.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -17,9 +18,23 @@ public class ProjectService {
         Project project = new Project();
         project.setName(req.getName());
         project.setDescription(req.getDescription());
-        project.setVersionControl(req.getVersionControl());
+        project.setGithubLink(req.getGithubLink());
+        project.setGithubToken(req.getGithubToken());
         project.setTeamMembers(req.getTeamMembers());
         project.setCreatedBy(managerId);
+
+        return projectRepo.save(project);
+    }
+
+    public Project updateProject(String projectId, ProjectRequest req) {
+        Project project = projectRepo.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        project.setName(req.getName());
+        project.setDescription(req.getDescription());
+        project.setGithubLink(req.getGithubLink());
+        project.setGithubToken(req.getGithubToken());
+        project.setTeamMembers(req.getTeamMembers());
 
         return projectRepo.save(project);
     }
