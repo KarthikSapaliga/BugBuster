@@ -34,7 +34,7 @@ function Dashboard() {
                     </div>
                 </div>
                 {
-                    user.role === "Manager" ? <Button onClick={createProject} >Create New Project</Button> : <></>
+                    user.role === "MANAGER" ? <Button onClick={createProject} >Create New Project</Button> : <></>
                 }
             </div>
 
