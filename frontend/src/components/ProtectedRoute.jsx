@@ -6,8 +6,7 @@ export default function ProtectedRoute({ children }) {
 
     return (
         <>
-            {isAuthenticated && <>{children}</>}
-            {!isAuthenticated && Navigate("/login")}
+            {isAuthenticated ? children : <Navigate to="/signin" />}
         </>
     );
 }

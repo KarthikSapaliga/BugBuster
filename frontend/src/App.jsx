@@ -1,8 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import SignUpPage from "./components/SignupPage";
-import SignInPage from "./components/SigninPage";
+import SignUpPage from "./pages/SignupPage";
+import SignInPage from "./pages/SigninPage";
 
 import Layout from "./components/Layout";
 import Modal from "./components/Modal";

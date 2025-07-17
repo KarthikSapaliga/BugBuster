@@ -11,7 +11,7 @@ const resolvedBugs = [
         project: "Auth Module",
         severity: "High",
         resolvedOn: "2025-07-10",
-        status: "Resolved",
+        status: "Closed",
     },
     {
         id: "BUG-104",
@@ -19,7 +19,7 @@ const resolvedBugs = [
         project: "User Profile",
         severity: "Medium",
         resolvedOn: "2025-07-12",
-        status: "Resolved",
+        status: "Closed",
     },
     {
         id: "BUG-112",
@@ -27,7 +27,7 @@ const resolvedBugs = [
         project: "Notification System",
         severity: "Low",
         resolvedOn: "2025-07-13",
-        status: "Resolved",
+        status: "Closed",
     },
 ];
 
