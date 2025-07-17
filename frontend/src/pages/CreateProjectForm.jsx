@@ -47,13 +47,18 @@ function CreateProjectForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="title">Repository Link</Label>
-                        <Input id="title" name="title" placeholder="Short summary of the bug" required />
+                        <Label htmlFor="title">Github Repository Link</Label>
+                        <Input id="title" name="title" placeholder="Project github repository link" required />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="title">Github Token</Label>
+                        <Input id="title" name="title" placeholder="Enter github token" required />
                     </div>
 
                     <div className="space-y-2">
                         <Label htmlFor="title">Add Team Members</Label>
-                        <MultiSelect options={OPTIONS} onChange={handleSelection} placeholder="Select tags" />
+                        <MultiSelect options={OPTIONS} onChange={handleSelection} placeholder="Select Team Members" />
                     </div>
 
                     <div className="pt-4">
