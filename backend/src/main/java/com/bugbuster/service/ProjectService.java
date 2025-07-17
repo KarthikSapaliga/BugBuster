@@ -42,4 +42,10 @@ public class ProjectService {
     public List<Project> getProjectsByUserId(String userId) {
         return projectRepo.findByTeamMembersContaining(userId);
     }
+
+    public Project getProjectById(String projectId) {
+        return projectRepo.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+    }
+
 }

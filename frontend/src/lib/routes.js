@@ -10,6 +10,7 @@ export const GET_DEVELOPERS_AND_TESTERS_ROUTE = "/api/users/devs-and-testers"
 export const CREATE_PROJECT_ROUTE = "/api/projects/create-project";
 export const UPDATE_PROJECT_ROUTE = "/api/projects/update-project"
 export const GET_MY_PROJECTS_ROUTE = "/api/projects/my-projects";
+export const GET_PROJECT_BY_ID_ROUTE = "/api/projects/get-by-id";
 
 // Bug Routes
 export const CREATE_BUG_ROUTE = "/api/bugs";                        // POST - Create a new bug

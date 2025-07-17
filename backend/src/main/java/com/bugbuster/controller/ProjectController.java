@@ -64,4 +64,11 @@ public class ProjectController {
 
         return projectService.updateProject(projectId, req);
     }
+
+    @GetMapping("/get-by-id/{id}")
+    public Project getProjectById(@PathVariable String id,
+            @RequestHeader("Authorization") String authHeader) {
+        return projectService.getProjectById(id);
+    }
+
 }
