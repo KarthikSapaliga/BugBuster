@@ -7,6 +7,7 @@ import { comments } from "@/lib/DummyData/comments";
 
 import CommentsContainer from "@/components/CommentsContainer";
 import ActivityLog from "@/components/BugActivityLog";
+import { useParams } from "react-router-dom";
 
 const severityColor = {
   Critical: "bg-red-500 text-red-900",
@@ -16,6 +17,9 @@ const severityColor = {
 };
 
 const BugReport = () => {
+
+  const params = useParams()
+
   return (
     <main className="min-h-full w-full p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
       <div className="w-full bg-background dark:sidebar border border-border shadow-md rounded-xl p-6 ">
@@ -24,7 +28,7 @@ const BugReport = () => {
             {/* Header */}
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-semibold tracking-tight">
-                Bug ID: {bugData.bugId}
+                Bug ID: {params.id}
               </h1>
               <span className={`px-3 py-1 rounded-full text-sm font-medium`}>
                 {bugData.status}
@@ -72,11 +76,10 @@ const BugReport = () => {
                 {bugData.attachments.map((attachment, index) => (
                   <div
                     key={index}
-                    className={`w-full min-h-48 rounded-lg flex items-center justify-center ${
-                      attachment.fileName.includes(".png")
+                    className={`w-full min-h-48 rounded-lg flex items-center justify-center ${attachment.fileName.includes(".png")
                         ? "bg-muted"
                         : "bg-secondary"
-                    }`}
+                      }`}
                   >
                     <div className="text-xs text-center text-muted-foreground">
                       {attachment.fileName.includes(".png") ? (
@@ -98,7 +101,7 @@ const BugReport = () => {
           </div>
 
           {/* Metadata */}
-          <div className="bg-sidebar rounded-xl border border-sidebar flex flex-col p-5 min-w-[30%] gap-3 shadow">
+          <div className="bg-sidebar rounded-xl border border-sidebar flex flex-col p-5 min-w-[35%] gap-3 shadow">
             <h2 className="text-lg text-foreground font-bold flex items-center gap-2 mb-2">
               Metadata
             </h2>
@@ -110,7 +113,7 @@ const BugReport = () => {
               </p>
               <span
                 className={cn(
-                  "py-2 px-3 inline-flex items-center text-sm rounded-lg font-medium border shadow-sm",
+                  "py-2 px-3 inline-flex items-center text-sm rounded-lg font-medium border ",
                   severityColor[bugData.priority]
                 )}
               >
@@ -119,7 +122,7 @@ const BugReport = () => {
             </div>
 
             <div className="space-y-3">
-              <div className="bg-background rounded-lg p-3 border border-gray-200 shadow-sm">
+              <div className="bg-background rounded-lg p-3 border border-gray-200 ">
                 <p className="text-xs mb-1 font-medium text-muted-foreground">
                   Module/Feature
                 </p>
@@ -128,7 +131,7 @@ const BugReport = () => {
                 </h3>
               </div>
 
-              <div className="bg-background rounded-lg p-3 border border-gray-200 shadow-sm">
+              <div className="bg-background rounded-lg p-3 border border-gray-200 ">
                 <p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
                   <User className="w-3 h-3" />
                   Reporter
@@ -138,7 +141,7 @@ const BugReport = () => {
                 </h3>
               </div>
 
-              <div className="bg-background rounded-lg p-3 border border-gray-200 shadow-sm">
+              <div className="bg-background rounded-lg p-3 border border-gray-200 ">
                 <p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
                   <User className="w-3 h-3" />
                   Assignee
@@ -148,7 +151,7 @@ const BugReport = () => {
                 </h3>
               </div>
 
-              <div className="bg-background rounded-lg p-3 border border-gray-200 shadow-sm">
+              <div className="bg-background rounded-lg p-3 border border-gray-200 ">
                 <p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   Date Created
@@ -158,7 +161,7 @@ const BugReport = () => {
                 </h3>
               </div>
 
-              <div className="bg-background rounded-lg p-3 border border-gray-200 shadow-sm">
+              <div className="bg-background rounded-lg p-3 border border-gray-200 ">
                 <p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   Date Resolved
