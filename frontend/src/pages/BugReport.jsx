@@ -72,7 +72,7 @@ const BugReport = () => {
                 {bugData.attachments.map((attachment, index) => (
                   <div
                     key={index}
-                    className={`w-24 h-24 rounded-lg flex items-center justify-center ${
+                    className={`w-full min-h-48 rounded-lg flex items-center justify-center ${
                       attachment.fileName.includes(".png")
                         ? "bg-muted"
                         : "bg-secondary"
