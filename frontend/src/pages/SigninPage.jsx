@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,12 @@ export default function SignInPage() {
     const navigate = useNavigate();
     const { login, isAuthenticated } = useAppStore();
 
-    if (isAuthenticated) navigate("/dashboard")
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/dashboard");
+        }
+    }, [isAuthenticated, navigate]);
+
 
     const [formData, setFormData] = useState({
         email: "",
