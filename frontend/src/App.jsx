@@ -20,6 +20,7 @@ import BugReport from "./pages/BugReport";
 import CreateProjectForm from "./pages/CreateProjectForm";
 import UpdateProjectForm from "./pages/UpdateProjectForm";
 import VersionControl from "./pages/VersionControl";
+import Teams from "./pages/Teams";
 
 function App() {
   return (
@@ -144,7 +145,7 @@ function App() {
           path="projects/vcs/:projectId"
           element={
             <ProtectedRoute>
-              <VersionControl/>
+              <VersionControl />
             </ProtectedRoute>
           }
         />
@@ -152,7 +153,7 @@ function App() {
           path="projects/team/:projectId"
           element={
             <ProtectedRoute>
-              <div>teams</div>
+              <Teams />
             </ProtectedRoute>
           }
         />
