@@ -10,4 +10,6 @@ public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
 
     List<User> findByRole(String role);
+
+    List<User> findByRoleIn(List<String> roles);
 }

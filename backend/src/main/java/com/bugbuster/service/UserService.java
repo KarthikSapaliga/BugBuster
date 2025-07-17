@@ -44,7 +44,7 @@ public class UserService {
         User newUser = new User();
         newUser.setName(req.getName());
         newUser.setEmail(req.getEmail());
-        newUser.setRole(req.getRole());
+        newUser.setRole(req.getRole().toUpperCase());
         newUser.setPassword(encoder.encode(req.getPassword()));
 
         User savedUser = userRepo.save(newUser);
@@ -57,4 +57,7 @@ public class UserService {
         return userRepo.findByRole("DEVELOPER");
     }
 
+    public List<User> getDevelopersAndTesters() {
+        return userRepo.findByRoleIn(List.of("DEVELOPER", "TESTER"));
+    }
 }

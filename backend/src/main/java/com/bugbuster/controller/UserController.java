@@ -18,4 +18,9 @@ public class UserController {
     public List<User> getDevelopers() {
         return userService.getDevelopers();
     }
+
+    @GetMapping("/devs-and-testers")
+    public List<User> getDevelopersAndTesters() {
+        return userService.getDevelopersAndTesters();
+    }
 }
