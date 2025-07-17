@@ -5,7 +5,7 @@ import { bugData } from '@/lib/DummyData/bug-data';
 
 const getStatusIcon = (status) => {
   const iconProps = { size: 12, className: "flex-shrink-0" };
-  
+
   switch (status.toLowerCase()) {
     case 'resolved':
       return <CheckCircle {...iconProps} className="text-green-500" />;
@@ -41,33 +41,33 @@ export default function ActivityLog() {
       <div className="mb-4">
         <h3 className="text-md text-foreground font-semibold mb-1">Activity Log</h3>
       </div>
-      
+
       <div className="relative">
         {/* Timeline line */}
-        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gray-200 via-gray-300 to-transparent"></div>
-        
+        <div className="absolute left-4 top-0 bottom-0 w-[1.5px] bg-gradient-to-b from-gray-200 via-gray-300 to-transparent"></div>
+
         <div className="space-y-3">
           {bugData.statusHistory.map((activity, index) => (
             <div key={index} className="relative flex items-start gap-3 group">
               {/* Icon container with background */}
-              <div className="relative z-10 flex items-center justify-center w-8 h-8 bg-background border-2 border-gray-200 rounded-full shadow-sm group-hover:shadow-md transition-shadow duration-200">
+              <div className="relative z-10 flex items-center justify-center w-8 h-8 bg-background border border-gray-200 rounded-full duration-200">
                 {getStatusIcon(activity.status)}
               </div>
-              
+
               {/* Content */}
               <div className="flex-1 min-w-0 pb-1">
-                <div className="bg-background rounded-lg border border-gray-200 p-2.5 shadow-sm hover:shadow-md transition-all duration-200 group-hover:border-gray-300">
+                <div className="bg-background rounded-lg border border-gray-200 p-2.5 transition-all duration-200 group-hover:border-gray-300">
                   <div className="flex items-center justify-between mb-1">
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(activity.status)}`}>
                       {activity.status}
                     </span>
                   </div>
-                  
+
                   <div className="flex items-center justify-between gap-1 text-xs text-muted-foreground">
                     <span className="font-medium">{activity.by}</span>
                     <time className="text-gray-500">
-                      {new Date(activity.date).toLocaleDateString('en-US', { 
-                        month: 'short', 
+                      {new Date(activity.date).toLocaleDateString('en-US', {
+                        month: 'short',
                         day: 'numeric'
                       })}
                     </time>
