@@ -43,7 +43,6 @@ public class ProjectController {
         String token = authHeader.replace("Bearer ", "");
         Claims claims = jwtUtil.extractAllClaims(token);
         String userId = claims.getSubject();
-
         return projectService.getProjectsByUserId(userId);
     }
 
