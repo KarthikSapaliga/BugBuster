@@ -3,6 +3,7 @@ package com.bugbuster.controller;
 import com.bugbuster.model.User;
 import com.bugbuster.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,4 +24,11 @@ public class UserController {
     public List<User> getDevelopersAndTesters() {
         return userService.getDevelopersAndTesters();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable String id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
+    }
+
 }

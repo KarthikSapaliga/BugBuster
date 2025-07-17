@@ -60,4 +60,10 @@ public class UserService {
     public List<User> getDevelopersAndTesters() {
         return userRepo.findByRoleIn(List.of("DEVELOPER", "TESTER"));
     }
+
+    public User getUserById(String id) {
+        return userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+    }
+
 }
