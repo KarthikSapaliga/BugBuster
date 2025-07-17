@@ -7,7 +7,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -15,9 +14,7 @@ import {
 } from "./ui/sidebar";
 import {
   BarChart3,
-  Bot,
   LayoutDashboard,
-  Settings,
   Bug,
   PlusCircle,
   User,
@@ -25,13 +22,6 @@ import {
   Flame,
   Plus,
 } from "lucide-react";
-
-import {
-  Collapsible,
-  CollapsibleTrigger,
-  CollapsibleContent,
-} from "@/components/ui/collapsible";
-import { ChevronRight, ChevronDown, Folder } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { NavLink, useLocation } from "react-router-dom";
