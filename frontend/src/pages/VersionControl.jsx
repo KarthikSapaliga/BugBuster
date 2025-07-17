@@ -30,6 +30,7 @@ import {
   fetchIssues,
   initOctokit,
 } from "@/lib/VersionControl-Integration/versioncontrol";
+import { Link } from "react-router-dom";
 
 // const mockIssues = [
 //   {
@@ -205,7 +206,6 @@ export default function VersionControl() {
     filterIssues();
   }, [searchTerm, statusFilter, severityFilter, issues]);
 
-
   const filterIssues = () => {
     let filtered = issues;
 
@@ -232,11 +232,11 @@ export default function VersionControl() {
     setFilteredIssues(filtered);
   };
 
-//   const handleRefresh = () => {
-//     setLoading(true);
-//     loadIssues();
-//     setLoading(false);
-//   };
+    const  handleRefresh = async() => {
+      setLoading(true);
+      await loadIssues();
+      setLoading(false);
+    };
 
   const openIssueModal = (issue) => {
     setSelectedIssue(issue);
@@ -258,7 +258,7 @@ export default function VersionControl() {
               Track and manage all repository issues
             </p>
           </div>
-          <Button onClick={()=>loadIssues()} disabled={loading}>
+          <Button onClick={() => handleRefresh()} disabled={loading}>
             <RefreshCw
               className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
             />
@@ -382,14 +382,18 @@ export default function VersionControl() {
                   </div>
 
                   <div className="flex gap-2 pt-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => openIssueModal(issue)}
+                    <Link
+                      to={`/bugs/${issue.issueId.toString().toLowerCase()}`}
                     >
-                      <Eye className="w-4 h-4 mr-1" />
-                      View Details
-                    </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                      >
+                        <Eye className="w-4 h-4 mr-1" />
+                        View Details
+                      </Button>
+                    </Link>
+                    {/* TODO */}
                     <Button size="sm" variant="outline" asChild>
                       <a
                         href={`https://github.com/owner/repo/issues/${issue.issueId}`}
