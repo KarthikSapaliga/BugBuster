@@ -49,4 +49,9 @@ public class BugService {
     public List<Bug> getBugsCreatedBy(String userId) {
         return bugRepository.findByCreatedBy(userId);
     }
+
+    public List<Bug> getBugsByProjectIds(List<String> projectIds) {
+        return bugRepository.findByProjectIdIn(projectIds);
+    }
+
 }

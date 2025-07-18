@@ -10,6 +10,7 @@ import io.jsonwebtoken.Claims;
 import com.bugbuster.model.Attachment;
 import com.bugbuster.model.Bug;
 import com.bugbuster.model.Comment;
+import com.bugbuster.model.Project;
 import com.bugbuster.model.WorkRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -282,6 +283,29 @@ public class BugController {
     @GetMapping
     public List<Bug> getAllBugs() {
         return bugService.getAllBugs();
+    }
+
+    // Get all bugs of user
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllBugsForUserProjects(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String userId = extractUserId(authHeader);
+
+            // Get all projects user created or is part of
+            List<Project> userProjects = userService.getProjectsByCreatorOrMember(userId);
+
+            // Extract project IDs
+            List<String> projectIds = userProjects.stream()
+                    .map(Project::getId)
+                    .toList();
+
+            // Get bugs in those projects
+            List<Bug> bugs = bugService.getBugsByProjectIds(projectIds);
+
+            return ResponseEntity.ok(bugs);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching bugs: " + e.getMessage());
+        }
     }
 
     // Get Bugs by Project

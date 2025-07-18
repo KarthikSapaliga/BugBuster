@@ -15,4 +15,6 @@ public interface BugRepository extends MongoRepository<Bug, String> {
     List<Bug> findByCreatedBy(String userId);
 
     List<Bug> findByProjectIdAndFromGithub(String projectId, boolean fromGithub);
+
+    List<Bug> findByProjectIdIn(List<String> projectIds);
 }

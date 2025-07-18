@@ -1,6 +1,8 @@
 package com.bugbuster.service;
 
+import com.bugbuster.model.Project;
 import com.bugbuster.model.User;
+import com.bugbuster.repository.ProjectRepository;
 import com.bugbuster.repository.UserRepository;
 import com.bugbuster.utils.JwtUtil;
 import com.bugbuster.dto.SignupRequest;
@@ -18,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private ProjectRepository projectRepo;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -64,6 +69,10 @@ public class UserService {
     public User getUserById(String id) {
         return userRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+    }
+
+    public List<Project> getProjectsByCreatorOrMember(String userId) {
+        return projectRepo.findByTeamMembersContainingOrCreatedBy(userId, userId);
     }
 
 }

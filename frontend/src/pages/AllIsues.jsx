@@ -14,8 +14,12 @@ import { AllIssuesTasks } from "@/lib/DummyData/all-issues";
 import { GET_ALL_BUGS_ROUTE } from "@/lib/routes";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useAppStore } from "@/store/store";
 
 function AllIsues() {
+
+  const { token } = useAppStore()
+
   const [issues, setIssues] = useState([]);
   const [filteredIssues, setFilteredIssues] = useState(issues);
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,8 +30,10 @@ function AllIsues() {
 
   useEffect(() => {
     async function fetchAllIssues() {
-      const res = await apiClient.get(GET_ALL_BUGS_ROUTE);
-      //console.log(res);
+      const res = await apiClient.get(GET_ALL_BUGS_ROUTE, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log(res);
       setIssues(res.data);
     }
 
