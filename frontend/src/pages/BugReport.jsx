@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { bugData } from "@/lib/DummyData/bug-data";
 import { comments } from "@/lib/DummyData/comments";
 
+import BugActions from "@/components/BugActions";
+
 import CommentsContainer from "@/components/CommentsContainer";
 import ActivityLog from "@/components/BugActivityLog";
 import { useParams } from "react-router-dom";
@@ -61,6 +63,10 @@ const BugReport = () => {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Bug ID: {bug.id}
               </p>
+            </div>
+
+            <div>
+              <BugActions />
             </div>
 
             {/* Description */}
