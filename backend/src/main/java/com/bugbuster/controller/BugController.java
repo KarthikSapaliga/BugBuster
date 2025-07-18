@@ -55,8 +55,8 @@ public class BugController {
         String urgency = bug.getUrgency();
         String severity = bug.getSeverity();
 
-        int severityValue = getSeverityValue(severity);
-        int urgencyValue = getUrgencyValue(urgency);
+        int severityValue = getSeverityValue(severity.toUpperCase());
+        int urgencyValue = getUrgencyValue(urgency.toUpperCase());
         String priority = "";
 
         int weightedScore = severityValue + urgencyValue;
@@ -485,16 +485,16 @@ public class BugController {
     private int getUrgencyValue(String urgency) {
         int urgencyValue;
         switch (urgency.toLowerCase()) {
-            case "urgent":
+            case "URGENT":
                 urgencyValue = 4;
                 break;
-            case "high":
+            case "HHIGH":
                 urgencyValue = 3;
                 break;
-            case "medium":
+            case "MEDIUM":
                 urgencyValue = 2;
                 break;
-            case "low":
+            case "LOW":
                 urgencyValue = 1;
                 break;
             default:
@@ -506,16 +506,16 @@ public class BugController {
     private int getSeverityValue(String severity) {
         int severityValue;
         switch (severity.toLowerCase()) {
-            case "critical":
+            case "CRITICAL":
                 severityValue = 4;
                 break;
-            case "high":
+            case "HIGH":
                 severityValue = 3;
                 break;
-            case "medium":
+            case "MEDIUM":
                 severityValue = 2;
                 break;
-            case "low":
+            case "LOW":
                 severityValue = 1;
                 break;
             default:
