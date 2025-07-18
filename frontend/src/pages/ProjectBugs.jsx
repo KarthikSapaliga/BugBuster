@@ -1,80 +1,341 @@
-import React, { useEffect, useState } from 'react';
-import { apiClient } from '@/lib/axios.js';
-import { useAppStore } from '@/store/store.js';
-import { useParams } from 'react-router-dom';
-import { GET_BUGS_BY_PROJECT_ROUTE, GET_PROJECT_BY_ID_ROUTE } from '@/lib/routes.js';
+import React, { useEffect, useState } from "react";
+import { apiClient } from "@/lib/axios.js";
+import { useAppStore } from "@/store/store.js";
+import { useParams, Link } from "react-router-dom";
 
-import ProjectBugsTable from '@/components/ProjectBugsTable';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Eye,
+  ExternalLink,
+  User,
+  Calendar,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  X,
+  Filter,
+  Search,
+  RefreshCw,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+  SelectGroup,
+} from "@/components/ui/select";
+import {
+  GET_BUGS_BY_PROJECT_ROUTE,
+  GET_PROJECT_BY_ID_ROUTE,
+} from "@/lib/routes.js";
+
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
+
+function getSeverityColor(severity) {
+  const map = {
+    Low: "bg-green-100 text-green-800",
+    Medium: "bg-yellow-100 text-yellow-800",
+    High: "bg-orange-100 text-orange-800",
+    Critical: "bg-red-100 text-red-800",
+  };
+  return map[severity] || "bg-gray-100 text-gray-800";
+}
 
 function ProjectBugs() {
-    const { projectId } = useParams();
-    const { token } = useAppStore();
-    const [project, setProject] = useState({});
-    const [bugs, setBugs] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const { projectId } = useParams();
+  const { token } = useAppStore();
+  const [project, setProject] = useState({});
+  const [bugs, setBugs] = useState([]);
+  const [filteredIssues, setFilteredIssues] = useState(bugs);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [severityFilter, setSeverityFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [urgencyFilter, setUrgencyFilter] = useState("all");
 
-    useEffect(() => {
+  const [loading, setLoading] = useState(true);
 
-        const fetchProjectInfo = async () => {
-            try {
-                const res = await apiClient.get(`${GET_PROJECT_BY_ID_ROUTE}/${projectId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setProject(res.data)
-            } catch (error) {
-                console.error('Failed to fetch bugs:', error);
-            }
-        }
+  useEffect(() => {
+    const fetchProjectInfo = async () => {
+      try {
+        const res = await apiClient.get(
+          `${GET_PROJECT_BY_ID_ROUTE}/${projectId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setProject(res.data);
+      } catch (error) {
+        console.error("Failed to fetch bugs:", error);
+      }
+    };
 
-        const fetchBugs = async () => {
-            try {
-                const res = await apiClient.get(`${GET_BUGS_BY_PROJECT_ROUTE}/${projectId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setBugs(res.data);
-                console.log(res.data)
-            } catch (error) {
-                console.error('Failed to fetch bugs:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchBugs = async () => {
+      try {
+        const res = await apiClient.get(
+          `${GET_BUGS_BY_PROJECT_ROUTE}/${projectId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setBugs(res.data);
+        console.log(res.data);
+      } catch (error) {
+        console.error("Failed to fetch bugs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        if (projectId) fetchProjectInfo()
-        if (projectId) fetchBugs();
-    }, [projectId, token]);
+    if (projectId) fetchProjectInfo();
+    if (projectId) fetchBugs();
+  }, [projectId, token]);
 
-    if (loading) return <p>Loading bugs...</p>;
+  useEffect(() => {
+    filterIssues();
+  }, [
+    searchTerm,
+    statusFilter,
+    severityFilter,
+    priorityFilter,
+    urgencyFilter,
+    bugs,
+  ]);
 
-    return (
-        <main className="p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
+  const filterIssues = () => {
+    let filtered = bugs;
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (issue) =>
+          issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          issue.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          issue.createdBy.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filter by status
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((issue) => issue.state === statusFilter);
+    }
+
+    //Filter by Priority
+    if (priorityFilter != "all") {
+      filtered = filtered.filter((issue) => issue.priority === priorityFilter);
+    }
+
+    //Filter by Urgency
+    if (urgencyFilter != "all") {
+      filtered = filtered.filter((issue) => issue.urgency === urgencyFilter);
+    }
+
+    // Filter by severity
+    if (severityFilter !== "all") {
+      filtered = filtered.filter((issue) => issue.severity === severityFilter);
+    }
+
+    setFilteredIssues(filtered);
+  };
+
+  if (loading) return <p>Loading bugs...</p>;
+
+  return (
+    <main className="p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold ">All Issues</h1>
+          <p className="text-muted-foreground mt-1">
+            Track and manage all Issues
+          </p>
+        </div>
+
+        {/* RESFRESH BUTTON  */}
+        {/* <Button onClick={() => handleRefresh()} disabled={loading}>
+          <RefreshCw
+            className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
+          />
+          Refresh
+        </Button> */}
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="p-2 shadow-sm">
+          <div className="grid grid-cols-7 gap-3 items-center">
+            <div className="flex items-center gap-2 col-span-3">
+              <Search className="size-5 text-primary" />
+              <Input
+                type="text"
+                placeholder="Search issues..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="px-2 py-1  border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Select
+                value={statusFilter}
+                onValueChange={(value) => setStatusFilter(value)}
+              >
+                <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="OPEN">Open</SelectItem>
+                  <SelectItem value="IN PROGRESS">In Progress</SelectItem>
+                  <SelectItem value="RESOLVED">Resolved</SelectItem>
+                  <SelectItem value="CLOSED">Closed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div>
-                <h1>Project Info</h1>
-                <p>Id: {project.id}</p>
-                <p>Name: {project.name}</p>
-                <p>Description: {project.description}</p>
-                <p>Created By: {project.createdBy}</p>
-                <p>Github Link: {project.githubLink}</p>
-                <p>Github Token: {project.githubToken}</p>
-                <div>
-                    <p>Team Members: </p>
-                    <ul>
-                        {
-                            project.teamMembers.map(id => <li key={id}>user id: {id}</li>)
-                        }
-                    </ul>
+              <Select
+                value={severityFilter}
+                onValueChange={(value) => setSeverityFilter(value)}
+              >
+                <SelectTrigger className="px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <SelectValue placeholder="All Severity" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Severity</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="critical">Critical</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Select
+                value={priorityFilter}
+                onValueChange={(value) => setPriorityFilter(value)}
+              >
+                <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <SelectValue placeholder="All Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Priority</SelectItem>
+                  <SelectItem value="p1">P1</SelectItem>
+                  <SelectItem value="p2">P2</SelectItem>
+                  <SelectItem value="p3">P3</SelectItem>
+                  <SelectItem value="p4">P4</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Select
+                value={urgencyFilter}
+                onValueChange={(value) => setUrgencyFilter(value)}
+              >
+                <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <SelectValue placeholder="Urgency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Urgency</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* BUG LIST  */}
+      <div className="space-y-4">
+        {filteredIssues.length === 0 ? (
+          <Card className="flex items-center gap-4 p-4">
+            <AlertTriangle className="size-5" />
+            <span> No issues found matching your filters.</span>
+          </Card>
+        ) : (
+          filteredIssues.map((issue) => (
+            <Card
+              key={issue.issueId}
+              className="hover:shadow-md transition-shadow"
+            >
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <h3 className="text-lg font-semibold">
+                        {issue.issueId} {issue.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {issue.description}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 ">
+                    <Badge
+                      className={`${getSeverityColor(issue.severity)} text-xs`}
+                    >
+                      {issue.severity.toUpperCase()}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      {issue.state.toUpperCase()}
+                    </Badge>
+                  </div>
                 </div>
-            </div>
-            <div className="bg-background dark:sidebar border border-border shadow-md rounded-xl p-6">
-                <h2 className="text-xl font-semibold text-foreground mb-4">All Issues</h2>
-                <ProjectBugsTable data={bugs} />
-            </div>
-        </main>
-    );
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <User className="w-4 h-4" />
+                    <span>Created by: {issue.createdBy}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="w-4 h-4" />
+                    <span>Created: {formatDate(issue.createdAt)}</span>
+                  </div>
+                  {issue.closedAt && (
+                    <>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <User className="w-4 h-4" />
+                        <span>Closed by: {issue.closedBy}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Calendar className="w-4 h-4" />
+                        <span>Closed: {formatDate(issue.closedAt)}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <Link to={`/bugs/${issue.id}`}>
+                    <Button size="sm" variant="outline">
+                      <Eye className="w-4 h-4 mr-1" />
+                      View Details
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+    </main>
+  );
 }
 
 export default ProjectBugs;
