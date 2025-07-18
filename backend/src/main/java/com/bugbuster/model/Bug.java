@@ -39,6 +39,7 @@ public class Bug {
 
     private String urgency;
     private String severity;
+    private String priority;
 
     private boolean fromGithub;
 
