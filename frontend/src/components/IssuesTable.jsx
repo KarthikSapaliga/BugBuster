@@ -21,7 +21,6 @@ function IssuesTable({ data }) {
                         <th className="px-4 py-3 font-medium">Project</th>
                         <th className="px-4 py-3 font-medium">Severity</th>
                         <th className="px-4 py-3 font-medium">Priority</th>
-                        <th className="px-4 py-3 font-medium text-center">Resolved On</th>
                         <th className="px-4 py-3 font-medium text-center">Status</th>
                         <th className="px-4 py-3 font-medium text-center">Actions</th>
                     </tr>
@@ -43,7 +42,6 @@ function IssuesTable({ data }) {
                                 </span>
                             </td>
                             <td className="px-4 py-3 text-center">{bug.priority}</td>
-                            <td className="px-4 py-3 text-center">{bug.resolvedOn}</td>
                             <td className="px-4 py-3 text-center">
                                 <span className="inline-flex items-center gap-1 text-green-600 bg-green-100 px-2 py-1 text-xs rounded font-medium">
                                     <CheckCircle size={14} /> {bug.status}
