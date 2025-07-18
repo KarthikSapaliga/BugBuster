@@ -2,6 +2,8 @@ import React from 'react'
 import WeeklyProgressChart from '@/components/charts/WeeklyProgressChart'
 import BugStatusPieChart from '@/components/charts/BugStatusPieChart'
 import History from '@/components/History'
+import BugStatusBarChart from '@/components/charts/BugStatusBarChart'
+import MonthlyProgressChart from '@/components/charts/MonthlyProgressChart'
 
 const status = [
     { label: 'Projects', value: '01' },
@@ -37,6 +39,16 @@ function Analytics() {
                 <div className="col-span-1 bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
                     <h2 className="text-lg font-semibold text-foreground mb-4">Bug Status</h2>
                     <BugStatusPieChart />
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <div className="col-span-3 bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+                    <h2 className="text-lg font-semibold text-foreground mb-4">Monthly Progress</h2>
+                    <MonthlyProgressChart />
+                </div>
+                <div className="col-span-2 bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+                    <h2 className="text-lg font-semibold text-foreground mb-4">Bug Status Bar Chart</h2>
+                    <BugStatusBarChart/>
                 </div>
             </div>
 
