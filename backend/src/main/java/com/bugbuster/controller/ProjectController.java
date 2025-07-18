@@ -2,6 +2,7 @@ package com.bugbuster.controller;
 
 import com.bugbuster.dto.ProjectRequest;
 import com.bugbuster.model.Project;
+import com.bugbuster.model.User;
 import com.bugbuster.service.ProjectService;
 import com.bugbuster.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -9,6 +10,7 @@ import io.jsonwebtoken.Claims;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -70,4 +72,8 @@ public class ProjectController {
         return projectService.getProjectById(id);
     }
 
+    @GetMapping("/developers/{projectId}")
+    public ResponseEntity<List<User>> getDevelopersInProject(@PathVariable String projectId) {
+        return ResponseEntity.ok(projectService.getDevelopersByProjectId(projectId));
+    }
 }

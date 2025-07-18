@@ -1,11 +1,17 @@
+// Host Route
 export const HOST = import.meta.env.VITE_SERVER_URL;
 
+// Auth Routes
 export const SIGNIN_ROUTE = "/api/auth/signin";
 export const SIGNUP_ROUTE = "/api/auth/signup";
 
+// User Routes
 export const GET_USER_ROUTE = "/api/users"        
 export const GET_DEVELOPERS_ROUTE = "/api/users/developers"        
 export const GET_DEVELOPERS_AND_TESTERS_ROUTE = "/api/users/devs-and-testers"
+
+// User + Project Routes
+export const GET_DEVS_IN_TEAM_ROUTE = "/api/projects/developers/{projectId}"
 
 // Project Routes
 export const CREATE_PROJECT_ROUTE = "/api/projects/create-project";
