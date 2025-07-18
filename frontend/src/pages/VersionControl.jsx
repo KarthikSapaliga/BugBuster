@@ -32,111 +32,6 @@ import {
 } from "@/lib/VersionControl-Integration/versioncontrol";
 import { Link } from "react-router-dom";
 
-// const mockIssues = [
-//   {
-//     issueId: 1023,
-//     title: "Login fails when using Google Auth",
-//     state: "open",
-//     createdAt: "2025-07-15T10:32:00Z",
-//     createdBy: "ananya-joshi",
-//     createdByAvatar: "https://github.com/ananya-joshi.png",
-//     closedAt: null,
-//     closedBy: null,
-//     closedByAvatar: null,
-//     description:
-//       "Users report a blank screen when attempting to login using Google OAuth on mobile devices. This affects iOS and Android users specifically.",
-//     steps:
-//       "1. Open app on mobile device\n2. Click 'Login with Google'\n3. Authenticate with Google\n4. Observe blank screen",
-//     expected:
-//       "User should be redirected to dashboard after successful authentication",
-//     actual: "User sees blank screen and cannot proceed",
-//     urgency: "high",
-//     severity: "critical",
-//     screenshot: "https://github.com/user-attachments/assets/screenshot1.png",
-//   },
-//   {
-//     issueId: 1024,
-//     title: "Dashboard chart not rendering",
-//     state: "open",
-//     createdAt: "2025-07-14T16:45:00Z",
-//     createdBy: "rahul-mehta",
-//     createdByAvatar: "https://github.com/rahul-mehta.png",
-//     closedAt: null,
-//     closedBy: null,
-//     closedByAvatar: null,
-//     description:
-//       "The analytics chart is not visible on Safari due to a possible rendering issue with the Chart.js library.",
-//     steps:
-//       "1. Open dashboard in Safari\n2. Navigate to analytics section\n3. Chart area is blank",
-//     expected: "Chart should display analytics data",
-//     actual: "Empty chart container with no data visualization",
-//     urgency: "medium",
-//     severity: "high",
-//     screenshot: null,
-//   },
-//   {
-//     issueId: 1025,
-//     title: "Incorrect total in invoice PDF",
-//     state: "closed",
-//     createdAt: "2025-07-13T09:18:00Z",
-//     createdBy: "priya-sharma",
-//     createdByAvatar: "https://github.com/priya-sharma.png",
-//     closedAt: "2025-07-16T14:30:00Z",
-//     closedBy: "dev-team",
-//     closedByAvatar: "https://github.com/dev-team.png",
-//     description:
-//       "PDF exports show incorrect total amount when discount coupons are applied twice.",
-//     steps:
-//       "1. Create invoice with items\n2. Apply discount coupon\n3. Apply second discount coupon\n4. Export to PDF",
-//     expected: "PDF should show correct total after all discounts",
-//     actual:
-//       "PDF shows incorrect calculation, appears to double-apply discounts",
-//     urgency: "low",
-//     severity: "medium",
-//     screenshot: "https://github.com/user-attachments/assets/screenshot2.png",
-//   },
-//   {
-//     issueId: 1026,
-//     title: "Memory leak in real-time notifications",
-//     state: "open",
-//     createdAt: "2025-07-12T11:22:00Z",
-//     createdBy: "tech-lead",
-//     createdByAvatar: "https://github.com/tech-lead.png",
-//     closedAt: null,
-//     closedBy: null,
-//     closedByAvatar: null,
-//     description:
-//       "WebSocket connections are not being properly cleaned up when users navigate away from pages, causing memory leaks.",
-//     steps:
-//       "1. Open multiple tabs with notifications\n2. Navigate between pages\n3. Close tabs\n4. Monitor memory usage",
-//     expected: "Memory should be freed when connections are no longer needed",
-//     actual: "Memory usage continues to increase, connections remain active",
-//     urgency: "high",
-//     severity: "high",
-//     screenshot: null,
-//   },
-//   {
-//     issueId: 1027,
-//     title: "Search functionality not working with special characters",
-//     state: "closed",
-//     createdAt: "2025-07-11T08:15:00Z",
-//     createdBy: "qa-tester",
-//     createdByAvatar: "https://github.com/qa-tester.png",
-//     closedAt: "2025-07-15T16:45:00Z",
-//     closedBy: "backend-dev",
-//     closedByAvatar: "https://github.com/backend-dev.png",
-//     description:
-//       "Search queries containing special characters like @, #, $ return no results even when matching content exists.",
-//     steps:
-//       "1. Go to search page\n2. Enter search term with special characters\n3. Submit search",
-//     expected: "Search should return relevant results",
-//     actual: "No results returned for queries with special characters",
-//     urgency: "medium",
-//     severity: "medium",
-//     screenshot: null,
-//   },
-// ];
-
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString("en-IN", {
     dateStyle: "medium",
@@ -173,14 +68,14 @@ function getSeverityColor(severity) {
 // }
 
 export default function VersionControl() {
-  const octokit = initOctokit(import.meta.env.VITE_GITHUB_TOKEN);
-
   const [issues, setIssues] = useState([]);
   const [filteredIssues, setFilteredIssues] = useState(issues);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [severityFilter, setSeverityFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [urgencyFilter, setUrgencyFilter] = useState("all");
 
   const loadIssues = async () => {
     const octokit = initOctokit(import.meta.env.VITE_GITHUB_TOKEN);
@@ -229,6 +124,16 @@ export default function VersionControl() {
       filtered = filtered.filter((issue) => issue.severity === severityFilter);
     }
 
+    //Filter by Priority
+    if (priorityFilter != "all") {
+      filtered = filtered.filter((issue) => issue.priority === priorityFilter);
+    }
+
+    //Filter by Urgency
+    if (urgencyFilter != "all") {
+      filtered = filtered.filter((issue) => issue.urgency === urgencyFilter);
+    }
+
     setFilteredIssues(filtered);
   };
 
@@ -269,19 +174,18 @@ export default function VersionControl() {
         {/* Filters */}
         <Card>
           <CardContent className="p-2 shadow-sm">
-            <div className="flex flex-wrap gap-4 items-center">
-              <div className="flex items-center gap-2">
+            <div className="grid grid-cols-7 gap-4 items-center">
+              <div className="col-span-3 flex items-center gap-2">
                 <Search className="size-5 text-primary" />
                 <Input
                   type="text"
                   placeholder="Search issues..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="px-2 py-1 w-96 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                  className=" px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
               <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-primary" />
 
                 <Select
                   value={statusFilter}
@@ -298,7 +202,6 @@ export default function VersionControl() {
                 </Select>
               </div>
               <div className="flex items-center gap-2">
-                <AlertTriangle className="size-5 text-red-500" />
                 <Select
                   value={severityFilter}
                   onValueChange={(value) => setSeverityFilter(value)}
@@ -312,6 +215,39 @@ export default function VersionControl() {
                     <SelectItem value="Medium">Medium</SelectItem>
                     <SelectItem value="High">High</SelectItem>
                     <SelectItem value="Critical">Critical</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Select
+                  value={priorityFilter}
+                  onValueChange={(value) => setPriorityFilter(value)}
+                >
+                  <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                    <SelectValue placeholder="All Priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Priority</SelectItem>
+                    <SelectItem value="p1">P1</SelectItem>
+                    <SelectItem value="p2">P2</SelectItem>
+                    <SelectItem value="p3">P3</SelectItem>
+                    <SelectItem value="p4">P4</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Select
+                  value={urgencyFilter}
+                  onValueChange={(value) => setUrgencyFilter(value)}
+                >
+                  <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                    <SelectValue placeholder="Urgency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Urgency</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -346,7 +282,9 @@ export default function VersionControl() {
                     </div>
                     <div className="flex gap-2 ">
                       <Badge
-                        className={`${getSeverityColor(issue.severity)} text-xs`}
+                        className={`${getSeverityColor(
+                          issue.severity
+                        )} text-xs`}
                       >
                         {issue.severity.toUpperCase()}
                       </Badge>
