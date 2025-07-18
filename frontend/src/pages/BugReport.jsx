@@ -1,13 +1,10 @@
 import {
   AlertTriangle,
   Calendar,
-  Paperclip,
-  Sparkles,
   User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import { bugData } from "@/lib/DummyData/bug-data";
 import { comments } from "@/lib/DummyData/comments";
 
 import BugActions from "@/components/BugActions";
@@ -103,7 +100,7 @@ const BugReport = () => {
         by: userMap[bug.assignedBy],
       });
       statusLog.push({
-        status: "In Progress",
+        status: "In_Progress",
         date: bug.assignedAt,
         by: userMap[bug.assignedTo],
       });
