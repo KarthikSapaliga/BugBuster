@@ -54,7 +54,21 @@ public class BugController {
         String urgency = bug.getUrgency();
         String severity = bug.getSeverity();
 
-        String priority = "p4";
+        int severityValue = getSeverityValue(severity);
+        int urgencyValue = getUrgencyValue(urgency);
+        String priority = "";
+
+        int weightedScore = severityValue + urgencyValue;
+
+        if (weightedScore >= 7) {
+            priority = "p1";
+        } else if (weightedScore >= 5) {
+            priority = "p2";
+        } else if (weightedScore >= 3) {
+            priority = "p3";
+        } else {
+            priority = "p4";
+        }
 
         bug.setPriority(priority);
 
@@ -297,5 +311,29 @@ public class BugController {
             return ((List<?>) roles).contains("TESTER");
         }
         return false;
+    }
+
+    private int getUrgencyValue(String urgency) {
+        int urgencyValue;
+        switch (urgency.toLowerCase()) {
+            case "urgent": urgencyValue= 4 ; break;
+            case "high" : urgencyValue=  3; break;
+            case "medium" : urgencyValue= 2; break;
+            case "low" : urgencyValue= 1; break;
+            default: urgencyValue= 0;
+        }
+        return urgencyValue;
+    }
+
+    private int getSeverityValue(String severity) {
+        int severityValue;
+        switch (severity.toLowerCase()) {
+            case "critical": severityValue= 4 ; break;
+            case "high" : severityValue=  3; break;
+            case "medium" : severityValue= 2; break;
+            case "low" : severityValue= 1; break;
+            default: severityValue= 0;
+        }
+        return severityValue;
     }
 }
