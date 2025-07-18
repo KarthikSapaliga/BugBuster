@@ -244,6 +244,40 @@ public class BugController {
         }
     }
 
+    // resolve the bug
+    @PatchMapping("/resolve/{id}")
+    public ResponseEntity<?> resolveBug(
+            @PathVariable String id,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String userId = extractUserId(authHeader);
+
+            Optional<Bug> bugOpt = bugService.getBugById(id);
+            if (bugOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Bug bug = bugOpt.get();
+
+            if (!userId.equals(bug.getAssignedTo())) {
+                return ResponseEntity.status(403).body("Only the assigned developer can resolve this bug.");
+            }
+
+            if (!"IN_PROGRESS".equalsIgnoreCase(bug.getState())) {
+                return ResponseEntity.badRequest().body("Bug must be 'IN_PROGRESS' to be resolved.");
+            }
+
+            bug.setState("RESOLVED");
+            bug.setResolvedAt(LocalDateTime.now());
+
+            return ResponseEntity.ok(bugService.updateBug(bug));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to resolve bug: " + e.getMessage());
+        }
+    }
+
     // Get all Bugs
     @GetMapping
     public List<Bug> getAllBugs() {
