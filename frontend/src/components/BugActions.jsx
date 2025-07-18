@@ -86,7 +86,7 @@ function BugActions({ bug }) {
 
         try {
             const res = await apiClient.patch(`${CLOSE_BUG_ROUTE}/${bug.id}`, null, {
-                params: { closedBy: user.name },
+                params: { closedBy: user.id },
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -151,7 +151,7 @@ function BugActions({ bug }) {
                         <h2 className="text-lg font-semibold mb-2">Actions</h2>
                         <div className='flex flex-col lg:flex-row gap-4'>
                             {bug.state === "OPEN" && <Button onClick={startWork} >Start Work</Button>}
-                            {bug.assignedTo === user.id && bug.state !== "RESOLVED" && <Button onClick={resolveBug}>Mark as Resolved</Button>}
+                            {bug.assignedTo === user.id && bug.state === "IN_PROGRESS" && <Button onClick={resolveBug}>Mark as Resolved</Button>}
                         </div>
                     </div>
                 </>
