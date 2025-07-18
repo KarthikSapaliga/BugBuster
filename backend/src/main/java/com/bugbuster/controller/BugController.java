@@ -85,19 +85,76 @@ public class BugController {
 
     // Update Bug
     @PutMapping("/{id}")
-    public ResponseEntity<Bug> updateBug(@PathVariable String id, @RequestBody Bug updatedBug,
+    public ResponseEntity<?> updateBug(@PathVariable String id,
+            @RequestBody Bug updatedBug,
             @RequestHeader("Authorization") String authHeader) {
-        Optional<Bug> existingOpt = bugService.getBugById(id);
-        if (existingOpt.isEmpty())
-            return ResponseEntity.notFound().build();
+        try {
+            System.out.println(updatedBug);
 
-        String userId = extractUserId(authHeader);
-        if (!existingOpt.get().getCreatedBy().equals(userId) && !isTester(authHeader)) {
-            return ResponseEntity.status(403).build();
+            Optional<Bug> existingOpt = bugService.getBugById(id);
+            if (existingOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Bug existingBug = existingOpt.get();
+            String userId = extractUserId(authHeader);
+
+            if (!existingBug.getCreatedBy().equals(userId) && !isTester(authHeader)) {
+                return ResponseEntity.status(403).body("Unauthorized to update this bug.");
+            }
+
+            // Merge updated fields
+            if (updatedBug.getTitle() != null)
+                existingBug.setTitle(updatedBug.getTitle());
+            if (updatedBug.getDescription() != null)
+                existingBug.setDescription(updatedBug.getDescription());
+            if (updatedBug.getReproductionSteps() != null)
+                existingBug.setReproductionSteps(updatedBug.getReproductionSteps());
+            if (updatedBug.getExpectedOutcome() != null)
+                existingBug.setExpectedOutcome(updatedBug.getExpectedOutcome());
+            if (updatedBug.getActualOutcome() != null)
+                existingBug.setActualOutcome(updatedBug.getActualOutcome());
+            if (updatedBug.getSeverity() != null)
+                existingBug.setSeverity(updatedBug.getSeverity());
+            if (updatedBug.getUrgency() != null)
+                existingBug.setUrgency(updatedBug.getUrgency());
+            if (updatedBug.getPriority() != null)
+                existingBug.setPriority(updatedBug.getPriority());
+            if (updatedBug.getProjectId() != null)
+                existingBug.setProjectId(updatedBug.getProjectId());
+            if (updatedBug.getState() != null)
+                existingBug.setState(updatedBug.getState());
+            if (updatedBug.getAssignedTo() != null)
+                existingBug.setAssignedTo(updatedBug.getAssignedTo());
+            if (updatedBug.getAssignedBy() != null)
+                existingBug.setAssignedBy(updatedBug.getAssignedBy());
+            if (updatedBug.getAssignedAt() != null)
+                existingBug.setAssignedAt(updatedBug.getAssignedAt());
+            if (updatedBug.getResolvedAt() != null)
+                existingBug.setResolvedAt(updatedBug.getResolvedAt());
+            if (updatedBug.getResolvedBy() != null)
+                existingBug.setResolvedBy(updatedBug.getResolvedBy());
+            if (updatedBug.getClosedAt() != null)
+                existingBug.setClosedAt(updatedBug.getClosedAt());
+            if (updatedBug.getClosedBy() != null)
+                existingBug.setClosedBy(updatedBug.getClosedBy());
+            if (updatedBug.getAttachments() != null)
+                existingBug.setAttachments(updatedBug.getAttachments());
+            if (updatedBug.getComments() != null)
+                existingBug.setComments(updatedBug.getComments());
+            if (updatedBug.getRequests() != null)
+                existingBug.setRequests(updatedBug.getRequests());
+            if (updatedBug.isFromGithub())
+                existingBug.setFromGithub(true); // only true if explicitly set
+
+            Bug savedBug = bugService.updateBug(existingBug);
+
+            return ResponseEntity.ok(savedBug);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to update bug: " + e.getMessage());
         }
-
-        updatedBug.setId(id);
-        return ResponseEntity.ok(bugService.updateBug(updatedBug));
     }
 
     // Delete Bug
@@ -114,6 +171,77 @@ public class BugController {
 
         bugService.deleteBug(id);
         return ResponseEntity.ok().build();
+    }
+
+    // Close Bug
+    @PatchMapping("/close/{id}")
+    public ResponseEntity<?> closeBug(@PathVariable String id,
+            @RequestParam String closedBy,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            if (!isTester(authHeader)) {
+                return ResponseEntity.status(403).body("Only testers can close bugs.");
+            }
+
+            Optional<Bug> bugOpt = bugService.getBugById(id);
+            if (bugOpt.isEmpty())
+                return ResponseEntity.notFound().build();
+
+            Bug bug = bugOpt.get();
+
+            if (!"RESOLVED".equalsIgnoreCase(bug.getState())) {
+                return ResponseEntity.badRequest().body("Bug must be in 'resolved' state to be closed.");
+            }
+
+            bug.setState("CLOSED");
+            bug.setClosedBy(closedBy);
+            bug.setClosedAt(LocalDateTime.now());
+
+            return ResponseEntity.ok(bugService.updateBug(bug));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to close bug: " + e.getMessage());
+        }
+    }
+
+    // Assign and Reassign Bugs
+    @PatchMapping("/assign/{id}")
+    public ResponseEntity<?> assignBugToDeveloper(
+            @PathVariable String id,
+            @RequestParam("developerId") String developerId,
+            @RequestHeader("Authorization") String authHeader) {
+
+        try {
+            if (!isTester(authHeader)) {
+                return ResponseEntity.status(403).body("Only managers or testers can assign bugs.");
+            }
+
+            Optional<Bug> bugOpt = bugService.getBugById(id);
+            if (bugOpt.isEmpty()) {
+                return ResponseEntity.status(404).body("Bug not found");
+            }
+
+            Bug bug = bugOpt.get();
+
+            if (!(bug.getState().equalsIgnoreCase("OPEN") || bug.getState().equalsIgnoreCase("RESOLVED"))) {
+                return ResponseEntity.status(400).body("Bug can only be assigned if it's in OPEN or RESOLVED state.");
+            }
+
+            String assignedBy = extractUserId(authHeader);
+            bug.setAssignedTo(developerId);
+            bug.setAssignedBy(assignedBy);
+            bug.setAssignedAt(LocalDateTime.now());
+            bug.setState("IN_PROGRESS");
+
+            Bug updatedBug = bugService.updateBug(bug);
+
+            return ResponseEntity.ok(updatedBug);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to assign bug: " + e.getMessage());
+        }
     }
 
     // Get all Bugs
@@ -136,6 +264,45 @@ public class BugController {
         return bugService.getAllBugs().stream()
                 .filter(bug -> userId.equalsIgnoreCase(bug.getAssignedTo()))
                 .collect(Collectors.toList());
+    }
+
+    // Start Working Route
+    @PatchMapping("/start-working/{id}")
+    public ResponseEntity<?> startWorkOnBug(
+            @PathVariable String id,
+            @RequestHeader("Authorization") String authHeader) {
+
+        try {
+            if (!isDeveloper(authHeader)) {
+                return ResponseEntity.status(403).body("Only developers can start work on bugs.");
+            }
+
+            Optional<Bug> bugOpt = bugService.getBugById(id);
+            if (bugOpt.isEmpty()) {
+                return ResponseEntity.status(404).body("Bug not found");
+            }
+
+            Bug bug = bugOpt.get();
+
+            if (!bug.getState().equalsIgnoreCase("OPEN")) {
+                return ResponseEntity.badRequest().body("Bug must be in OPEN state to start working on it.");
+            }
+
+            String userId = extractUserId(authHeader);
+
+            bug.setAssignedTo(userId);
+            bug.setAssignedBy(userId);
+            bug.setAssignedAt(LocalDateTime.now());
+            bug.setState("IN_PROGRESS");
+
+            Bug updatedBug = bugService.updateBug(bug);
+
+            return ResponseEntity.ok(updatedBug);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to start bug: " + e.getMessage());
+        }
     }
 
     // Comment on Bug
@@ -163,76 +330,6 @@ public class BugController {
     public ResponseEntity<?> getComments(@PathVariable String id) {
         return bugService.getBugById(id)
                 .map(bug -> ResponseEntity.ok(bug.getComments() != null ? bug.getComments() : new ArrayList<>()))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    // Request work on Bug
-    @PostMapping("/requests/{id}")
-    public ResponseEntity<?> addRequest(@PathVariable String id, @RequestBody WorkRequest request,
-            @RequestHeader("Authorization") String authHeader) {
-        Optional<Bug> bugOpt = bugService.getBugById(id);
-        if (bugOpt.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        Bug bug = bugOpt.get();
-        if (bug.getRequests() == null)
-            bug.setRequests(new ArrayList<>());
-
-        request.setAuthor(extractUserId(authHeader));
-        request.setStatus("pending");
-        request.setTimestamp(new Date());
-        bug.getRequests().add(request);
-
-        bugService.updateBug(bug);
-        return ResponseEntity.ok(bug);
-    }
-
-    // Approve/Reject request
-    @PutMapping("/requests/{id}/{index}")
-    public ResponseEntity<?> handleRequest(@PathVariable String id, @PathVariable int index,
-            @RequestParam String status,
-            @RequestHeader("Authorization") String authHeader) {
-        Optional<Bug> bugOpt = bugService.getBugById(id);
-        if (bugOpt.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        if (!isTester(authHeader)) {
-            return ResponseEntity.status(403).body("Only testers can approve or reject work requests.");
-        }
-
-        Bug bug = bugOpt.get();
-        List<WorkRequest> requests = bug.getRequests();
-        if (requests == null || index < 0 || index >= requests.size()) {
-            return ResponseEntity.badRequest().body("Invalid request index");
-        }
-
-        WorkRequest req = requests.get(index);
-        req.setStatus(status);
-
-        if ("approved".equalsIgnoreCase(status)) {
-            String assignedTo = req.getAuthor();
-            bug.setAssignedTo(assignedTo);
-            bug.setAssignedAt(LocalDateTime.now());
-            bug.setAssignedBy(extractUserId(authHeader));
-
-            for (int i = 0; i < requests.size(); i++) {
-                if (i != index && "pending".equalsIgnoreCase(requests.get(i).getStatus())) {
-                    requests.get(i).setStatus("rejected");
-                }
-            }
-
-            // mailService.sendBugAssignmentMail(assignedTo, bug.getTitle());
-        }
-
-        bugService.updateBug(bug);
-        return ResponseEntity.ok(bug);
-    }
-
-    // Get all requests for a bug
-    @GetMapping("/requests/{id}")
-    public ResponseEntity<?> getRequests(@PathVariable String id) {
-        return bugService.getBugById(id)
-                .map(bug -> ResponseEntity.ok(bug.getRequests() != null ? bug.getRequests() : new ArrayList<>()))
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -304,11 +401,25 @@ public class BugController {
     private boolean isTester(String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         Claims claims = jwtUtil.extractAllClaims(token);
-        Object roles = claims.get("roles");
-        if (roles instanceof String) {
-            return Arrays.asList(((String) roles).split(",")).contains("TESTER");
-        } else if (roles instanceof List) {
-            return ((List<?>) roles).contains("TESTER");
+        Object role = claims.get("role");
+
+        if (role instanceof String) {
+            return Arrays.asList(((String) role).split(",")).contains("TESTER");
+        } else if (role instanceof List) {
+            return ((List<?>) role).contains("TESTER");
+        }
+        return false;
+    }
+
+    private boolean isDeveloper(String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        Claims claims = jwtUtil.extractAllClaims(token);
+        Object role = claims.get("role");
+
+        if (role instanceof String) {
+            return Arrays.asList(((String) role).split(",")).contains("DEVELOPER");
+        } else if (role instanceof List) {
+            return ((List<?>) role).contains("DEVELOPER");
         }
         return false;
     }
@@ -316,11 +427,20 @@ public class BugController {
     private int getUrgencyValue(String urgency) {
         int urgencyValue;
         switch (urgency.toLowerCase()) {
-            case "urgent": urgencyValue= 4 ; break;
-            case "high" : urgencyValue=  3; break;
-            case "medium" : urgencyValue= 2; break;
-            case "low" : urgencyValue= 1; break;
-            default: urgencyValue= 0;
+            case "urgent":
+                urgencyValue = 4;
+                break;
+            case "high":
+                urgencyValue = 3;
+                break;
+            case "medium":
+                urgencyValue = 2;
+                break;
+            case "low":
+                urgencyValue = 1;
+                break;
+            default:
+                urgencyValue = 0;
         }
         return urgencyValue;
     }
@@ -328,11 +448,20 @@ public class BugController {
     private int getSeverityValue(String severity) {
         int severityValue;
         switch (severity.toLowerCase()) {
-            case "critical": severityValue= 4 ; break;
-            case "high" : severityValue=  3; break;
-            case "medium" : severityValue= 2; break;
-            case "low" : severityValue= 1; break;
-            default: severityValue= 0;
+            case "critical":
+                severityValue = 4;
+                break;
+            case "high":
+                severityValue = 3;
+                break;
+            case "medium":
+                severityValue = 2;
+                break;
+            case "low":
+                severityValue = 1;
+                break;
+            default:
+                severityValue = 0;
         }
         return severityValue;
     }

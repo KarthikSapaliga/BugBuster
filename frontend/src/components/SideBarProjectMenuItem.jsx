@@ -31,7 +31,7 @@ const SideBarProjectMenuItem = ({ project }) => {
     {
       title: "Team",
       url: `/projects/team/${project.id}`,
-      roles: ["MANAGER", "TESTER"],
+      roles: ["MANAGER", "TESTER", "DEVELOPER"],
     },
     {
       title: "Settings",

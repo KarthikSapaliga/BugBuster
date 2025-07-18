@@ -2,7 +2,10 @@ package com.bugbuster.service;
 
 import com.bugbuster.dto.ProjectRequest;
 import com.bugbuster.model.Project;
+import com.bugbuster.model.User;
 import com.bugbuster.repository.ProjectRepository;
+import com.bugbuster.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,9 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepo;
+
+    @Autowired
+    private UserRepository userRepo;
 
     public Project createProject(ProjectRequest req, String managerId) {
         Project project = new Project();
@@ -64,4 +70,12 @@ public class ProjectService {
                 .orElseThrow(() -> new RuntimeException("Project not found"));
     }
 
+    public List<User> getDevelopersByProjectId(String projectId) {
+        Project project = projectRepo.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        List<String> teamMembers = project.getTeamMembers();
+
+        return userRepo.findDevelopersInTeam(teamMembers);
+    }
 }
