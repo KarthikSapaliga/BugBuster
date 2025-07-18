@@ -6,15 +6,15 @@ const getStatusIcon = (status) => {
   const iconProps = { size: 12, className: "flex-shrink-0" };
 
   switch (status.toLowerCase()) {
-    case 'resolved':
+    case 'closed':
       return <CheckCircle {...iconProps} className="text-green-500" />;
-    case 'in progress':
+    case 'in_progress':
       return <PlayCircle {...iconProps} className="text-blue-500" />;
     case 'assigned':
       return <Clock {...iconProps} className="text-orange-500" />;
     case 'open':
       return <AlertCircle {...iconProps} className="text-red-500" />;
-    case 'closed':
+    case 'resolved':
       return <XCircle {...iconProps} className="text-yellow-500" />; // Or pick a different icon if you prefer
     default:
       return <XCircle {...iconProps} className="text-gray-500" />;
@@ -23,15 +23,15 @@ const getStatusIcon = (status) => {
 
 const getStatusColor = (status) => {
   switch (status.toLowerCase()) {
-    case 'resolved':
+    case 'closed':
       return 'text-green-700 bg-green-50 border-green-200';
-    case 'in progress':
+    case 'in_progress':
       return 'text-blue-700 bg-blue-50 border-blue-200';
     case 'assigned':
       return 'text-orange-700 bg-orange-50 border-orange-200';
     case 'open':
       return 'text-red-700 bg-red-50 border-red-200';
-    case 'closed':
+    case 'resolved':
       return 'text-yellow-700 bg-yellow-50 border-yellow-200';
     default:
       return 'text-gray-700 bg-gray-50 border-gray-200';
