@@ -1,4 +1,10 @@
-import { AlertTriangle, Calendar, Paperclip, Sparkles, User } from "lucide-react";
+import {
+  AlertTriangle,
+  Calendar,
+  Paperclip,
+  Sparkles,
+  User,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { bugData } from "@/lib/DummyData/bug-data";
@@ -14,6 +20,7 @@ import { useState, useEffect } from "react";
 import { apiClient } from "@/lib/axios";
 import { GET_BUG_BY_ID_ROUTE } from "@/lib/routes";
 import toast from "react-hot-toast";
+import { getUserName } from "@/lib/api";
 
 const severityColor = {
   Critical: "bg-red-500 text-red-900",
@@ -23,26 +30,52 @@ const severityColor = {
 };
 
 const BugReport = () => {
-
-  const params = useParams()
+  const params = useParams();
   const bugId = params.id;
-  const [bug, setBug] = useState({})
+  const [bug, setBug] = useState({});
+  const [userMap, setUserMap] = useState({});
 
+  //Fetching Bug Info
   useEffect(() => {
     const fetchBugInfo = async () => {
       try {
         const res = await apiClient.get(`${GET_BUG_BY_ID_ROUTE}/${bugId}`);
-        setBug(res.data)
-        console.log(res.data)
+        setBug(res.data);
+        console.log(res.data);
       } catch (err) {
-        console.log(err)
-        toast.error("Failed to fetch the Bug Info")
+        console.log(err);
+        toast.error("Failed to fetch the Bug Info");
       }
-    }
+    };
     if (bugId) {
-      fetchBugInfo()
+      fetchBugInfo();
     }
-  }, [bugId])
+  }, [bugId]);
+
+  //fetching User Names
+  useEffect(() => {
+    if (!bug || Object.keys(bug).length === 0) return;
+
+    const userIds = [bug.createdBy, bug.assignedTo, bug.resolvedBy].filter(
+      Boolean
+    );
+
+    async function fetchUserNames() {
+      const newUserMap = {};
+
+      await Promise.all(
+        userIds.map(async (userId) => {
+          const name = await getUserName({ userId });
+          newUserMap[userId] = name || "Unknown User";
+        })
+      );
+
+      setUserMap(newUserMap);
+    }
+
+    fetchUserNames();
+  }, [bug]);
+
 
   return (
     <main className="min-h-full w-full p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
@@ -103,13 +136,15 @@ const BugReport = () => {
 
             {/* Attachments */}
 
-
             {bug.attachments && bug.attachments.length > 0 && (
               <div>
                 <h2 className="text-lg font-semibold mb-2">Attachments</h2>
                 <div className="flex gap-4 flex-wrap">
                   {bug.attachments.map((attachment, index) => (
-                    <div key={index} className="rounded-sm py-2 px-4 flex items-center justify-center bg-secondary">
+                    <div
+                      key={index}
+                      className="rounded-sm py-2 px-4 flex items-center justify-center bg-secondary"
+                    >
                       {attachment.originalName}
                     </div>
                   ))}
@@ -131,7 +166,8 @@ const BugReport = () => {
               </p>
               <span
                 className={cn(
-                  "py-2 px-3 inline-flex items-center text-sm rounded-lg font-medium border ",)}
+                  "py-2 px-3 inline-flex items-center text-sm rounded-lg font-medium border "
+                )}
               >
                 {bug.priority}
               </span>
@@ -153,7 +189,7 @@ const BugReport = () => {
                   Reporter
                 </p>
                 <h3 className="text-foreground font-semibold">
-                  {bug.createdBy}
+                  {userMap[bug.createdBy] || "Loading"}
                 </h3>
               </div>
 
@@ -163,7 +199,7 @@ const BugReport = () => {
                   Assignee
                 </p>
                 <h3 className="text-foreground font-semibold">
-                  {bug.assignedTo || "Not assigned"}
+                  {userMap[bug.assignedTo] || "Not Assigned"}
                 </h3>
               </div>
 
