@@ -61,13 +61,13 @@ public class BugController {
         int weightedScore = severityValue + urgencyValue;
 
         if (weightedScore >= 7) {
-            priority = "p1";
+            priority = "P1";
         } else if (weightedScore >= 5) {
-            priority = "p2";
+            priority = "P2";
         } else if (weightedScore >= 3) {
-            priority = "p3";
+            priority = "P3";
         } else {
-            priority = "p4";
+            priority = "P4";
         }
 
         bug.setPriority(priority);
