@@ -32,6 +32,9 @@ public class Bug {
     private String assignedTo;
     private String assignedBy;
 
+    private LocalDateTime resolvedAt;
+    private String resolvedBy;
+
     private String description;
     private String reproductionSteps;
     private String expectedOutcome;
@@ -43,7 +46,7 @@ public class Bug {
 
     private boolean fromGithub;
 
-    private List<Attachment> attachments; 
-    private List<Comment> comments;   
-    private List<WorkRequest> requests;  
+    private List<Attachment> attachments;
+    private List<Comment> comments;
+    private List<WorkRequest> requests;
 }
