@@ -33,6 +33,7 @@ import {
   GET_BUGS_BY_PROJECT_ROUTE,
   GET_PROJECT_BY_ID_ROUTE,
 } from "@/lib/routes.js";
+import { getUserName } from "@/lib/api";
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString("en-IN", {
@@ -64,6 +65,23 @@ function ProjectBugs() {
   const [urgencyFilter, setUrgencyFilter] = useState("all");
 
   const [loading, setLoading] = useState(true);
+
+
+  //Caching the Users ID's so it will not be fetched again and again
+  const uniqueUserIds = Array.from(
+    new Set(
+      filteredIssues
+        .flatMap((issue) => [
+          issue.createdBy,
+          issue.assignedTo,
+          issue.resolvedBy,
+          issue.closedBy,
+        ])
+        .filter(Boolean) // remove null or undefined
+    )
+  );
+
+  const [userMap, setUserMap] = useState({});
 
   useEffect(() => {
     const fetchProjectInfo = async () => {
@@ -106,6 +124,23 @@ function ProjectBugs() {
   }, [projectId, token]);
 
   useEffect(() => {
+    async function fetchUserNames() {
+      const newUserMap = {};
+
+      await Promise.all(
+        uniqueUserIds.map(async (userId) => {
+          const name = await getUserName({ userId });
+          newUserMap[userId] = name || "Unknown User";
+        })
+      );
+
+      setUserMap(newUserMap);
+    }
+
+    fetchUserNames();
+  }, [filteredIssues]);
+
+  useEffect(() => {
     filterIssues();
   }, [
     searchTerm,
@@ -131,26 +166,40 @@ function ProjectBugs() {
 
     // Filter by status
     if (statusFilter !== "all") {
-      filtered = filtered.filter((issue) => issue.state.toUpperCase() === statusFilter);
+      filtered = filtered.filter(
+        (issue) => issue.state.toUpperCase() === statusFilter
+      );
     }
 
     //Filter by Priority
     if (priorityFilter != "all") {
-      filtered = filtered.filter((issue) => issue.priority.toUpperCase() === priorityFilter);
+      filtered = filtered.filter(
+        (issue) => issue.priority.toUpperCase() === priorityFilter
+      );
     }
 
     //Filter by Urgency
     if (urgencyFilter != "all") {
-      filtered = filtered.filter((issue) => issue.urgency.toUpperCase() === urgencyFilter);
+      filtered = filtered.filter(
+        (issue) => issue.urgency.toUpperCase() === urgencyFilter
+      );
     }
 
     // Filter by severity
     if (severityFilter !== "all") {
-      filtered = filtered.filter((issue) => issue.severity.toUpperCase() === severityFilter);
+      filtered = filtered.filter(
+        (issue) => issue.severity.toUpperCase() === severityFilter
+      );
     }
 
     setFilteredIssues(filtered);
   };
+
+  function getUser(userId) {
+    const user = getUserName(userId);
+    console.log(user);
+    return user.name;
+  }
 
   if (loading) return <p>Loading bugs...</p>;
 
@@ -270,10 +319,7 @@ function ProjectBugs() {
           </Card>
         ) : (
           filteredIssues.map((issue) => (
-            <Card
-              key={issue.issueId}
-              className="hover:shadow-md transition-shadow"
-            >
+            <Card key={issue.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">
@@ -297,11 +343,12 @@ function ProjectBugs() {
                     </Badge>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <User className="w-4 h-4" />
-                    <span>Created by: {issue.createdBy}</span>
+                    <span>
+                      Created by:{userMap[issue.createdBy] || "Loading..."}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Calendar className="w-4 h-4" />
@@ -311,7 +358,7 @@ function ProjectBugs() {
                     <>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <User className="w-4 h-4" />
-                        <span>Closed by: {issue.closedBy}</span>
+                        <span>Closed by: {userMap[issue.closedBy] || "Loading..."}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Calendar className="w-4 h-4" />
