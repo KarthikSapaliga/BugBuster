@@ -15,7 +15,7 @@ export const AllIssuesTasks = [
         severity: "Medium",
         priority: "P2",
         resolvedOn: "2025-07-12",
-        status: "Pending",
+        status: "Open",
     },
     {
         id: "BUG-112",
@@ -78,6 +78,6 @@ export const AllIssuesTasks = [
         severity: "Low",
         priority: "P3",
         resolvedOn: "2025-07-13",
-        status: "InProgress",
+        status: "Open",
     },
 ];
