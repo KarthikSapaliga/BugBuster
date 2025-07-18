@@ -21,6 +21,7 @@ import CreateProjectForm from "./pages/CreateProjectForm";
 import UpdateProjectForm from "./pages/UpdateProjectForm";
 import VersionControl from "./pages/VersionControl";
 import Teams from "./pages/Teams";
+import ProjectBugs from "./pages/ProjectBugs";
 
 function App() {
   return (
@@ -137,7 +138,7 @@ function App() {
           path="projects/bugs/:projectId"
           element={
             <ProtectedRoute>
-              <div>issues</div>
+              <ProjectBugs />
             </ProtectedRoute>
           }
         />
