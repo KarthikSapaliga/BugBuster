@@ -11,40 +11,28 @@ function BugActions({ bug }) {
         <div className='flex flex-col gap-4'>
             {user && user.role === "TESTER" &&
                 <>
-                    <div className='flex gap-4 w-full'>
-                        <div className="space-y-2 w-full">
-                            <Label htmlFor="severity">Assign To</Label>
-                            <Select>
-                                <SelectTrigger id="severity">
-                                    <SelectValue placeholder="Select severity" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="low">Low</SelectItem>
-                                    <SelectItem value="medium">Medium</SelectItem>
-                                    <SelectItem value="high">High</SelectItem>
-                                    <SelectItem value="critical">Critical</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-2 w-full">
-                            <Label htmlFor="severity">Severity</Label>
-                            <Select>
-                                <SelectTrigger id="severity">
-                                    <SelectValue placeholder="Select severity" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="low">Low</SelectItem>
-                                    <SelectItem value="medium">Medium</SelectItem>
-                                    <SelectItem value="high">High</SelectItem>
-                                    <SelectItem value="critical">Critical</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+
+                    <div className="space-y-2 w-full">
+                        <Label htmlFor="member">Assign To</Label>
+                        <Select>
+                            <SelectTrigger id="member">
+                                <SelectValue placeholder="Select member" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {/* <SelectItem value="low">Low</SelectItem>
+                                <SelectItem value="medium">Medium</SelectItem>
+                                <SelectItem value="high">High</SelectItem>
+                                <SelectItem value="critical">Critical</SelectItem> */}
+                            </SelectContent>
+                        </Select>
                     </div>
+
                     <div>
                         <p>Actions</p>
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
                             <Button>Update the Details</Button>
+                            <Button>Close the issue</Button>
+                            <Button>Reassign</Button>
                             <Button>Delete</Button>
                         </div>
                     </div>
