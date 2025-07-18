@@ -1,13 +1,20 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Button } from '@/components/ui/button'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-import { useAppStore } from '@/store/store'
-import { useEffect, useState } from 'react'
-import { apiClient } from '@/lib/axios'
-import { GET_DEVELOPERS_ROUTE, CLOSE_BUG_ROUTE, ASSIGN_BUG_ROUTE, DELETE_BUG_ROUTE, RESOLVE_BUG_ROUTE } from '@/lib/routes'
-import toast from "react-hot-toast";
-import Cookies from "js-cookie";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from '@/components/ui/button';
+
+import { useAppStore } from '@/store/store';
+import { apiClient } from '@/lib/axios';
+import {
+    GET_DEVELOPERS_ROUTE,
+    START_WORKING_ROUTE,
+    ASSIGN_BUG_ROUTE,
+    RESOLVE_BUG_ROUTE,
+    CLOSE_BUG_ROUTE,
+    DELETE_BUG_ROUTE,
+} from '@/lib/routes';
 
 function BugActions({ bug }) {
     const { user, token } = useAppStore();
@@ -28,22 +35,20 @@ function BugActions({ bug }) {
         navigate(`/bugs/update-bug/${bug.id}`)
     }
 
-    const closeBug = async () => {
+    const startWork = async () => {
         if (!token) return toast.error("Unauthorized");
 
         try {
-            const res = await apiClient.patch(`${CLOSE_BUG_ROUTE}/${bug.id}`, null, {
-                params: { closedBy: user.name },
+            const res = await apiClient.patch(`${START_WORKING_ROUTE}/${bug.id}`, null, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            toast.success("Bug closed successfully!");
-            console.log("Response:", res.data);
+            toast.success("Bug marked as In Progress!");
         } catch (err) {
-            console.error("Error:", err);
-            toast.error(err?.response?.data || "Failed to close bug.");
+            toast.error(err?.response?.data?.message || "Failed to start working on bug.");
         }
     };
+
 
     const assignUser = async () => {
         if (!token) return toast.error("Unauthorized");
@@ -71,15 +76,41 @@ function BugActions({ bug }) {
             });
 
             toast.success("Bug marked as resolved!");
-            console.log("Response:", res.data);
         } catch (err) {
-            console.error("Error:", err);
             toast.error(err?.response?.data?.message || "Failed to resolve bug.");
         }
     };
 
+    const closeBug = async () => {
+        if (!token) return toast.error("Unauthorized");
 
-    const deleteBug = () => { }
+        try {
+            const res = await apiClient.patch(`${CLOSE_BUG_ROUTE}/${bug.id}`, null, {
+                params: { closedBy: user.id },
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            toast.success("Bug closed successfully!");
+        } catch (err) {
+            toast.error(err?.response?.data || "Failed to close bug.");
+        }
+    };
+
+    const deleteBug = async () => {
+        if (!token) return toast.error("Unauthorized");
+
+        try {
+            const res = await apiClient.delete(`${DELETE_BUG_ROUTE}/${bug.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            toast.success("Bug deleted successfully!");
+            navigate("/dashboard");
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "Failed to delete bug.");
+        }
+    };
+
 
     return (
         <div className='flex flex-col gap-4'>
@@ -113,13 +144,14 @@ function BugActions({ bug }) {
 
                 </>
             }
+
             {user && user.role === "DEVELOPER" &&
                 <>
                     <div>
                         <h2 className="text-lg font-semibold mb-2">Actions</h2>
                         <div className='flex flex-col lg:flex-row gap-4'>
-                            {bug.state === "OPEN" && <Button >Start Work</Button>}
-                            {bug.assignedTo === user.id && bug.state !== "RESOLVED" && <Button onClick={resolveBug}>Mark as Resolved</Button>}
+                            {bug.state === "OPEN" && <Button onClick={startWork} >Start Work</Button>}
+                            {bug.assignedTo === user.id && bug.state === "IN_PROGRESS" && <Button onClick={resolveBug}>Mark as Resolved</Button>}
                         </div>
                     </div>
                 </>
