@@ -1,4 +1,3 @@
-import React from "react";
 import { AlertTriangle, Calendar, Paperclip, Sparkles, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +7,11 @@ import { comments } from "@/lib/DummyData/comments";
 import CommentsContainer from "@/components/CommentsContainer";
 import ActivityLog from "@/components/BugActivityLog";
 import { useParams } from "react-router-dom";
+
+import { useState, useEffect } from "react";
+import { apiClient } from "@/lib/axios";
+import { GET_BUG_BY_ID_ROUTE } from "@/lib/routes";
+import toast from "react-hot-toast";
 
 const severityColor = {
   Critical: "bg-red-500 text-red-900",
@@ -19,6 +23,24 @@ const severityColor = {
 const BugReport = () => {
 
   const params = useParams()
+  const bugId = params.id;
+  const [bug, setBug] = useState({})
+
+  useEffect(() => {
+    const fetchBugInfo = async () => {
+      try {
+        const res = await apiClient.get(`${GET_BUG_BY_ID_ROUTE}/${bugId}`);
+        setBug(res.data)
+        console.log(res.data)
+      } catch (err) {
+        console.log(err)
+        toast.error("Failed to fetch the Bug Info")
+      }
+    }
+    if (bugId) {
+      fetchBugInfo()
+    }
+  }, [bugId])
 
   return (
     <main className="min-h-full w-full p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
@@ -26,31 +48,35 @@ const BugReport = () => {
         <div className="w-full flex flex-col lg:flex-row gap-6">
           <div className="flex-1 flex flex-col gap-6">
             {/* Header */}
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                Bug ID: {params.id}
-              </h1>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium`}>
-                {bugData.status}
-              </span>
+
+            <div>
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-semibold tracking-tight mb-1">
+                  Bug: {bug.title}
+                </h1>
+                <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+                  {bug.state}
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Bug ID: {bug.id}
+              </p>
             </div>
 
             {/* Description */}
             <div>
               <h2 className="text-lg font-semibold mb-2">Description</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {bugData.description}
+                {bug.description}
               </p>
             </div>
 
             {/* Steps to Reproduce */}
             <div>
               <h2 className="text-lg font-semibold mb-2">Steps to Reproduce</h2>
-              <ul className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
-                {bugData.stepsToReproduce.map((step, index) => (
-                  <li key={index}>{step}</li>
-                ))}
-              </ul>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {bug.reproductionSteps}
+              </p>
             </div>
 
             {/* Expected vs Actual Result */}
@@ -58,46 +84,32 @@ const BugReport = () => {
               <div className="flex-1">
                 <h2 className="text-lg font-semibold mb-2">Expected Result</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
-                  {bugData.expectedResult}
+                  {bug.expectedOutcome}
                 </p>
               </div>
               <div className="flex-1">
                 <h2 className="text-lg font-semibold mb-2">Actual Result</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
-                  {bugData.actualResult}
+                  {bug.actualOutcome}
                 </p>
               </div>
             </div>
 
             {/* Attachments */}
-            <div>
-              <h2 className="text-lg font-semibold mb-2">Attachments</h2>
-              <div className="flex gap-4 flex-wrap">
-                {bugData.attachments.map((attachment, index) => (
-                  <div
-                    key={index}
-                    className={`w-full min-h-48 rounded-lg flex items-center justify-center ${attachment.fileName.includes(".png")
-                        ? "bg-muted"
-                        : "bg-secondary"
-                      }`}
-                  >
-                    <div className="text-xs text-center text-muted-foreground">
-                      {attachment.fileName.includes(".png") ? (
-                        <>
-                          <div className="w-8 h-6 bg-border rounded mb-1 mx-auto" />
-                          <span>Screenshot</span>
-                        </>
-                      ) : (
-                        <>
-                          <Paperclip className="w-6 h-6 mx-auto mb-1" />
-                          <span>Log File</span>
-                        </>
-                      )}
+
+
+            {bug.attachments && bug.attachments.length > 0 && (
+              <div>
+                <h2 className="text-lg font-semibold mb-2">Attachments</h2>
+                <div className="flex gap-4 flex-wrap">
+                  {bug.attachments.map((attachment, index) => (
+                    <div key={index} className="rounded-sm py-2 px-4 flex items-center justify-center bg-secondary">
+                      {attachment.originalName}
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Metadata */}
@@ -113,21 +125,19 @@ const BugReport = () => {
               </p>
               <span
                 className={cn(
-                  "py-2 px-3 inline-flex items-center text-sm rounded-lg font-medium border ",
-                  severityColor[bugData.priority]
-                )}
+                  "py-2 px-3 inline-flex items-center text-sm rounded-lg font-medium border ",)}
               >
-                {bugData.priority}
+                {bug.priority}
               </span>
             </div>
 
             <div className="space-y-3">
               <div className="bg-background rounded-lg p-3 border border-gray-200 ">
                 <p className="text-xs mb-1 font-medium text-muted-foreground">
-                  Module/Feature
+                  Project ID
                 </p>
                 <h3 className="text-foreground font-semibold">
-                  {bugData.module}
+                  {bug.projectId}
                 </h3>
               </div>
 
@@ -137,7 +147,7 @@ const BugReport = () => {
                   Reporter
                 </p>
                 <h3 className="text-foreground font-semibold">
-                  {bugData.reporter}
+                  {bug.createdBy}
                 </h3>
               </div>
 
@@ -147,7 +157,7 @@ const BugReport = () => {
                   Assignee
                 </p>
                 <h3 className="text-foreground font-semibold">
-                  {bugData.assignee}
+                  {bug.assignedTo || "Not assigned"}
                 </h3>
               </div>
 
@@ -157,7 +167,7 @@ const BugReport = () => {
                   Date Created
                 </p>
                 <h3 className="text-foreground font-semibold">
-                  {bugData.dateCreated}
+                  {bug.createdAt}
                 </h3>
               </div>
 
@@ -167,13 +177,13 @@ const BugReport = () => {
                   Date Resolved
                 </p>
                 <h3 className="text-foreground font-semibold">
-                  {bugData.dateResolved || "Not resolved yet"}
+                  {bug.resolvedAt || "Not resolved yet"}
                 </h3>
               </div>
             </div>
 
             {/* Activity Log */}
-            <ActivityLog />
+            <ActivityLog state={bug.state} />
           </div>
         </div>
         <CommentsContainer comments={comments} />
