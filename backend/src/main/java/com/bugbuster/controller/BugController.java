@@ -266,6 +266,45 @@ public class BugController {
                 .collect(Collectors.toList());
     }
 
+    // Start Working Route
+    @PatchMapping("/start-working/{id}")
+    public ResponseEntity<?> startWorkOnBug(
+            @PathVariable String id,
+            @RequestHeader("Authorization") String authHeader) {
+
+        try {
+            if (!isDeveloper(authHeader)) {
+                return ResponseEntity.status(403).body("Only developers can start work on bugs.");
+            }
+
+            Optional<Bug> bugOpt = bugService.getBugById(id);
+            if (bugOpt.isEmpty()) {
+                return ResponseEntity.status(404).body("Bug not found");
+            }
+
+            Bug bug = bugOpt.get();
+
+            if (!bug.getState().equalsIgnoreCase("OPEN")) {
+                return ResponseEntity.badRequest().body("Bug must be in OPEN state to start working on it.");
+            }
+
+            String userId = extractUserId(authHeader);
+
+            bug.setAssignedTo(userId);
+            bug.setAssignedBy(userId);
+            bug.setAssignedAt(LocalDateTime.now());
+            bug.setState("IN_PROGRESS");
+
+            Bug updatedBug = bugService.updateBug(bug);
+
+            return ResponseEntity.ok(updatedBug);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to start bug: " + e.getMessage());
+        }
+    }
+
     // Comment on Bug
     @PostMapping("/comment/{id}")
     public ResponseEntity<?> addComment(@PathVariable String id, @RequestBody Comment comment,
@@ -291,76 +330,6 @@ public class BugController {
     public ResponseEntity<?> getComments(@PathVariable String id) {
         return bugService.getBugById(id)
                 .map(bug -> ResponseEntity.ok(bug.getComments() != null ? bug.getComments() : new ArrayList<>()))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    // Request work on Bug
-    @PostMapping("/requests/{id}")
-    public ResponseEntity<?> addRequest(@PathVariable String id, @RequestBody WorkRequest request,
-            @RequestHeader("Authorization") String authHeader) {
-        Optional<Bug> bugOpt = bugService.getBugById(id);
-        if (bugOpt.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        Bug bug = bugOpt.get();
-        if (bug.getRequests() == null)
-            bug.setRequests(new ArrayList<>());
-
-        request.setAuthor(extractUserId(authHeader));
-        request.setStatus("pending");
-        request.setTimestamp(new Date());
-        bug.getRequests().add(request);
-
-        bugService.updateBug(bug);
-        return ResponseEntity.ok(bug);
-    }
-
-    // Approve/Reject request
-    @PutMapping("/requests/{id}/{index}")
-    public ResponseEntity<?> handleRequest(@PathVariable String id, @PathVariable int index,
-            @RequestParam String status,
-            @RequestHeader("Authorization") String authHeader) {
-        Optional<Bug> bugOpt = bugService.getBugById(id);
-        if (bugOpt.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        if (!isTester(authHeader)) {
-            return ResponseEntity.status(403).body("Only testers can approve or reject work requests.");
-        }
-
-        Bug bug = bugOpt.get();
-        List<WorkRequest> requests = bug.getRequests();
-        if (requests == null || index < 0 || index >= requests.size()) {
-            return ResponseEntity.badRequest().body("Invalid request index");
-        }
-
-        WorkRequest req = requests.get(index);
-        req.setStatus(status);
-
-        if ("approved".equalsIgnoreCase(status)) {
-            String assignedTo = req.getAuthor();
-            bug.setAssignedTo(assignedTo);
-            bug.setAssignedAt(LocalDateTime.now());
-            bug.setAssignedBy(extractUserId(authHeader));
-
-            for (int i = 0; i < requests.size(); i++) {
-                if (i != index && "pending".equalsIgnoreCase(requests.get(i).getStatus())) {
-                    requests.get(i).setStatus("rejected");
-                }
-            }
-
-            // mailService.sendBugAssignmentMail(assignedTo, bug.getTitle());
-        }
-
-        bugService.updateBug(bug);
-        return ResponseEntity.ok(bug);
-    }
-
-    // Get all requests for a bug
-    @GetMapping("/requests/{id}")
-    public ResponseEntity<?> getRequests(@PathVariable String id) {
-        return bugService.getBugById(id)
-                .map(bug -> ResponseEntity.ok(bug.getRequests() != null ? bug.getRequests() : new ArrayList<>()))
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -434,12 +403,23 @@ public class BugController {
         Claims claims = jwtUtil.extractAllClaims(token);
         Object role = claims.get("role");
 
-        System.out.println("\n\nRole:" + role);
-
         if (role instanceof String) {
             return Arrays.asList(((String) role).split(",")).contains("TESTER");
         } else if (role instanceof List) {
             return ((List<?>) role).contains("TESTER");
+        }
+        return false;
+    }
+
+    private boolean isDeveloper(String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        Claims claims = jwtUtil.extractAllClaims(token);
+        Object role = claims.get("role");
+
+        if (role instanceof String) {
+            return Arrays.asList(((String) role).split(",")).contains("DEVELOPER");
+        } else if (role instanceof List) {
+            return ((List<?>) role).contains("DEVELOPER");
         }
         return false;
     }

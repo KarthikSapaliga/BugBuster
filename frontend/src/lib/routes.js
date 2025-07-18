@@ -33,3 +33,4 @@ export const GET_BUGS_CREATED_BY_ROUTE = "/api/bugs/createdBy";     // GET - App
 
 export const CLOSE_BUG_ROUTE = "/api/bugs";                         // PATCH - Append /:id/close?closedBy=userId
 export const ASSIGN_BUG_ROUTE = "/api/bugs";                        // PATCH - Append /:id/assign?assignedTo=userId&assignedBy=userId
+export const START_WORKING_ROUTE = "/api/bugs/start-working"        // PATCH - Append /:id
