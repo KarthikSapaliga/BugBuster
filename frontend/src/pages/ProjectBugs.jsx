@@ -249,7 +249,7 @@ function ProjectBugs() {
                 <SelectContent>
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="OPEN">Open</SelectItem>
-                  <SelectItem value="IN PROGRESS">In Progress</SelectItem>
+                  <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
                   <SelectItem value="RESOLVED">Resolved</SelectItem>
                   <SelectItem value="CLOSED">Closed</SelectItem>
                 </SelectContent>
