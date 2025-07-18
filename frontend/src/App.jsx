@@ -15,13 +15,14 @@ import AllIsues from "./pages/AllIsues";
 import InProgress from "./pages/InProgress";
 import HighPriority from "./pages/HighPriority";
 import AssignedMe from "./pages/AssignedMe";
-import BugReportingForm from "./pages/BugReportingForm";
-import BugReport from "./pages/BugReport";
 import CreateProjectForm from "./pages/CreateProjectForm";
 import UpdateProjectForm from "./pages/UpdateProjectForm";
 import VersionControl from "./pages/VersionControl";
 import Teams from "./pages/Teams";
 import ProjectBugs from "./pages/ProjectBugs";
+import BugReportingForm from "./pages/BugReportingForm";
+import BugReport from "./pages/BugReport";
+import BugUpdateForm from "./pages/BugUpdateForm";
 
 function App() {
   return (
@@ -167,10 +168,10 @@ function App() {
           }
         />
         <Route
-          path="/bugs/bug-update/:id"
+          path="/bugs/update-bug/:id"
           element={
             <ProtectedRoute>
-              <BugReport />
+              <BugUpdateForm />
             </ProtectedRoute>
           }
         />

@@ -1,11 +1,17 @@
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
 
 import { useAppStore } from '@/store/store'
 
 function BugActions({ bug }) {
     const { user } = useAppStore();
+    const navigate = useNavigate();
+
+    const updateBugDetails = (bug) => {
+        navigate(`/bugs/update-bug/${bug.id}`)
+    }
 
     return (
         <div className='flex flex-col gap-4'>
@@ -30,7 +36,7 @@ function BugActions({ bug }) {
                     <div>
                         <p>Actions</p>
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
-                            <Button>Update the Details</Button>
+                            <Button onClick={() => updateBugDetails(bug)}>Update the Details</Button>
                             <Button>Close the issue</Button>
                             <Button>Reassign</Button>
                             <Button>Delete</Button>
