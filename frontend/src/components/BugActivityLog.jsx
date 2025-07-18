@@ -2,7 +2,6 @@ import React from 'react';
 import { CheckCircle, AlertCircle, Clock, XCircle, PlayCircle } from 'lucide-react';
 import { bugData } from '@/lib/DummyData/bug-data';
 
-
 const getStatusIcon = (status) => {
   const iconProps = { size: 12, className: "flex-shrink-0" };
 
@@ -15,6 +14,8 @@ const getStatusIcon = (status) => {
       return <Clock {...iconProps} className="text-orange-500" />;
     case 'open':
       return <AlertCircle {...iconProps} className="text-red-500" />;
+    case 'closed':
+      return <XCircle {...iconProps} className="text-yellow-500" />; // Or pick a different icon if you prefer
     default:
       return <XCircle {...iconProps} className="text-gray-500" />;
   }
@@ -30,12 +31,16 @@ const getStatusColor = (status) => {
       return 'text-orange-700 bg-orange-50 border-orange-200';
     case 'open':
       return 'text-red-700 bg-red-50 border-red-200';
+    case 'closed':
+      return 'text-yellow-700 bg-yellow-50 border-yellow-200';
     default:
       return 'text-gray-700 bg-gray-50 border-gray-200';
   }
 };
 
-export default function ActivityLog() {
+
+export default function ActivityLog({statusHistory}) {
+  console.log(statusHistory);
   return (
     <div className="pt-4 border-t border-border">
       <div className="mb-4">
@@ -47,7 +52,7 @@ export default function ActivityLog() {
         <div className="absolute left-4 top-0 bottom-0 w-[1.5px] bg-gradient-to-b from-gray-200 via-gray-300 to-transparent"></div>
 
         <div className="space-y-3">
-          {bugData.statusHistory.map((activity, index) => (
+          {statusHistory.map((activity, index) => (
             <div key={index} className="relative flex items-start gap-3 group">
               {/* Icon container with background */}
               <div className="relative z-10 flex items-center justify-center w-8 h-8 bg-background border border-gray-200 rounded-full duration-200">
