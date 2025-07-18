@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 
-export default function MultiSelect({ options = [], placeholder = "Select items", onChange }) {
+export default function MultiSelect({ options = [], placeholder = "Select items", onChange, value }) {
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState([]);
+
+    useEffect(() => {
+        if (value.length > 0) {
+            setSelected(value)
+        }
+    }, [options])
+
 
     const toggleSelect = (value) => {
         let updated = selected.includes(value)
