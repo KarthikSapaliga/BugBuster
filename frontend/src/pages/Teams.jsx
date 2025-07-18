@@ -48,7 +48,7 @@ function Teams() {
       try {
         const data = await Promise.all(
           teamMembers.map((id) =>
-            apiClient.get(`${GET_USER_ROUTE}${id}`).then((res) => res.data)
+            apiClient.get(`${GET_USER_ROUTE}/${id}`).then((res) => res.data)
           )
         );
         setMemberDetails(data);
