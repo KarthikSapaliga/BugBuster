@@ -35,6 +35,8 @@ const BugReport = () => {
   const [bug, setBug] = useState({});
   const [userMap, setUserMap] = useState({});
 
+  const [bugStatusLog, setBugStatusLog] = useState([]);
+
   //Fetching Bug Info
   useEffect(() => {
     const fetchBugInfo = async () => {
@@ -51,14 +53,17 @@ const BugReport = () => {
       fetchBugInfo();
     }
   }, [bugId]);
-
-  //fetching User Names
+  // Fetch the user names once bug changes
   useEffect(() => {
     if (!bug || Object.keys(bug).length === 0) return;
 
-    const userIds = [bug.createdBy, bug.assignedTo, bug.resolvedBy].filter(
-      Boolean
-    );
+    const userIds = [
+      bug.createdBy,
+      bug.assignedBy,
+      bug.assignedTo,
+      bug.resolvedBy,
+      bug.closedBy,
+    ].filter(Boolean);
 
     async function fetchUserNames() {
       const newUserMap = {};
@@ -76,7 +81,53 @@ const BugReport = () => {
     fetchUserNames();
   }, [bug]);
 
+  // Build the status log when both bug AND userMap are ready
+  useEffect(() => {
+    if (!bug || Object.keys(bug).length === 0) return;
+    if (!userMap || Object.keys(userMap).length === 0) return;
 
+    const statusLog = [];
+
+    if (bug.createdBy) {
+      statusLog.push({
+        status: "Open",
+        date: bug.createdAt,
+        by: userMap[bug.createdBy],
+      });
+    }
+
+    if (bug.assignedTo) {
+      statusLog.push({
+        status: "Assigned",
+        date: bug.assignedAt,
+        by: userMap[bug.assignedBy],
+      });
+      statusLog.push({
+        status: "In Progress",
+        date: bug.assignedAt,
+        by: userMap[bug.assignedTo],
+      });
+    }
+
+    if (bug.resolvedBy) {
+      statusLog.push({
+        status: "Resolved",
+        date: bug.resolvedAt,
+        by: userMap[bug.resolvedBy],
+      });
+    }
+
+    if (bug.closedBy) {
+      statusLog.push({
+        status: "Closed",
+        date: bug.closedAt,
+        by: userMap[bug.closedBy],
+      });
+    }
+
+    setBugStatusLog(statusLog);
+  }, [bug, userMap]);
+  
   return (
     <main className="min-h-full w-full p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
       <div className="w-full bg-background dark:sidebar border border-border shadow-md rounded-xl p-6 ">
@@ -225,7 +276,7 @@ const BugReport = () => {
             </div>
 
             {/* Activity Log */}
-            <ActivityLog state={bug.state} />
+            <ActivityLog statusHistory={bugStatusLog} />
           </div>
         </div>
         <CommentsContainer comments={comments} />
