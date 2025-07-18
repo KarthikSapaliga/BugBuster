@@ -50,6 +50,14 @@ public class BugController {
         String userId = extractUserId(authHeader);
         bug.setCreatedBy(userId);
         bug.setCreatedAt(LocalDateTime.now());
+
+        String urgency = bug.getUrgency();
+        String severity = bug.getSeverity();
+
+        String priority = "p4";
+
+        bug.setPriority(priority);
+
         return bugService.createBug(bug);
     }
 
@@ -102,7 +110,8 @@ public class BugController {
 
     // Get Bugs by Project
     @GetMapping("/project/{projectId}")
-    public List<Bug> getBugsByProject(@PathVariable String projectId, @RequestParam(required = false) Boolean fromGithub) {
+    public List<Bug> getBugsByProject(@PathVariable String projectId,
+            @RequestParam(required = false) Boolean fromGithub) {
         return bugService.getBugsByProject(projectId, fromGithub);
     }
 
@@ -166,7 +175,8 @@ public class BugController {
 
     // Approve/Reject request
     @PutMapping("/requests/{id}/{index}")
-    public ResponseEntity<?> handleRequest(@PathVariable String id, @PathVariable int index, @RequestParam String status,
+    public ResponseEntity<?> handleRequest(@PathVariable String id, @PathVariable int index,
+            @RequestParam String status,
             @RequestHeader("Authorization") String authHeader) {
         Optional<Bug> bugOpt = bugService.getBugById(id);
         if (bugOpt.isEmpty())
