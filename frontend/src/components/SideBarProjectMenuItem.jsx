@@ -15,7 +15,7 @@ const SideBarProjectMenuItem = ({ project }) => {
   const location = useLocation();
   const [open, setOpen] = React.useState(false);
 
-  const userRoles = user.role;
+  const userRoles = user?.role || "";
 
   const subMenus = [
     {
