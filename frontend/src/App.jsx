@@ -119,14 +119,6 @@ function App() {
           }
         />
         <Route
-          path="/bugs/:id"
-          element={
-            <ProtectedRoute>
-              <BugReport />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/create-project"
           element={
             <ProtectedRoute>
@@ -163,6 +155,22 @@ function App() {
           element={
             <ProtectedRoute>
               <UpdateProjectForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bugs/:id"
+          element={
+            <ProtectedRoute>
+              <BugReport />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bugs/bug-update/:id"
+          element={
+            <ProtectedRoute>
+              <BugReport />
             </ProtectedRoute>
           }
         />
