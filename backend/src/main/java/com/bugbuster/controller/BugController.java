@@ -2,6 +2,10 @@ package com.bugbuster.controller;
 
 import com.bugbuster.service.BugService;
 import com.bugbuster.service.UserService;
+import com.bugbuster.utils.JwtUtil;
+
+import io.jsonwebtoken.Claims;
+
 // import com.bugbuster.service.MailService;
 import com.bugbuster.model.Attachment;
 import com.bugbuster.model.Bug;
@@ -21,6 +25,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +41,14 @@ public class BugController {
     private UserService userService;
     // @Autowired
     // private MailService mailService;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // Create Bug
     @PostMapping
-    public Bug createBug(@RequestBody Bug bug, Authentication auth) {
-        bug.setCreatedBy(auth.getName());
+    public Bug createBug(@RequestHeader("Authorization") String authHeader, @RequestBody Bug bug) {
+        String userId = extractUserId(authHeader);
+        bug.setCreatedBy(userId);
         bug.setCreatedAt(LocalDateTime.now());
         return bugService.createBug(bug);
     }
@@ -55,13 +63,14 @@ public class BugController {
 
     // Update Bug
     @PutMapping("/{id}")
-    public ResponseEntity<Bug> updateBug(@PathVariable String id, @RequestBody Bug updatedBug, Authentication auth) {
+    public ResponseEntity<Bug> updateBug(@PathVariable String id, @RequestBody Bug updatedBug,
+            @RequestHeader("Authorization") String authHeader) {
         Optional<Bug> existingOpt = bugService.getBugById(id);
         if (existingOpt.isEmpty())
             return ResponseEntity.notFound().build();
 
-        Bug existing = existingOpt.get();
-        if (!existing.getCreatedBy().equals(auth.getName()) && !auth.getAuthorities().toString().contains("TESTER")) {
+        String userId = extractUserId(authHeader);
+        if (!existingOpt.get().getCreatedBy().equals(userId) && !isTester(authHeader)) {
             return ResponseEntity.status(403).build();
         }
 
@@ -71,11 +80,13 @@ public class BugController {
 
     // Delete Bug
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBug(@PathVariable String id, Authentication auth) {
+    public ResponseEntity<?> deleteBug(@PathVariable String id, @RequestHeader("Authorization") String authHeader) {
         Optional<Bug> bug = bugService.getBugById(id);
         if (bug.isEmpty())
             return ResponseEntity.notFound().build();
-        if (!bug.get().getCreatedBy().equals(auth.getName()) && !auth.getAuthorities().toString().contains("TESTER")) {
+
+        String userId = extractUserId(authHeader);
+        if (!bug.get().getCreatedBy().equals(userId) && !isTester(authHeader)) {
             return ResponseEntity.status(403).build();
         }
 
@@ -91,23 +102,23 @@ public class BugController {
 
     // Get Bugs by Project
     @GetMapping("/project/{projectId}")
-    public List<Bug> getBugsByProject(@PathVariable String projectId,
-            @RequestParam(required = false) Boolean fromGithub) {
+    public List<Bug> getBugsByProject(@PathVariable String projectId, @RequestParam(required = false) Boolean fromGithub) {
         return bugService.getBugsByProject(projectId, fromGithub);
     }
 
     // Get Bugs assigned to current user
     @GetMapping("/assigned")
-    public List<Bug> getAssignedBugs(Authentication auth) {
-        String username = auth.getName();
+    public List<Bug> getAssignedBugs(@RequestHeader("Authorization") String authHeader) {
+        String userId = extractUserId(authHeader);
         return bugService.getAllBugs().stream()
-                .filter(bug -> username.equalsIgnoreCase(bug.getAssignedTo()))
+                .filter(bug -> userId.equalsIgnoreCase(bug.getAssignedTo()))
                 .collect(Collectors.toList());
     }
 
     // Comment on Bug
     @PostMapping("/comment/{id}")
-    public ResponseEntity<?> addComment(@PathVariable String id, @RequestBody Comment comment, Authentication auth) {
+    public ResponseEntity<?> addComment(@PathVariable String id, @RequestBody Comment comment,
+            @RequestHeader("Authorization") String authHeader) {
         Optional<Bug> bugOpt = bugService.getBugById(id);
         if (bugOpt.isEmpty())
             return ResponseEntity.notFound().build();
@@ -116,7 +127,7 @@ public class BugController {
         if (bug.getComments() == null)
             bug.setComments(new ArrayList<>());
 
-        comment.setAuthor(auth.getName());
+        comment.setAuthor(extractUserId(authHeader));
         comment.setTimestamp(new Date());
         bug.getComments().add(comment);
 
@@ -135,7 +146,7 @@ public class BugController {
     // Request work on Bug
     @PostMapping("/requests/{id}")
     public ResponseEntity<?> addRequest(@PathVariable String id, @RequestBody WorkRequest request,
-            Authentication auth) {
+            @RequestHeader("Authorization") String authHeader) {
         Optional<Bug> bugOpt = bugService.getBugById(id);
         if (bugOpt.isEmpty())
             return ResponseEntity.notFound().build();
@@ -144,7 +155,7 @@ public class BugController {
         if (bug.getRequests() == null)
             bug.setRequests(new ArrayList<>());
 
-        request.setAuthor(auth.getName());
+        request.setAuthor(extractUserId(authHeader));
         request.setStatus("pending");
         request.setTimestamp(new Date());
         bug.getRequests().add(request);
@@ -155,24 +166,17 @@ public class BugController {
 
     // Approve/Reject request
     @PutMapping("/requests/{id}/{index}")
-    public ResponseEntity<?> handleRequest(
-            @PathVariable String id,
-            @PathVariable int index,
-            @RequestParam String status,
-            Authentication auth) {
+    public ResponseEntity<?> handleRequest(@PathVariable String id, @PathVariable int index, @RequestParam String status,
+            @RequestHeader("Authorization") String authHeader) {
         Optional<Bug> bugOpt = bugService.getBugById(id);
         if (bugOpt.isEmpty())
             return ResponseEntity.notFound().build();
 
-        Bug bug = bugOpt.get();
-
-        // Only testers can approve/reject
-        boolean isTester = auth.getAuthorities().stream()
-                .anyMatch(role -> role.getAuthority().equals("TESTER"));
-        if (!isTester) {
+        if (!isTester(authHeader)) {
             return ResponseEntity.status(403).body("Only testers can approve or reject work requests.");
         }
 
+        Bug bug = bugOpt.get();
         List<WorkRequest> requests = bug.getRequests();
         if (requests == null || index < 0 || index >= requests.size()) {
             return ResponseEntity.badRequest().body("Invalid request index");
@@ -185,9 +189,8 @@ public class BugController {
             String assignedTo = req.getAuthor();
             bug.setAssignedTo(assignedTo);
             bug.setAssignedAt(LocalDateTime.now());
-            bug.setAssignedBy(auth.getName());
+            bug.setAssignedBy(extractUserId(authHeader));
 
-            // Cancel other pending requests
             for (int i = 0; i < requests.size(); i++) {
                 if (i != index && "pending".equalsIgnoreCase(requests.get(i).getStatus())) {
                     requests.get(i).setStatus("rejected");
@@ -266,5 +269,23 @@ public class BugController {
             case "txt" -> "text/plain";
             default -> "application/octet-stream";
         };
+    }
+
+    private String extractUserId(String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        Claims claims = jwtUtil.extractAllClaims(token);
+        return claims.getSubject();
+    }
+
+    private boolean isTester(String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        Claims claims = jwtUtil.extractAllClaims(token);
+        Object roles = claims.get("roles");
+        if (roles instanceof String) {
+            return Arrays.asList(((String) roles).split(",")).contains("TESTER");
+        } else if (roles instanceof List) {
+            return ((List<?>) roles).contains("TESTER");
+        }
+        return false;
     }
 }
