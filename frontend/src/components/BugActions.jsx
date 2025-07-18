@@ -79,7 +79,22 @@ function BugActions({ bug }) {
     };
 
 
-    const deleteBug = () => { }
+    const deleteBug = async () => {
+        if (!token) return toast.error("Unauthorized");
+
+        try {
+            const res = await apiClient.delete(`${DELETE_BUG_ROUTE}/${bug.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            toast.success("Bug deleted successfully!");
+            navigate("/dashboard");
+        } catch (err) {
+            console.error("Error:", err);
+            toast.error(err?.response?.data?.message || "Failed to delete bug.");
+        }
+    };
+
 
     return (
         <div className='flex flex-col gap-4'>
