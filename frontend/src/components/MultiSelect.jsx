@@ -9,7 +9,7 @@ export default function MultiSelect({ options = [], placeholder = "Select items"
     const [selected, setSelected] = useState([]);
 
     useEffect(() => {
-        if (value.length > 0) {
+        if (value && value.length > 0) {
             setSelected(value)
         }
     }, [options])
