@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/store/store';
 import { apiClient } from '@/lib/axios';
 import {
-    GET_DEVELOPERS_ROUTE,
+    GET_DEVS_IN_TEAM_ROUTE,
     START_WORKING_ROUTE,
     ASSIGN_BUG_ROUTE,
     RESOLVE_BUG_ROUTE,
@@ -22,14 +22,15 @@ function BugActions({ bug }) {
     const [developers, setDevelopers] = useState([]);
     const [selectedDev, setSelectedDev] = useState("");
 
-    const fetchDevelopers = async () => {
-        const res = await apiClient.get(GET_DEVELOPERS_ROUTE);
-        setDevelopers(res.data);
-    }
-
     useEffect(() => {
-        fetchDevelopers();
-    }, [])
+        const fetchDevelopers = async () => {
+            const res = await apiClient.get(`${GET_DEVS_IN_TEAM_ROUTE}/${bug.projectId}`);
+            setDevelopers(res.data);
+        }
+        if (bug) {
+            fetchDevelopers();
+        }
+    }, [bug?.projectId])
 
     const updateBugDetails = (bug) => {
         navigate(`/bugs/update-bug/${bug.id}`)
