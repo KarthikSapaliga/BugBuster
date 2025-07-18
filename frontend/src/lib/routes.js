@@ -11,7 +11,7 @@ export const GET_DEVELOPERS_ROUTE = "/api/users/developers"
 export const GET_DEVELOPERS_AND_TESTERS_ROUTE = "/api/users/devs-and-testers"
 
 // User + Project Routes
-export const GET_DEVS_IN_TEAM_ROUTE = "/api/projects/developers/{projectId}"
+export const GET_DEVS_IN_TEAM_ROUTE = "/api/projects/developers"
 
 // Project Routes
 export const CREATE_PROJECT_ROUTE = "/api/projects/create-project";
