@@ -66,7 +66,7 @@ const BugReport = () => {
             </div>
 
             <div>
-              <BugActions />
+              <BugActions bug={bug} />
             </div>
 
             {/* Description */}
