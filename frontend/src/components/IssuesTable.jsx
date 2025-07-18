@@ -96,7 +96,6 @@ function IssuesTable({ data }) {
       <table className="min-w-full text-sm text-left">
         <thead className="bg-muted">
           <tr className="text-muted-foreground">
-            <th className="px-4 py-3 font-medium">ID</th>
             <th className="px-4 py-3 font-medium">Title</th>
             <th className="px-4 py-3 font-medium">Project</th>
             <th className="px-4 py-3 font-medium">Severity</th>
@@ -108,7 +107,6 @@ function IssuesTable({ data }) {
         <tbody className="divide-y">
           {data.map((bug) => (
             <tr key={bug.id} className="hover:bg-muted/50">
-              <td className="px-4 py-3 font-medium">{bug.id}</td>
               <td className="px-4 py-3">{bug.title}</td>
               <td className="px-4 py-3">{projectMap[bug.projectId]?.name || "Loading..."}</td>
               <td className="px-4 py-3">
