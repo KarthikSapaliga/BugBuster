@@ -2,7 +2,7 @@ package com.bugbuster.controller;
 
 import com.bugbuster.service.BugService;
 import com.bugbuster.service.UserService;
-import com.bugbuster.service.MailService;
+// import com.bugbuster.service.MailService;
 import com.bugbuster.model.Attachment;
 import com.bugbuster.model.Bug;
 import com.bugbuster.model.Comment;
@@ -34,8 +34,8 @@ public class BugController {
     private BugService bugService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private MailService mailService;
+    // @Autowired
+    // private MailService mailService;
 
     // Create Bug
     @PostMapping
@@ -106,7 +106,7 @@ public class BugController {
     }
 
     // Comment on Bug
-    @PostMapping("/{id}/comments")
+    @PostMapping("/comment/{id}")
     public ResponseEntity<?> addComment(@PathVariable String id, @RequestBody Comment comment, Authentication auth) {
         Optional<Bug> bugOpt = bugService.getBugById(id);
         if (bugOpt.isEmpty())
@@ -125,7 +125,7 @@ public class BugController {
     }
 
     // Get comments
-    @GetMapping("/{id}/comments")
+    @GetMapping("/comments/{id}")
     public ResponseEntity<?> getComments(@PathVariable String id) {
         return bugService.getBugById(id)
                 .map(bug -> ResponseEntity.ok(bug.getComments() != null ? bug.getComments() : new ArrayList<>()))
@@ -133,7 +133,7 @@ public class BugController {
     }
 
     // Request work on Bug
-    @PostMapping("/{id}/requests")
+    @PostMapping("/requests/{id}")
     public ResponseEntity<?> addRequest(@PathVariable String id, @RequestBody WorkRequest request,
             Authentication auth) {
         Optional<Bug> bugOpt = bugService.getBugById(id);
@@ -154,7 +154,7 @@ public class BugController {
     }
 
     // Approve/Reject request
-    @PutMapping("/{id}/requests/{index}")
+    @PutMapping("/requests/{id}/{index}")
     public ResponseEntity<?> handleRequest(
             @PathVariable String id,
             @PathVariable int index,
@@ -202,7 +202,7 @@ public class BugController {
     }
 
     // Get all requests for a bug
-    @GetMapping("/{id}/requests")
+    @GetMapping("/requests/{id}")
     public ResponseEntity<?> getRequests(@PathVariable String id) {
         return bugService.getBugById(id)
                 .map(bug -> ResponseEntity.ok(bug.getRequests() != null ? bug.getRequests() : new ArrayList<>()))
