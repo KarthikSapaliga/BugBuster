@@ -48,7 +48,7 @@ function getSeverityColor(severity) {
     high: "bg-orange-100 text-orange-800",
     critical: "bg-red-100 text-red-800",
   };
-  return map[severity] || "bg-gray-100 text-gray-800";
+  return map[severity.toLowerCase()] || "bg-gray-100 text-gray-800";
 }
 
 function ProjectBugs() {
@@ -131,22 +131,22 @@ function ProjectBugs() {
 
     // Filter by status
     if (statusFilter !== "all") {
-      filtered = filtered.filter((issue) => issue.state === statusFilter);
+      filtered = filtered.filter((issue) => issue.state.toUpperCase() === statusFilter);
     }
 
     //Filter by Priority
     if (priorityFilter != "all") {
-      filtered = filtered.filter((issue) => issue.priority === priorityFilter);
+      filtered = filtered.filter((issue) => issue.priority.toUpperCase() === priorityFilter);
     }
 
     //Filter by Urgency
     if (urgencyFilter != "all") {
-      filtered = filtered.filter((issue) => issue.urgency === urgencyFilter);
+      filtered = filtered.filter((issue) => issue.urgency.toUpperCase() === urgencyFilter);
     }
 
     // Filter by severity
     if (severityFilter !== "all") {
-      filtered = filtered.filter((issue) => issue.severity === severityFilter);
+      filtered = filtered.filter((issue) => issue.severity.toUpperCase() === severityFilter);
     }
 
     setFilteredIssues(filtered);
@@ -216,10 +216,10 @@ function ProjectBugs() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Severity</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="critical">Critical</SelectItem>
+                  <SelectItem value="LOW">Low</SelectItem>
+                  <SelectItem value="MEDIUM">Medium</SelectItem>
+                  <SelectItem value="HIGH">High</SelectItem>
+                  <SelectItem value="CRITICAL">Critical</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -251,9 +251,9 @@ function ProjectBugs() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Urgency</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="HIGH">High</SelectItem>
+                  <SelectItem value="MEDIUM">Medium</SelectItem>
+                  <SelectItem value="LOW">Low</SelectItem>
                 </SelectContent>
               </Select>
             </div>

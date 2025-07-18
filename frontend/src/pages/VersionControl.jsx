@@ -40,13 +40,14 @@ function formatDate(dateString) {
 }
 
 function getSeverityColor(severity) {
+
   const map = {
-    Low: "bg-green-100 text-green-800",
-    Medium: "bg-yellow-100 text-yellow-800",
-    High: "bg-orange-100 text-orange-800",
-    Critical: "bg-red-100 text-red-800",
+    LOW: "bg-green-100 text-green-800",
+    MEDIUM: "bg-yellow-100 text-yellow-800",
+    HIGH: "bg-orange-100 text-orange-800",
+    CRITICAL: "bg-red-100 text-red-800",
   };
-  return map[severity] || "bg-gray-100 text-gray-800";
+  return map[severity.toUpperCase()] || "bg-gray-100 text-gray-800";
 }
 
 // function getUrgencyColor(urgency) {
@@ -58,14 +59,6 @@ function getSeverityColor(severity) {
 //     return map[urgency] || "bg-gray-100 text-gray-800";
 // }
 
-// function getStateIcon(state) {
-//   if (state === "open") {
-//     return <AlertTriangle className="w-4 h-4 text-red-500" />;
-//   } else if (state === "closed") {
-//     return <CheckCircle className="w-4 h-4 text-green-500" />;
-//   }
-//   return <Clock className="w-4 h-4 text-yellow-500" />;
-// }
 
 export default function VersionControl() {
   const [issues, setIssues] = useState([]);
@@ -116,22 +109,22 @@ export default function VersionControl() {
 
     // Filter by status
     if (statusFilter !== "all") {
-      filtered = filtered.filter((issue) => issue.state === statusFilter);
+      filtered = filtered.filter((issue) => issue.state.toUpperCase() === statusFilter);
     }
 
     // Filter by severity
     if (severityFilter !== "all") {
-      filtered = filtered.filter((issue) => issue.severity === severityFilter);
+      filtered = filtered.filter((issue) => issue.severity.toUpperCase() === severityFilter);
     }
 
     //Filter by Priority
     if (priorityFilter != "all") {
-      filtered = filtered.filter((issue) => issue.priority === priorityFilter);
+      filtered = filtered.filter((issue) => issue.priority.toUpperCase() === priorityFilter);
     }
 
     //Filter by Urgency
     if (urgencyFilter != "all") {
-      filtered = filtered.filter((issue) => issue.urgency === urgencyFilter);
+      filtered = filtered.filter((issue) => issue.urgency.toUpperCase() === urgencyFilter);
     }
 
     setFilteredIssues(filtered);
@@ -142,15 +135,6 @@ export default function VersionControl() {
     await loadIssues();
     setLoading(false);
   };
-
-  const openIssueModal = (issue) => {
-    setSelectedIssue(issue);
-  };
-
-  //   const openIssues = filteredIssues.filter((issue) => issue.state === "open");
-  //   const closedIssues = filteredIssues.filter(
-  //     (issue) => issue.state === "closed"
-  //   );
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8 lg:p-12">
@@ -196,8 +180,8 @@ export default function VersionControl() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="open">Open</SelectItem>
-                    <SelectItem value="closed">Closed</SelectItem>
+                    <SelectItem value="OPEN">Open</SelectItem>
+                    <SelectItem value="CLOSED">Closed</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -211,10 +195,10 @@ export default function VersionControl() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Severity</SelectItem>
-                    <SelectItem value="Low">Low</SelectItem>
-                    <SelectItem value="Medium">Medium</SelectItem>
-                    <SelectItem value="High">High</SelectItem>
-                    <SelectItem value="Critical">Critical</SelectItem>
+                    <SelectItem value="LOW">Low</SelectItem>
+                    <SelectItem value="MEDIUM">Medium</SelectItem>
+                    <SelectItem value="HIGH">High</SelectItem>
+                    <SelectItem value="CRITICAL">Critical</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -245,9 +229,9 @@ export default function VersionControl() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Urgency</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="HIGH">High</SelectItem>
+                    <SelectItem value="MEDIUM">Medium</SelectItem>
+                    <SelectItem value="LOW">Low</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
