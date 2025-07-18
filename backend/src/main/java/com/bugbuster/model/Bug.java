@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "bugs")
 @Data
@@ -12,12 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class Bug {
-
     @Id
     private String id;
 
-    private boolean fromGithub;
-    
     private String issueId;
     private String projectId;
 
@@ -42,5 +40,9 @@ public class Bug {
     private String urgency;
     private String severity;
 
-    private String screenshot;
+    private boolean fromGithub;
+
+    private List<Attachment> attachments; 
+    private List<Comment> comments;   
+    private List<WorkRequest> requests;  
 }
