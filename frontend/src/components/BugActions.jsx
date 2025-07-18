@@ -4,14 +4,28 @@ import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 
 import { useAppStore } from '@/store/store'
+import { useEffect, useState } from 'react'
+import { apiClient } from '@/lib/axios'
+import { GET_DEVELOPERS_ROUTE } from '@/lib/routes'
 
 function BugActions({ bug }) {
     const { user } = useAppStore();
     const navigate = useNavigate();
+    const [developers , setDevelopers] = useState([]);
 
     const updateBugDetails = (bug) => {
         navigate(`/bugs/update-bug/${bug.id}`)
     }
+
+    const fetchDevelopers = async() =>{
+        const res = await apiClient.get(GET_DEVELOPERS_ROUTE);
+        //console.log(res.data);
+        setDevelopers(res.data);
+    }
+    
+    useEffect(()=>{
+        fetchDevelopers();
+    },[])
 
     return (
         <div className='flex flex-col gap-4'>
@@ -25,10 +39,9 @@ function BugActions({ bug }) {
                                 <SelectValue placeholder="Select member" />
                             </SelectTrigger>
                             <SelectContent>
-                                {/* <SelectItem value="low">Low</SelectItem>
-                                <SelectItem value="medium">Medium</SelectItem>
-                                <SelectItem value="high">High</SelectItem>
-                                <SelectItem value="critical">Critical</SelectItem> */}
+                                {developers.map((developer)=>(
+                                    <SelectItem key={developer.id} value ={developer.id} >{developer.name}</SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>
