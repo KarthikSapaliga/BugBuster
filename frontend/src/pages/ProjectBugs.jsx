@@ -123,6 +123,7 @@ function ProjectBugs() {
     if (projectId) fetchBugs();
   }, [projectId, token]);
 
+  
   useEffect(() => {
     async function fetchUserNames() {
       const newUserMap = {};

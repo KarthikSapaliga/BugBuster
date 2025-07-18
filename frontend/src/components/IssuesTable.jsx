@@ -10,13 +10,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { apiClient } from "@/lib/axios";
+import { GET_PROJECT_BY_ID_ROUTE } from "@/lib/routes";
+import { useAppStore } from "@/store/store";
 
-const severityColor = {
-  Critical: "bg-red-500 text-red-900",
-  High: "bg-red-100 text-red-500",
-  Medium: "bg-yellow-100 text-yellow-700",
-  Low: "bg-emerald-100 text-emerald-700",
-};
+function getSeverityColor(severity) {
+  const map = {
+    low: "bg-green-100 text-green-800",
+    medium: "bg-yellow-100 text-yellow-800",
+    high: "bg-orange-100 text-orange-800",
+    critical: "bg-red-100 text-red-800",
+  };
+  return map[severity.toLowerCase()] || "bg-gray-100 text-gray-800";
+}
 
 function getStatusColor(status) {
   const statusMap = {
@@ -45,6 +52,45 @@ const getStatusIcon = (status) => {
 };
 
 function IssuesTable({ data }) {
+  const [projectMap, setProjectMap] = useState({});
+  const { token } = useAppStore();
+  //console.log(data);
+
+  useEffect(() => {
+    if (!data || data.length === 0) {
+      return;
+    }
+
+    const uniqueProjectIds = [
+      ...new Set(data.map((issue) => issue.projectId).filter(Boolean)),
+    ];
+
+    async function fetchProjects() {
+      const newProjectMap = { ...projectMap };
+
+      await Promise.all(
+        uniqueProjectIds.map(async (projectId) => {
+          if (!newProjectMap[projectId]) {
+            try {
+              const res = await apiClient.get(
+                `${GET_PROJECT_BY_ID_ROUTE}/${projectId}`,{
+                  headers: { Authorization: `Bearer ${token}` }
+                }
+              );
+              newProjectMap[projectId] = res.data;
+            } catch (err) {
+              console.error(`Failed to fetch project ${projectId}:`, err);
+            }
+          }
+        })
+      );
+
+      setProjectMap(newProjectMap);
+    }
+
+    fetchProjects();
+  }, [data]); 
+
   return (
     <div className="overflow-x-auto rounded-md border">
       <table className="min-w-full text-sm text-left">
@@ -64,12 +110,12 @@ function IssuesTable({ data }) {
             <tr key={bug.id} className="hover:bg-muted/50">
               <td className="px-4 py-3 font-medium">{bug.id}</td>
               <td className="px-4 py-3">{bug.title}</td>
-              <td className="px-4 py-3">{bug.project}</td>
+              <td className="px-4 py-3">{projectMap[bug.projectId]?.name || "Loading..."}</td>
               <td className="px-4 py-3">
                 <span
                   className={cn(
                     "px-2 py-1 text-xs font-medium rounded-md",
-                    severityColor[bug.severity]
+                    getSeverityColor(bug.severity)
                   )}
                 >
                   {bug.severity}
@@ -79,10 +125,10 @@ function IssuesTable({ data }) {
               <td className="px-4 py-3 text-center">
                 <span
                   className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded font-medium ${getStatusColor(
-                    bug.status.toUpperCase()
+                    bug?.state.toUpperCase()
                   )}`}
                 >
-                  {getStatusIcon(bug.status.toUpperCase())} {bug.status}
+                  {getStatusIcon(bug.state.toUpperCase())} {bug.state}
                 </span>
               </td>
               <td className="flex gap-2 py-3 justify-center items-center">

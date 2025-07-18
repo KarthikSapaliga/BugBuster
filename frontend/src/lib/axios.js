@@ -9,13 +9,13 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((request) => {
-    console.log("Axios Request:\n", request);
+    //console.log("Axios Request:\n", request);
     return request;
 });
 
 apiClient.interceptors.response.use(
     (response) => {
-        console.log("Axios Response:\n", response);
+        //console.log("Axios Response:\n", response);
         return response;
     },
     (error) => {
