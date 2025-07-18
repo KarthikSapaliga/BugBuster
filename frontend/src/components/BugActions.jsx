@@ -1,4 +1,3 @@
-import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
@@ -6,65 +5,121 @@ import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/store/store'
 import { useEffect, useState } from 'react'
 import { apiClient } from '@/lib/axios'
-import { GET_DEVELOPERS_ROUTE } from '@/lib/routes'
+import { GET_DEVELOPERS_ROUTE, CLOSE_BUG_ROUTE, ASSIGN_BUG_ROUTE, DELETE_BUG_ROUTE, RESOLVE_BUG_ROUTE } from '@/lib/routes'
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 function BugActions({ bug }) {
-    const { user } = useAppStore();
+    const { user, token } = useAppStore();
     const navigate = useNavigate();
-    const [developers , setDevelopers] = useState([]);
+    const [developers, setDevelopers] = useState([]);
+    const [selectedDev, setSelectedDev] = useState("");
+
+    const fetchDevelopers = async () => {
+        const res = await apiClient.get(GET_DEVELOPERS_ROUTE);
+        setDevelopers(res.data);
+    }
+
+    useEffect(() => {
+        fetchDevelopers();
+    }, [])
 
     const updateBugDetails = (bug) => {
         navigate(`/bugs/update-bug/${bug.id}`)
     }
 
-    const fetchDevelopers = async() =>{
-        const res = await apiClient.get(GET_DEVELOPERS_ROUTE);
-        //console.log(res.data);
-        setDevelopers(res.data);
-    }
-    
-    useEffect(()=>{
-        fetchDevelopers();
-    },[])
+    const closeBug = async () => {
+        if (!token) return toast.error("Unauthorized");
+
+        try {
+            const res = await apiClient.patch(`${CLOSE_BUG_ROUTE}/${bug.id}`, null, {
+                params: { closedBy: user.name },
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            toast.success("Bug closed successfully!");
+            console.log("Response:", res.data);
+        } catch (err) {
+            console.error("Error:", err);
+            toast.error(err?.response?.data || "Failed to close bug.");
+        }
+    };
+
+    const assignUser = async () => {
+        if (!token) return toast.error("Unauthorized");
+
+        if (!selectedDev) return toast.error("Please select a developer");
+
+        try {
+            const res = await apiClient.patch(`${ASSIGN_BUG_ROUTE}/${bug.id}`, null, {
+                params: { developerId: selectedDev },
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            toast.success("Developer assigned successfully!");
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "Failed to assign developer.");
+        }
+    };
+
+    const resolveBug = async () => {
+        if (!token) return toast.error("Unauthorized");
+
+        try {
+            const res = await apiClient.patch(`${RESOLVE_BUG_ROUTE}/${bug.id}`, null, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            toast.success("Bug marked as resolved!");
+            console.log("Response:", res.data);
+        } catch (err) {
+            console.error("Error:", err);
+            toast.error(err?.response?.data?.message || "Failed to resolve bug.");
+        }
+    };
+
+
+    const deleteBug = () => { }
 
     return (
         <div className='flex flex-col gap-4'>
             {user && user.role === "TESTER" &&
                 <>
-
-                    <div className="space-y-2 w-full">
-                        <Label htmlFor="member">Assign To</Label>
-                        <Select>
-                            <SelectTrigger id="member">
-                                <SelectValue placeholder="Select member" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {developers.map((developer)=>(
-                                    <SelectItem key={developer.id} value ={developer.id} >{developer.name}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
                     <div>
-                        <p>Actions</p>
-                        <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+                        <h2 className="text-lg font-semibold mb-2">Actions</h2>
+                        <div className='grid grid-cols-1 lg:grid-cols-3 gap-4'>
                             <Button onClick={() => updateBugDetails(bug)}>Update the Details</Button>
-                            <Button>Close the issue</Button>
-                            <Button>Reassign</Button>
-                            <Button>Delete</Button>
+                            <Button onClick={() => closeBug()}>Close the issue</Button>
+                            <Button onClick={() => deleteBug()}>Delete</Button>
                         </div>
                     </div>
+
+                    {bug.state === "OPEN" && <div className="space-y-2 w-full">
+                        <h2 className="text-lg font-semibold mb-2">Assign To</h2>
+                        <div className="flex gap-4">
+                            <Select onValueChange={setSelectedDev}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select member" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {developers.map((developer) => (
+                                        <SelectItem key={developer.id} value={developer.id} >{developer.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <Button disabled={!selectedDev} onClick={() => assignUser()}>Assign</Button>
+                        </div>
+                    </div>}
 
                 </>
             }
             {user && user.role === "DEVELOPER" &&
                 <>
                     <div>
-                        <p>Actions</p>
-                        <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
-                            <Button>Request to Work</Button>
-                            <Button>Mark as Resolved</Button>
+                        <h2 className="text-lg font-semibold mb-2">Actions</h2>
+                        <div className='flex flex-col lg:flex-row gap-4'>
+                            {bug.state === "OPEN" && <Button >Start Work</Button>}
+                            {bug.assignedTo === user.id && bug.state !== "RESOLVED" && <Button onClick={resolveBug}>Mark as Resolved</Button>}
                         </div>
                     </div>
                 </>
