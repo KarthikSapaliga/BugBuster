@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Loader2, User, Mail, Lock, UserCheck } from "lucide-react";
 import { apiClient } from "@/lib/axios.js";
 import { SIGNUP_ROUTE } from "@/lib/routes.js";
 import toast from "react-hot-toast";
@@ -36,6 +39,13 @@ export default function SignupForm() {
         }));
     };
 
+    const handleRoleChange = (value) => {
+        setFormData((prev) => ({
+            ...prev,
+            role: value,
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -55,76 +65,100 @@ export default function SignupForm() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-background">
-            <div className="bg-sidebar shadow-xl rounded-2xl p-8 w-full max-w-md flex flex-col gap-4 text-center">
-                <form onSubmit={handleSubmit} className="space-y-6 text-left">
-                    <h2 className="text-2xl font-bold text-center">Sign Up</h2>
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+            <Card className="w-full max-w-md shadow-lg">
+                <CardHeader className="space-y-1">
+                    <CardTitle className="text-2xl font-bold text-center">
+                        Create an account
+                    </CardTitle>
+                    <CardDescription className="text-center">
+                        Enter your information to get started
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="name">Name</Label>
+                            <div className="relative">
+                                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    id="name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="John Doe"
+                                    className="pl-10"
+                                />
+                            </div>
+                        </div>
 
-                    <div>
-                        <Label htmlFor="name">Name</Label>
-                        <Input
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            placeholder="John Doe"
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <div className="relative">
+                                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="you@example.com"
+                                    className="pl-10"
+                                />
+                            </div>
+                        </div>
 
-                    <div>
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                            placeholder="you@example.com"
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="password">Password</Label>
+                            <div className="relative">
+                                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="••••••••"
+                                    className="pl-10"
+                                />
+                            </div>
+                        </div>
 
-                    <div>
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            name="password"
-                            type="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            placeholder="••••••••"
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="role">Role</Label>
+                            <div className="relative">
+                                <UserCheck className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+                                <Select value={formData.role} onValueChange={handleRoleChange}>
+                                    <SelectTrigger className="pl-10">
+                                        <SelectValue placeholder="Select your role" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Developer">Developer</SelectItem>
+                                        <SelectItem value="Tester">Tester</SelectItem>
+                                        <SelectItem value="Manager">Manager</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
 
-                    <div>
-                        <Label htmlFor="role">Role</Label>
-                        <select
-                            id="role"
-                            name="role"
-                            value={formData.role}
-                            onChange={handleChange}
-                            className="w-full text-primary bg-sidebar mt-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="Developer">Developer</option>
-                            <option value="Tester">Tester</option>
-                            <option value="Manager">Manager</option>
-                        </select>
-                    </div>
-
-                    <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? "Signing Up..." : "Sign Up"}
-                    </Button>
-                </form>
-
-                <p className="text-sm text-muted-foreground">
-                    Already have an account?{" "}
-                    <Link to="/signin" className="text-blue-600 hover:underline">
-                        Sign In
-                    </Link>
-                </p>
-            </div>
+                        <Button type="submit" className="w-full" disabled={loading}>
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {loading ? "Signing Up..." : "Sign Up"}
+                        </Button>
+                    </form>
+                </CardContent>
+                <CardFooter>
+                    <p className="text-sm text-muted-foreground text-center w-full">
+                        Already have an account?{" "}
+                        <Link to="/signin" className="text-primary hover:underline font-medium">
+                            Sign In
+                        </Link>
+                    </p>
+                </CardFooter>
+            </Card>
         </div>
     );
 }
