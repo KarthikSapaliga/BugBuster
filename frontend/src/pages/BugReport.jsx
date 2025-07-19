@@ -218,7 +218,7 @@ const BugReport = () => {
 					</div>
 
 					{/* Metadata */}
-					<div className="bg-sidebar rounded-xl border border-sidebar flex flex-col p-5 min-w-[35%] gap-3 shadow">
+					<div className="bg-sidebar rounded-xl border border-border flex flex-col p-5 min-w-[35%] gap-3 shadow">
 						<h2 className="text-lg text-foreground font-bold flex items-center gap-2 mb-2">
 							Metadata
 						</h2>
