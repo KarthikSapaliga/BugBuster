@@ -38,13 +38,7 @@ import {
 import { getUserName } from "@/lib/api";
 import BugCard from "@/components/BugCard";
 import IssueFilter from "@/components/IssueFilter";
-
-function formatDate(dateString) {
-  return new Date(dateString).toLocaleString("en-IN", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-}
+import { formatDate } from "@/lib/utils";
 
 function getSeverityColor(severity) {
   const map = {
@@ -244,7 +238,7 @@ function ProjectBugs() {
           </Card>
         ) : (
           filteredIssues.map((issue) => (
-            <BugCard key={issue.issueId} issue={issue} />
+            <BugCard key={issue.issueId || issue.id} issue={issue} />
           ))
         )}
       </div>
