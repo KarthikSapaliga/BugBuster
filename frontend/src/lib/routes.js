@@ -38,6 +38,9 @@ export const ASSIGN_BUG_ROUTE = "/api/bugs/assign"; // PATCH - Append /:id
 export const RESOLVE_BUG_ROUTE = "/api/bugs/resolve"; // PATCH - Append /:id
 export const START_WORKING_ROUTE = "/api/bugs/start-working"; // PATCH - Append /:id
 
+export const BUG_UPLOAD_ROUTE = "/api/bugs/files/upload"; // POST
+export const BUG_DOWNLOAD_ROUTE = "/api/bugs/files"; // GET - Append /{filename:.+}
+
 export const GITHUB_IMPORT_ROUTE = "/api/bugs/github-import";
 
 // Comment Routes
