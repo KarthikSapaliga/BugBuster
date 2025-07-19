@@ -21,6 +21,8 @@ import {
 	AlertTriangle,
 	Search,
 	RefreshCw,
+	UserCheck,
+	UserPlus,
 } from "lucide-react";
 import {
 	fetchIssues,
@@ -159,7 +161,7 @@ export default function VersionControl() {
 				</div>
 
 				{/* Filters */}
-				<Card>
+				<Card className="bg-sidebar">
 					<CardContent className="p-2">
 						<div className="grid grid-cols-5 gap-4 items-center">
 							<div className="col-span-2 flex items-center gap-2">
@@ -202,13 +204,13 @@ export default function VersionControl() {
 				{/* Issues List */}
 				<div className="space-y-4">
 					{filteredIssues.length === 0 ? (
-						<Card className="flex items-center gap-4 p-4">
+						<Card className="flex items-center gap-4 p-4 bg-sidebar">
 							<AlertTriangle className="size-5" />
 							<span>No issues found matching your filters.</span>
 						</Card>
 					) : (
 						filteredIssues.map((issue) => (
-							<Card key={issue.issueId} className="hover:shadow-md">
+							<Card key={issue.issueId} className="hover:shadow-md bg-sidebar">
 								<CardContent className="p-6 space-y-3">
 									<div className="flex justify-between items-start">
 										<div>
@@ -229,7 +231,7 @@ export default function VersionControl() {
 
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-muted-foreground">
 										<div className="flex items-center gap-2">
-											<User className="w-4 h-4" />
+											<UserPlus className="w-4 h-4" />
 											<span>Created by: {issue.createdBy}</span>
 										</div>
 										<div className="flex items-center gap-2">
@@ -239,7 +241,7 @@ export default function VersionControl() {
 										{issue.closedAt && (
 											<>
 												<div className="flex items-center gap-2">
-													<User className="w-4 h-4" />
+													<UserCheck className="w-4 h-4" />
 													<span>Closed by: {issue.closedBy}</span>
 												</div>
 												<div className="flex items-center gap-2">
