@@ -12,6 +12,7 @@ import {
 } from "@/lib/analytics";
 import { apiClient } from "@/lib/axios";
 import { GET_ALL_BUGS_ROUTE } from "@/lib/routes";
+import IssuesTable from "@/components/IssuesTable";
 
 function Analytics() {
   const { token } = useAppStore();
@@ -20,6 +21,7 @@ function Analytics() {
   const [pieData, setPieData] = useState([]);
   const [weeklyData, setWeeklyData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
+  const [closedBugs , setClosedBugs] = useState([]);
 
   useEffect(() => {
     async function fetchAllIssues() {
@@ -39,6 +41,9 @@ function Analytics() {
         setPieData(pieData);
         setWeeklyData(weeklyProgress);
         setMonthlyData(generatedMonthly);
+
+        setClosedBugs(bugsData.filter((bug)=>bug.state === "CLOSED"))
+        
       } catch (err) {
         console.error("Failed to fetch bugs:", err);
       }
@@ -88,7 +93,7 @@ function Analytics() {
       {/* History */}
       <div className="bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
         <h2 className="text-xl font-semibold text-foreground mb-4">History</h2>
-        <History />
+        <IssuesTable  data = {closedBugs}/>
       </div>
     </main>
   );
