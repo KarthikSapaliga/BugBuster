@@ -36,7 +36,7 @@ export default function BugStatusPieChart({ data }) {
   };
 
   return (
-    <div className="w-full h-80">
+    <div className="w-full h-80 rounded-xl shadow-inner">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
