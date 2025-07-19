@@ -291,7 +291,7 @@ function BugReportingForm() {
                         />
 
                         {attachments.length > 0 && (
-                            <ul className="mt-2 space-y-1 text-sm text-gray-700">
+                            <ul className="mt-2 space-y-1 text-sm">
                                 {attachments.map((file, idx) => (
                                     <li
                                         key={idx}

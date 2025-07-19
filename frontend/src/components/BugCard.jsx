@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import { Calendar, ExternalLink, Eye, UserCheck, UserPlus, CheckCircle, PlayCircle, Clock, AlertCircle, XCircle, Plus } from "lucide-react";
+import { Calendar, ExternalLink, Eye, UserCheck, UserPlus, CheckCircle, PlayCircle, Clock, AlertCircle, XCircle, Plus, Github } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -50,6 +50,12 @@ const BugCard = ({ issue, userMap }) => {
               </p>
             </div>
             <div className="flex flex-wrap gap-2 ml-4 shrink-0">
+              {issue.fromGithub && (
+              <Badge variant="default">
+                <Github className="w-4 h-4 mr-1" />
+                GitHub
+              </Badge>
+              )}
               {issue.state && (
                 <Badge variant="outline" className={`${getStatusColor(issue.state)} text-xs font-medium`}>
                   <span className="mr-1">{getStatusIcon(issue.state)}</span>

@@ -80,10 +80,10 @@ export default function QuickActions() {
             Critical Bugs
           </div>
           <p className="text-sm text-muted-foreground">
-            You have <strong>2 critical bugs</strong> that need immediate
+            You have <strong>critical bugs</strong> that need immediate
             attention.
           </p>
-          <Button variant="destructive" className="w-full" asChild>
+          <Button variant="destructive" className="w-full bg-red-500" asChild>
             <Link to="/high-priority">View Critical Bugs</Link>
           </Button>
         </CardContent>

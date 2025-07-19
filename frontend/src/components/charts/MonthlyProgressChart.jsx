@@ -1,100 +1,4 @@
-// import {
-//     AreaChart,
-//     Area,
-//     XAxis,
-//     YAxis,
-//     CartesianGrid,
-//     Tooltip,
-//     ResponsiveContainer,
-//     Legend
-// } from "recharts";
 
-// export default function MonthlyProgressChart({monthlyData}) {
-
-//     const axisColor =  "#9ca3af";
-
-//     return (
-//         <div className="w-full">
-
-//             {/* Chart */}
-//             <div className={`w-full h-[350px] rounded-lg`}>
-//                 <ResponsiveContainer width="100%" height="100%">
-//                     <AreaChart
-//                         data={monthlyData}
-//                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-//                     >
-//                         <defs>
-//                             <linearGradient id="completedGradient" x1="0" y1="0" x2="0" y2="1">
-//                                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-//                                 <stop offset="95%" stopColor="#10b981" stopOpacity={0.05}/>
-//                             </linearGradient>
-//                             <linearGradient id="targetGradient" x1="0" y1="0" x2="0" y2="1">
-//                                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
-//                                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05}/>
-//                             </linearGradient>
-//                         </defs>
-                        
-//                         <CartesianGrid 
-//                             strokeDasharray="4 4" 
-//                         />
-                        
-//                         <XAxis
-//                             dataKey="month"
-//                             stroke={axisColor}
-//                             tickLine={false}
-//                             axisLine={{ stroke: axisColor }}
-//                             fontSize={12}
-//                         />
-                        
-//                         <YAxis
-//                             stroke={axisColor}
-//                             tickLine={false}
-//                             axisLine={{ stroke: axisColor }}
-//                             fontSize={12}
-//                         />
-                        
-//                         <Tooltip
-//                             contentStyle={{
-//                                 borderRadius: "0.5rem",
-//                                 fontSize: "0.875rem",
-//                                 boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
-//                             }}
-//                             labelStyle={{ 
-//                                 fontWeight: "500"
-//                             }}
-//                             formatter={(value, name) => [
-//                                 value,
-//                                 name === 'completed' ? 'Completed' : 
-//                                 name === 'target' ? 'Target' : 'Pending'
-//                             ]}
-//                         />
-                        
-//                         <Legend />
-                        
-//                         <Area
-//                             type="monotone"
-//                             dataKey="target"
-//                             stroke="#3b82f6"
-//                             fillOpacity={1}
-//                             fill="url(#targetGradient)"
-//                             strokeWidth={2}
-//                             strokeDasharray="5 5"
-//                         />
-                        
-//                         <Area
-//                             type="monotone"
-//                             dataKey="completed"
-//                             stroke="#10b981"
-//                             fillOpacity={1}
-//                             fill="url(#completedGradient)"
-//                             strokeWidth={3}
-//                         />
-//                     </AreaChart>
-//                 </ResponsiveContainer>
-//             </div>
-//         </div>
-//     );
-// }
 import {
     AreaChart,
     Area,
@@ -241,6 +145,5 @@ export default function MonthlyProgressChart({monthlyData = [
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-
     );
 }

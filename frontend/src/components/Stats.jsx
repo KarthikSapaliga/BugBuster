@@ -40,7 +40,7 @@ const Stats = () => {
         {stats.map(({ label, value }) => (
           <div
             key={label}
-            className="bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6 text-center"
+            className="bg-sidebar border border-border shadow-md rounded-xl p-6 text-center"
           >
             <h2 className="text-lg font-medium text-muted-foreground mb-2">
               {label}

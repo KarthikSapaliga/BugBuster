@@ -55,8 +55,8 @@ export default function SignupForm() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
-            <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md flex flex-col gap-4 text-center">
+        <div className="flex items-center justify-center min-h-screen bg-background">
+            <div className="bg-sidebar shadow-xl rounded-2xl p-8 w-full max-w-md flex flex-col gap-4 text-center">
                 <form onSubmit={handleSubmit} className="space-y-6 text-left">
                     <h2 className="text-2xl font-bold text-center">Sign Up</h2>
 
@@ -105,7 +105,7 @@ export default function SignupForm() {
                             name="role"
                             value={formData.role}
                             onChange={handleChange}
-                            className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full text-primary bg-sidebar mt-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="Developer">Developer</option>
                             <option value="Tester">Tester</option>

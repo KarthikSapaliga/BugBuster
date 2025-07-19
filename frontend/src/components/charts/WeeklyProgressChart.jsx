@@ -11,23 +11,22 @@ import {
 } from "recharts";
 import { useTheme } from "@/contexts/ThemeContext";
 
-// ✅ Consistent status colors matching Bar & Pie Chart
 const STATUS_COLORS = {
- pending: "#ef4444",   // purple-500 for 'pending'
- completed: "#10b981"  // cyan-500 for 'completed'
+ pending: "#ef4444",   
+ completed: "#10b981"  
 };
 
 export default function WeeklyProgressChart({ data }) {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
-  const axisColor = isDark ? "#6b7280" : "#9ca3af"; // Tailwind gray-500 vs gray-400
-  const gridColor = isDark ? "#27272a" : "#e5e7eb"; // subtle grid contrast
+  const axisColor = isDark ? "#6b7280" : "#9ca3af"; 
+  const gridColor = isDark ? "#27272a" : "#e5e7eb"; 
   const tooltipBg = isDark ? "#18181b" : "#ffffff";
   const tooltipBorder = isDark ? "#3f3f46" : "#e5e7eb";
 
   return (
-    <div className="w-full h-[260px] flex items-center justify-center">
+    <div className="w-full h-[280px]  flex items-center justify-center rounded-xl shadow-inner">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}

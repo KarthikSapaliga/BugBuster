@@ -1,6 +1,5 @@
 import {
   Eye,
-  Pencil,
   CheckCircle,
   PlayCircle,
   Clock,
@@ -40,7 +39,6 @@ const getStatusIcon = (status) => {
 function IssuesTable({ data }) {
   const [projectMap, setProjectMap] = useState({});
   const { token } = useAppStore();
-  //console.log(data);
 
   useEffect(() => {
     if (!data || data.length === 0) {
