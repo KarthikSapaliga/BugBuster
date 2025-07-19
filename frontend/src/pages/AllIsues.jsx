@@ -15,10 +15,10 @@ import { GET_ALL_BUGS_ROUTE } from "@/lib/routes";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAppStore } from "@/store/store";
+import IssueFilter from "@/components/IssueFilter";
 
 function AllIsues() {
-
-  const { token } = useAppStore()
+  const { token } = useAppStore();
 
   const [issues, setIssues] = useState([]);
   const [filteredIssues, setFilteredIssues] = useState(issues);
@@ -31,7 +31,7 @@ function AllIsues() {
   useEffect(() => {
     async function fetchAllIssues() {
       const res = await apiClient.get(GET_ALL_BUGS_ROUTE, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       console.log(res);
       setIssues(res.data);
@@ -104,88 +104,18 @@ function AllIsues() {
         {/* Filters */}
         <Card className="mb-4">
           <CardContent className="p-2 shadow-sm">
-            <div className="grid grid-cols-7 gap-3 items-center">
-              <div className="flex items-center gap-2 col-span-3">
-                <Search className="size-5 text-primary" />
-                <Input
-                  type="text"
-                  placeholder="Search issues..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="px-2 py-1  border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Select
-                  value={statusFilter}
-                  onValueChange={(value) => setStatusFilter(value)}
-                >
-                  <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                    <SelectValue placeholder="All Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="OPEN">Open</SelectItem>
-                    <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-                    <SelectItem value="RESOLVED">Resolved</SelectItem>
-                    <SelectItem value="CLOSED">Closed</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Select
-                  value={severityFilter}
-                  onValueChange={(value) => setSeverityFilter(value)}
-                >
-                  <SelectTrigger className="px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                    <SelectValue placeholder="All Severity" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Severity</SelectItem>
-                    <SelectItem value="LOW">Low</SelectItem>
-                    <SelectItem value="MEDIUM">Medium</SelectItem>
-                    <SelectItem value="HIGH">High</SelectItem>
-                    <SelectItem value="CRITICAL">Critical</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Select
-                  value={priorityFilter}
-                  onValueChange={(value) => setPriorityFilter(value)}
-                >
-                  <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                    <SelectValue placeholder="All Priority" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Priority</SelectItem>
-                    <SelectItem value="P1">P1</SelectItem>
-                    <SelectItem value="P2">P2</SelectItem>
-                    <SelectItem value="P3">P3</SelectItem>
-                    <SelectItem value="P4">P4</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Select
-                  value={urgencyFilter}
-                  onValueChange={(value) => setUrgencyFilter(value)}
-                >
-                  <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                    <SelectValue placeholder="Urgency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Urgency</SelectItem>
-                    <SelectItem value="HIGH">High</SelectItem>
-                    <SelectItem value="MEDIUM">Medium</SelectItem>
-                    <SelectItem value="LOW">Low</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            <IssueFilter
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              severityFilter={severityFilter}
+              setSeverityFilter={setSeverityFilter}
+              priorityFilter={priorityFilter}
+              setPriorityFilter={setPriorityFilter}
+              urgencyFilter={urgencyFilter}
+              setUrgencyFilter={setUrgencyFilter}
+            />
           </CardContent>
         </Card>
         <IssuesTable data={filteredIssues} />
