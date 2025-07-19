@@ -230,7 +230,7 @@ const BugReport = () => {
 							</p>
 							<span
 								className={cn(
-									"py-2 px-3 bg-card inline-flex items-center text-sm rounded-lg font-medium border border-border "
+									"py-2 px-3 bg-background inline-flex items-center text-sm rounded-lg font-medium border border-border "
 								)}
 							>
 								{bug.priority}
@@ -238,7 +238,7 @@ const BugReport = () => {
 						</div>
 
 						<div className="space-y-3">
-							<div className="bg-card rounded-lg p-3 border border-border ">
+							<div className="bg-background rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground">
 									Project ID
 								</p>
