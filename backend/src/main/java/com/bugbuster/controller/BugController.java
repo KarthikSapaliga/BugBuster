@@ -13,6 +13,7 @@ import com.bugbuster.model.Comment;
 import com.bugbuster.model.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -359,34 +360,6 @@ public class BugController {
         }
     }
 
-    // Comment on Bug
-    @PostMapping("/comment/{id}")
-    public ResponseEntity<?> addComment(@PathVariable String id, @RequestBody Comment comment,
-            @RequestHeader("Authorization") String authHeader) {
-        Optional<Bug> bugOpt = bugService.getBugById(id);
-        if (bugOpt.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        Bug bug = bugOpt.get();
-        if (bug.getComments() == null)
-            bug.setComments(new ArrayList<>());
-
-        comment.setAuthor(extractUserId(authHeader));
-        comment.setTimestamp(new Date());
-        bug.getComments().add(comment);
-
-        bugService.updateBug(bug);
-        return ResponseEntity.ok(bug);
-    }
-
-    // Get comments
-    @GetMapping("/comments/{id}")
-    public ResponseEntity<?> getComments(@PathVariable String id) {
-        return bugService.getBugById(id)
-                .map(bug -> ResponseEntity.ok(bug.getComments() != null ? bug.getComments() : new ArrayList<>()))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
     // Upload file
     @PostMapping("/files/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -426,6 +399,52 @@ public class BugController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error downloading file: " + e.getMessage());
         }
+    }
+
+    // Comment on Bug
+    @PostMapping("/comments/{id}")
+    public ResponseEntity<?> addComment(@PathVariable String id,
+            @RequestBody Comment comment,
+            @RequestHeader("Authorization") String authHeader) {
+        Optional<Bug> bugOpt = bugService.getBugById(id);
+        if (bugOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bug not found");
+        }
+
+        Bug bug = bugOpt.get();
+
+        if (bug.getComments() == null) {
+            bug.setComments(new ArrayList<>());
+        }
+
+        comment.setAuthor(extractUserId(authHeader));
+        comment.setTimestamp(LocalDateTime.now());
+
+        bug.getComments().add(comment);
+        bugService.updateBug(bug);
+
+        return ResponseEntity.ok("Comment added successfully");
+    }
+
+    // Get All Comments
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<?> getComments(@PathVariable String id) {
+        Optional<Bug> bugOpt = bugService.getBugById(id);
+
+        if (bugOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bug not found");
+        }
+
+        List<Comment> comments = bugOpt.get().getComments();
+
+        if (comments == null) {
+            comments = new ArrayList<>();
+        } else {
+            // Sort by timestamp descending (newest first)
+            comments.sort((c1, c2) -> c2.getTimestamp().compareTo(c1.getTimestamp()));
+        }
+
+        return ResponseEntity.ok(comments);
     }
 
     private String determineContentType(String filename) {
