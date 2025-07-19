@@ -21,13 +21,13 @@ export default function AttachmentList({ attachments = [] }) {
                 {attachments.map((attachment, idx) => {
                     const downloadUrl = `${HOST}${BUG_DOWNLOAD_ROUTE}/${attachment.filename}`;
                     return (
-                        <Card key={idx} className="shadow-md p-1">
-                            <CardContent className="flex flex-col gap-2 p-2 items-center justify-center h-full">
+                        <Card key={idx} className="shadow-md p-1 h-52">
+                            <CardContent className="flex flex-col gap-2 p-2 items-center justify-between h-full">
                                 {isImage(attachment.originalName) ? (
                                     <img
                                         src={downloadUrl}
                                         alt={attachment.originalName}
-                                        className="max-h-48 object-contain rounded-md border border-muted"
+                                        className="object-contain rounded-md border border-muted"
                                         loading="lazy"
                                     />
                                 ) : (
