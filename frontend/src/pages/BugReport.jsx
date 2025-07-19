@@ -3,7 +3,7 @@ import {
 	Calendar,
 	User,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 import BugActions from "@/components/BugActions";
 
@@ -259,7 +259,7 @@ const BugReport = () => {
 									Date Created
 								</p>
 								<h3 className="text-foreground font-semibold">
-									{bug.createdAt}
+									{formatDate(bug.createdAt)}
 								</h3>
 							</div>
 
@@ -269,7 +269,7 @@ const BugReport = () => {
 									Date Resolved
 								</p>
 								<h3 className="text-foreground font-semibold">
-									{bug.resolvedAt || "Not resolved yet"}
+									{formatDate(bug.resolvedAt) || "Not resolved yet"}
 								</h3>
 							</div>
 						</div>
