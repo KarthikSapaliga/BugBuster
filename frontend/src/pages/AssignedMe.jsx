@@ -100,7 +100,7 @@ function AssignedMe() {
               </Card>
             ) : (
               assignedBugs.map((issue) => (
-                <BugCard key={issue.issueId} issue = {issue}/>
+                <BugCard key={issue.issueId} issue = {issue} userMap={userMap}/>
               ))
             )}
           </div>
