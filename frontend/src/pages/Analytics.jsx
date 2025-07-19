@@ -6,7 +6,10 @@ import BugStatusBarChart from "@/components/charts/BugStatusBarChart";
 import MonthlyProgressChart from "@/components/charts/MonthlyProgressChart";
 import Stats from "@/components/Stats";
 import { useAppStore } from "@/store/store";
-import { generateMonthlyProgressData, getBugAnalyticsData } from "@/lib/analytics";
+import {
+  generateMonthlyProgressData,
+  getBugAnalyticsData,
+} from "@/lib/analytics";
 import { apiClient } from "@/lib/axios";
 import { GET_ALL_BUGS_ROUTE } from "@/lib/routes";
 
@@ -16,7 +19,7 @@ function Analytics() {
   const [barData, setBarData] = useState([]);
   const [pieData, setPieData] = useState([]);
   const [weeklyData, setWeeklyData] = useState([]);
-  const [monthlyData,setMonthlyData] = useState([]);
+  const [monthlyData, setMonthlyData] = useState([]);
 
   useEffect(() => {
     async function fetchAllIssues() {
@@ -28,14 +31,14 @@ function Analytics() {
 
         setBugs(bugsData);
 
-        const { barData, pieData, weeklyProgress } = getBugAnalyticsData(bugsData);
+        const { barData, pieData, weeklyProgress } =
+          getBugAnalyticsData(bugsData);
         const generatedMonthly = generateMonthlyProgressData(bugsData);
-        
+
         setBarData(barData);
         setPieData(pieData);
         setWeeklyData(weeklyProgress);
         setMonthlyData(generatedMonthly);
-
       } catch (err) {
         console.error("Failed to fetch bugs:", err);
       }
@@ -49,32 +52,36 @@ function Analytics() {
       <Stats />
 
       {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="col-span-3 bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+      <div className="grid grid-cols-1  gap-6">
+        <div className="bg-card dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Weekly Progress
           </h2>
           <WeeklyProgressChart data={weeklyData} />
         </div>
-        <div className="col-span-1 bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className=" bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Bug Status
           </h2>
           <BugStatusPieChart data={pieData} />
         </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-        <div className="col-span-3 bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-foreground mb-4">
-            Monthly Progress
-          </h2>
-          <MonthlyProgressChart monthlyData = {monthlyData} />
-        </div>
-        <div className="col-span-2 bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+        <div className=" bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Bug Status Bar Chart
           </h2>
           <BugStatusBarChart data={barData} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1  gap-6">
+        <div className="col-span-1 bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+          <h2 className="text-lg font-semibold text-foreground mb-4">
+            Monthly Progress
+          </h2>
+          <MonthlyProgressChart monthlyData={monthlyData} />
         </div>
       </div>
 
