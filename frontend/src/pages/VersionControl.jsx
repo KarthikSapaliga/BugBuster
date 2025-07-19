@@ -156,7 +156,7 @@ export default function VersionControl() {
 				</div>
 
 				{/* Filters */}
-				<Card className="bg-sidebar">
+				<Card className="">
 					<CardContent className="p-2">
 						<IssueFilter
 							searchTerm={searchTerm}
