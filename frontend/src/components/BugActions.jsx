@@ -23,6 +23,8 @@ function BugActions({ bug }) {
     const [selectedDev, setSelectedDev] = useState("");
 
     useEffect(() => {
+        if(!bug.projectId) return;
+
         const fetchDevelopers = async () => {
             const res = await apiClient.get(`${GET_DEVS_IN_TEAM_ROUTE}/${bug.projectId}`);
             setDevelopers(res.data);
@@ -30,7 +32,7 @@ function BugActions({ bug }) {
         if (bug) {
             fetchDevelopers();
         }
-    }, [bug?.projectId])
+    }, [bug.projectId])
 
     const updateBugDetails = (bug) => {
         navigate(`/bugs/update-bug/${bug.id}`)

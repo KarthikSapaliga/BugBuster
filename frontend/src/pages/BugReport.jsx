@@ -18,13 +18,6 @@ import toast from "react-hot-toast";
 import { getUserName } from "@/lib/api";
 import { useAppStore } from "@/store/store";
 
-const severityColor = {
-	Critical: "bg-red-500 text-red-900",
-	High: "bg-red-100 text-red-500",
-	Medium: "bg-yellow-100 text-yellow-700",
-	Low: "bg-emerald-100 text-emerald-700",
-};
-
 const BugReport = () => {
 	const { token } = useAppStore()
 	const params = useParams();
@@ -40,7 +33,7 @@ const BugReport = () => {
 			try {
 				const res = await apiClient.get(`${GET_BUG_BY_ID_ROUTE}/${bugId}`);
 				setBug(res.data);
-				console.log(res.data);
+				//console.log(res.data);
 			} catch (err) {
 				console.log(err);
 				toast.error("Failed to fetch the Bug Info");
@@ -52,7 +45,6 @@ const BugReport = () => {
 				headers: { Authorization: `Bearer ${token}` },
 			})
 			setComments(res.data)
-			console.log(res.data)
 		}
 		fetchComments()
 

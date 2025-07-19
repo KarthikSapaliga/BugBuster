@@ -40,7 +40,6 @@ const getStatusColor = (status) => {
 
 
 export default function ActivityLog({statusHistory}) {
-  console.log(statusHistory);
   return (
     <div className="pt-4 border-t border-border">
       <div className="mb-4">
