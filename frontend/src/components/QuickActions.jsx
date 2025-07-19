@@ -6,11 +6,18 @@ import { useAppStore } from "@/store/store";
 
 const links = [
   {
+    title: "Create Project",
+    route: "/create-project",
+    icon: <Plus className="mr-2 h-4 w-4" />,
+    variant: "default",
+    access: ["MANAGER"],
+  },
+  {
     title: "Report New Bug",
     route: "/report-bug",
     icon: <Plus className="mr-2 h-4 w-4" />,
     variant: "default",
-    access: ["all"],
+    access: ["TESTER","DEVELOPER"],
   },
   {
     title: "View All Bugs",
@@ -33,6 +40,7 @@ const links = [
     variant: "secondary",
     access: ["all"],
   },
+  
 ];
 
 export default function QuickActions() {
