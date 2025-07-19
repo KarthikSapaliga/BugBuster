@@ -53,7 +53,7 @@ export default function ActivityLog({statusHistory}) {
 
                   <div className="flex items-center justify-between gap-1 text-xs text-muted-foreground">
                     <span className="font-medium m-1">{activity.by}</span>
-                    <time className="text-gray-500">
+                    <time className="text-muted-foreground">
                       {formatDate(activity.date)}
                     </time>
                   </div>

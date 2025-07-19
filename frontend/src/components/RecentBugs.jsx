@@ -52,7 +52,7 @@ export default function RecentBugs() {
     },[])
 
     return (
-        <Card className="bg-muted w-full">
+        <Card className="bg-sidebar w-full">
             <CardContent className="pt-6 space-y-5">
                 <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Recent Bugs</h2>

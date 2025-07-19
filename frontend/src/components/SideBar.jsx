@@ -178,7 +178,6 @@ const SideBar = () => {
               <SidebarMenu>
                 {projects.map((project) => (
                   <SideBarProjectMenuItem key={project.id} project={project} />
-                  // <p>hello</p>
                 ))}
                 {user?.role == "MANAGER" && (
                   <SidebarMenuItem>
