@@ -1,3 +1,100 @@
+// import {
+//     AreaChart,
+//     Area,
+//     XAxis,
+//     YAxis,
+//     CartesianGrid,
+//     Tooltip,
+//     ResponsiveContainer,
+//     Legend
+// } from "recharts";
+
+// export default function MonthlyProgressChart({monthlyData}) {
+
+//     const axisColor =  "#9ca3af";
+
+//     return (
+//         <div className="w-full">
+
+//             {/* Chart */}
+//             <div className={`w-full h-[350px] rounded-lg`}>
+//                 <ResponsiveContainer width="100%" height="100%">
+//                     <AreaChart
+//                         data={monthlyData}
+//                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+//                     >
+//                         <defs>
+//                             <linearGradient id="completedGradient" x1="0" y1="0" x2="0" y2="1">
+//                                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+//                                 <stop offset="95%" stopColor="#10b981" stopOpacity={0.05}/>
+//                             </linearGradient>
+//                             <linearGradient id="targetGradient" x1="0" y1="0" x2="0" y2="1">
+//                                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
+//                                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05}/>
+//                             </linearGradient>
+//                         </defs>
+                        
+//                         <CartesianGrid 
+//                             strokeDasharray="4 4" 
+//                         />
+                        
+//                         <XAxis
+//                             dataKey="month"
+//                             stroke={axisColor}
+//                             tickLine={false}
+//                             axisLine={{ stroke: axisColor }}
+//                             fontSize={12}
+//                         />
+                        
+//                         <YAxis
+//                             stroke={axisColor}
+//                             tickLine={false}
+//                             axisLine={{ stroke: axisColor }}
+//                             fontSize={12}
+//                         />
+                        
+//                         <Tooltip
+//                             contentStyle={{
+//                                 borderRadius: "0.5rem",
+//                                 fontSize: "0.875rem",
+//                                 boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+//                             }}
+//                             labelStyle={{ 
+//                                 fontWeight: "500"
+//                             }}
+//                             formatter={(value, name) => [
+//                                 value,
+//                                 name === 'completed' ? 'Completed' : 
+//                                 name === 'target' ? 'Target' : 'Pending'
+//                             ]}
+//                         />
+                        
+//                         <Legend />
+                        
+//                         <Area
+//                             type="monotone"
+//                             dataKey="target"
+//                             stroke="#3b82f6"
+//                             fillOpacity={1}
+//                             fill="url(#targetGradient)"
+//                             strokeWidth={2}
+//                             strokeDasharray="5 5"
+//                         />
+                        
+//                         <Area
+//                             type="monotone"
+//                             dataKey="completed"
+//                             stroke="#10b981"
+//                             fillOpacity={1}
+//                             fill="url(#completedGradient)"
+//                             strokeWidth={3}
+//                         />
+//                     </AreaChart>
+//                 </ResponsiveContainer>
+//             </div>
+//         </div>
+//     );
+// }
 import {
     AreaChart,
     Area,
@@ -8,111 +105,142 @@ import {
     ResponsiveContainer,
     Legend
 } from "recharts";
-import { useState } from "react";
-import { useTheme } from "@/contexts/ThemeContext";
 
-const monthlyData = [
-    { month: "Jan", completed: 45, target: 50, pending: 12 },
-    { month: "Feb", completed: 52, target: 55, pending: 8 },
-    { month: "Mar", completed: 61, target: 60, pending: 15 },
-    { month: "Apr", completed: 48, target: 50, pending: 18 },
-    { month: "May", completed: 67, target: 65, pending: 10 },
-    { month: "Jun", completed: 73, target: 70, pending: 14 },
-    { month: "Jul", completed: 58, target: 60, pending: 22 },
-    { month: "Aug", completed: 71, target: 75, pending: 9 },
-    { month: "Sep", completed: 84, target: 80, pending: 16 },
-    { month: "Oct", completed: 79, target: 85, pending: 11 },
-    { month: "Nov", completed: 92, target: 90, pending: 7 },
-    { month: "Dec", completed: 88, target: 95, pending: 13 }
-];
+export default function MonthlyProgressChart({monthlyData = [
+    { month: 'Jan', completed: 45, target: 50 },
+    { month: 'Feb', completed: 62, target: 65 },
+    { month: 'Mar', completed: 38, target: 55 },
+    { month: 'Apr', completed: 71, target: 70 },
+    { month: 'May', completed: 89, target: 75 },
+    { month: 'Jun', completed: 67, target: 80 },
+]}) {
 
-export default function MonthlyProgressChart() {
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="bg-background/95 backdrop-blur-sm border-0 rounded-xl p-4 shadow-2xl ring-1 ring-black/5">
+                    <p className="text-primary font-semibold text-base mb-2">{label}</p>
+                    {payload.map((entry, index) => (
+                        <div key={index} className="flex items-center gap-3 mb-1">
+                            <div 
+                                className="w-3 h-3 rounded-full" 
+                                style={{ backgroundColor: entry.color }}
+                            />
+                            <span className="text-muted-foreground text-sm font-medium">
+                                {entry.name}: <span className="text-primary font-semibold">{entry.value}</span>
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+        return null;
+    };
 
-    const axisColor =  "#9ca3af";
-
-    // Calculate total and achievement rate
-    const totalCompleted = monthlyData.reduce((sum, month) => sum + month.completed, 0);
-    const totalTarget = monthlyData.reduce((sum, month) => sum + month.target, 0);
+    const CustomLegend = (props) => {
+        const { payload } = props;
+        return (
+            <div className="flex justify-center gap-8 mt-4">
+                {payload.map((entry, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                        <div 
+                            className="w-4 h-3 rounded-sm" 
+                            style={{ backgroundColor: entry.color }}
+                        />
+                        <span className="text-primary font-medium text-sm capitalize">
+                            {entry.value}
+                        </span>
+                    </div>
+                ))}
+            </div>
+        );
+    };
 
     return (
-        <div className="w-full">
-
-            {/* Chart */}
-            <div className={`w-full h-[350px] rounded-lg`}>
+            <div className="w-full h-[400px] rounded-xl  backdrop-blur-sm shadow-inner">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         data={monthlyData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                     >
                         <defs>
                             <linearGradient id="completedGradient" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                                <stop offset="95%" stopColor="#10b981" stopOpacity={0.05}/>
+                                <stop offset="0%" stopColor="#06d6a0" stopOpacity={0.8}/>
+                                <stop offset="50%" stopColor="#06d6a0" stopOpacity={0.4}/>
+                                <stop offset="100%" stopColor="#06d6a0" stopOpacity={0.1}/>
                             </linearGradient>
                             <linearGradient id="targetGradient" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
-                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05}/>
+                                <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.6}/>
+                                <stop offset="50%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                                <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.1}/>
                             </linearGradient>
+                            
+                            {/* Glow effects */}
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge> 
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
                         </defs>
                         
                         <CartesianGrid 
-                            strokeDasharray="4 4" 
+                            strokeDasharray="2 6" 
+                            stroke="#e2e8f0"
+                            strokeOpacity={0.6}
                         />
                         
                         <XAxis
                             dataKey="month"
-                            stroke={axisColor}
+                            stroke="#64748b"
                             tickLine={false}
-                            axisLine={{ stroke: axisColor }}
-                            fontSize={12}
+                            axisLine={false}
+                            fontSize={13}
+                            fontWeight={500}
+                            dy={10}
                         />
                         
                         <YAxis
-                            stroke={axisColor}
+                            stroke="#64748b"
                             tickLine={false}
-                            axisLine={{ stroke: axisColor }}
-                            fontSize={12}
+                            axisLine={false}
+                            fontSize={13}
+                            fontWeight={500}
+                            dx={-10}
                         />
                         
-                        <Tooltip
-                            contentStyle={{
-                                borderRadius: "0.5rem",
-                                fontSize: "0.875rem",
-                                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
-                            }}
-                            labelStyle={{ 
-                                fontWeight: "500"
-                            }}
-                            formatter={(value, name) => [
-                                value,
-                                name === 'completed' ? 'Completed' : 
-                                name === 'target' ? 'Target' : 'Pending'
-                            ]}
-                        />
+                        <Tooltip content={<CustomTooltip />} />
                         
-                        <Legend />
+                        <Legend content={<CustomLegend />} />
                         
                         <Area
                             type="monotone"
                             dataKey="target"
-                            stroke="#3b82f6"
-                            fillOpacity={1}
+                            stroke="#8b5cf6"
                             fill="url(#targetGradient)"
-                            strokeWidth={2}
-                            strokeDasharray="5 5"
+                            strokeWidth={3}
+                            strokeDasharray="8 4"
+                            strokeLinecap="round"
+                            name="Target"
+                            dot={{ fill: '#8b5cf6', r: 5, strokeWidth: 2, stroke: '#ffffff' }}
+                            activeDot={{ r: 7, strokeWidth: 3, stroke: '#8b5cf6', fill: '#ffffff' }}
                         />
                         
                         <Area
                             type="monotone"
                             dataKey="completed"
-                            stroke="#10b981"
-                            fillOpacity={1}
+                            stroke="#06d6a0"
                             fill="url(#completedGradient)"
-                            strokeWidth={3}
+                            strokeWidth={4}
+                            strokeLinecap="round"
+                            name="Completed"
+                            dot={{ fill: '#06d6a0', r: 6, strokeWidth: 2, stroke: '#ffffff' }}
+                            activeDot={{ r: 8, strokeWidth: 3, stroke: '#06d6a0', fill: '#ffffff', filter: 'url(#glow)' }}
                         />
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-        </div>
+
     );
 }
