@@ -87,6 +87,7 @@ export default function IssueFilter({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Urgency</SelectItem>
+            <SelectItem value="URGENT">Urgent</SelectItem>
             <SelectItem value="HIGH">High</SelectItem>
             <SelectItem value="MEDIUM">Medium</SelectItem>
             <SelectItem value="LOW">Low</SelectItem>
