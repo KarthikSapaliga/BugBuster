@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import toast from 'react-hot-toast'
-import { X } from 'lucide-react'
+import { Trash2, X } from 'lucide-react'
 import { apiClient } from '@/lib/axios'
 import { useAppStore } from '@/store/store'
 import { GET_MY_PROJECTS_ROUTE } from '@/lib/routes'
@@ -299,14 +299,14 @@ function BugReportingForm() {
                                 {attachments.map((file, idx) => (
                                     <li
                                         key={idx}
-                                        className="flex items-center justify-between bg-gray-100 px-3 py-1 rounded-md"
+                                        className="flex items-center justify-between bg-muted px-3 py-3 rounded-md"
                                     >
                                         <span className="truncate">{file.name}</span>
                                         <button
                                             onClick={() => removeFile(file.name)}
                                             className="text-red-500 hover:text-red-700"
                                         >
-                                            <X size={16} />
+                                            <Trash2 size={16} />
                                         </button>
                                     </li>
                                 ))}
