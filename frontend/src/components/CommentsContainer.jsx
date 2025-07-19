@@ -2,16 +2,37 @@ import React, { useState } from "react"
 import Comment from "./Comment"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { apiClient } from "@/lib/axios"
+import { useAppStore } from "@/store/store"
+import toast from "react-hot-toast"
 
-export default function CommentsContainer({ bugId, comments, onAddComment }) {
+import { GET_COMMENTS_ROUTE, POST_COMMENT_ROUTE } from "@/lib/routes"
+
+export default function CommentsContainer({ bugId, comments, setComments }) {
     const [newComment, setNewComment] = useState("")
+    const [loading, setLoading] = useState(false)
 
-    const handleSubmit = () => {
+    const { token } = useAppStore()
+
+    const handleSubmit = async () => {
         if (newComment.trim() === "") return
 
-        // handle the add comment
+        try {
+            setLoading(true)
+            const res = await apiClient.post(`${POST_COMMENT_ROUTE}/${bugId}`,
+                { content: newComment },
+                { headers: { Authorization: `Bearer ${token}` } }
+            )
 
-        setNewComment("")
+            const commentRes = await apiClient.get(`${GET_COMMENTS_ROUTE}/${bugId}`)
+            setComments(commentRes.data)
+
+            setNewComment("")
+        } catch (err) {
+            toast.error("Something went wrong. Please try again.")
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -24,9 +45,12 @@ export default function CommentsContainer({ bugId, comments, onAddComment }) {
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Leave a comment"
                     rows={5}
+                    disabled={loading}
                 />
                 <div className="mt-2 flex justify-end">
-                    <Button onClick={handleSubmit}>Comment</Button>
+                    <Button onClick={handleSubmit} disabled={loading || newComment.trim() === ""}>
+                        {loading ? "Posting..." : "Comment"}
+                    </Button>
                 </div>
             </div>
 
