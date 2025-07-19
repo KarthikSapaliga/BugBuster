@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import WeeklyProgressChart from "@/components/charts/WeeklyProgressChart";
 import BugStatusPieChart from "@/components/charts/BugStatusPieChart";
-import History from "@/components/History";
 import BugStatusBarChart from "@/components/charts/BugStatusBarChart";
 import MonthlyProgressChart from "@/components/charts/MonthlyProgressChart";
 import Stats from "@/components/Stats";
