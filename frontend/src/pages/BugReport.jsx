@@ -166,7 +166,7 @@ const BugReport = () => {
 									Bug: {bug.title}
 								</h1>
 								{bug.state && (
-									<Badge variant="outline" className={`${getStatusColor(bug.state)} text-xs font-medium`}>
+									<Badge variant="outline" className={`${getStatusColor(bug.state)} text-xs font-medium whitespace-nowrap`}>
 										<span className="mr-1">{getStatusIcon(bug.state)}</span>
 										{bug.state.replace('_', ' ').toUpperCase()}
 									</Badge>
@@ -230,7 +230,7 @@ const BugReport = () => {
 							</p>
 							<span
 								className={cn(
-									"py-2 px-3 bg-card inline-flex items-center text-sm rounded-lg font-medium border border-gray-200 "
+									"py-2 px-3 bg-card inline-flex items-center text-sm rounded-lg font-medium border border-border "
 								)}
 							>
 								{bug.priority}
@@ -238,7 +238,7 @@ const BugReport = () => {
 						</div>
 
 						<div className="space-y-3">
-							<div className="bg-card rounded-lg p-3 border border-gray-200 ">
+							<div className="bg-card rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground">
 									Project ID
 								</p>
@@ -247,7 +247,7 @@ const BugReport = () => {
 								</h3>
 							</div>
 
-							<div className="bg-background rounded-lg p-3 border border-gray-200 ">
+							<div className="bg-background rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
 									<User className="w-3 h-3" />
 									Reporter
@@ -257,7 +257,7 @@ const BugReport = () => {
 								</h3>
 							</div>
 
-							<div className="bg-background rounded-lg p-3 border border-gray-200 ">
+							<div className="bg-background rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
 									<User className="w-3 h-3" />
 									Assignee
@@ -267,7 +267,7 @@ const BugReport = () => {
 								</h3>
 							</div>
 
-							<div className="bg-background rounded-lg p-3 border border-gray-200 ">
+							<div className="bg-background rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
 									<Calendar className="w-3 h-3" />
 									Date Created
@@ -277,7 +277,7 @@ const BugReport = () => {
 								</h3>
 							</div>
 
-							<div className="bg-background rounded-lg p-3 border border-gray-200 ">
+							<div className="bg-background rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
 									<Calendar className="w-3 h-3" />
 									Date Resolved

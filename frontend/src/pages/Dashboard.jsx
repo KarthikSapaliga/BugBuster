@@ -32,16 +32,22 @@ function Dashboard() {
           </div>
           <div>
             <h1 className="text-3xl font-bold mb-2 text-foreground">
-              {user.name}
+              {user.name
+                .toLowerCase()
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ')}
             </h1>
             <div className="flex gap-2 items-center flex-wrap">
               <Badge
                 variant="default"
-                className="bg-primary "
+                className="bg-primary tracking-wider"
               >
                 {user.role}
               </Badge>
-              <Badge variant="outline">{user.email}</Badge>
+              <Badge variant="outline">
+                <span  className="tracking-wider">{user.email}</span>
+              </Badge>
             </div>
           </div>
         </div>
