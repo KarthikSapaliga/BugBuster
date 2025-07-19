@@ -23,7 +23,7 @@ const getStatusIcon = (status) => {
   }
 };
 
-export default function ActivityLog({statusHistory}) {
+export default function ActivityLog({ statusHistory }) {
   return (
     <div className="pt-4 border-t border-border">
       <div className="mb-4">
@@ -38,16 +38,16 @@ export default function ActivityLog({statusHistory}) {
           {statusHistory.map((activity, index) => (
             <div key={index} className="relative flex items-start gap-3 group">
               {/* Icon container with background */}
-              <div className="relative z-10 flex items-center justify-center w-8 h-8 bg-background border border-border rounded-full duration-200">
+              <div className="relative z-10 flex items-center justify-center w-8 h-8 bg-muted border border-border rounded-full duration-200">
                 {getStatusIcon(activity.status)}
               </div>
 
               {/* Content */}
               <div className="flex-1 min-w-0 pb-1">
-                <div className="bg-background rounded-lg border border-border p-2.5 transition-all duration-200 group-hover:border-gray-300 dark:group-hover:border-gray-800">
+                <div className="bg-muted rounded-lg border border-border p-2.5 transition-all duration-200 group-hover:border-gray-300 dark:group-hover:border-gray-800">
                   <div className="flex items-center justify-between mb-1">
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(activity.status)}`}>
-                      {activity.status}
+                      {activity.status.replace('_', ' ')}
                     </span>
                   </div>
 
