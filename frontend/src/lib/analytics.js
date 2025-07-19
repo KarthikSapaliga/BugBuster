@@ -74,3 +74,48 @@ export function getBugAnalyticsData(bugs) {
     weeklyProgress: weekly
   };
 }
+
+
+
+export function generateMonthlyProgressData(bugs) {
+  const monthNames = [
+    "Jan", "Feb", "Mar", "Apr",
+    "May", "Jun", "Jul", "Aug",
+    "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  // Start with 0 for each month
+  const monthlyData = monthNames.map((month) => ({
+    month,
+    completed: 0,
+    pending: 0,
+    target: 0
+  }));
+
+  bugs.forEach(bug => {
+    // Completed logic
+    if (bug.resolvedAt && bug.state === "RESOLVED") {
+      const resolvedDate = new Date(bug.resolvedAt);
+      const monthIndex = resolvedDate.getMonth();
+      monthlyData[monthIndex].completed += 1;
+    } else if (bug.closedAt && bug.state === "CLOSED") {
+      const closedDate = new Date(bug.closedAt);
+      const monthIndex = closedDate.getMonth();
+      monthlyData[monthIndex].completed += 1;
+    }
+
+    // Pending logic
+    if (bug.createdAt && (bug.state === "OPEN" || bug.state === "IN_PROGRESS")) {
+      const createdDate = new Date(bug.createdAt);
+      const monthIndex = createdDate.getMonth();
+      monthlyData[monthIndex].pending += 1;
+    }
+  });
+
+  // ✅ Calculate dynamic targets: total = completed + pending
+  monthlyData.forEach(month => {
+    month.target = month.completed + month.pending;
+  });
+
+  return monthlyData;
+}
