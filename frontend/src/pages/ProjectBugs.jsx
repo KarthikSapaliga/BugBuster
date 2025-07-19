@@ -36,6 +36,8 @@ import {
   GET_PROJECT_BY_ID_ROUTE,
 } from "@/lib/routes.js";
 import { getUserName } from "@/lib/api";
+import BugCard from "@/components/BugCard";
+import IssueFilter from "@/components/IssueFilter";
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString("en-IN", {
@@ -67,7 +69,6 @@ function ProjectBugs() {
   const [urgencyFilter, setUrgencyFilter] = useState("all");
 
   const [loading, setLoading] = useState(true);
-
 
   //Caching the Users ID's so it will not be fetched again and again
   const uniqueUserIds = Array.from(
@@ -124,7 +125,6 @@ function ProjectBugs() {
     if (projectId) fetchProjectInfo();
     if (projectId) fetchBugs();
   }, [projectId, token]);
-
 
   useEffect(() => {
     async function fetchUserNames() {
@@ -215,101 +215,23 @@ function ProjectBugs() {
             Track and manage all Issues
           </p>
         </div>
-
-        {/* RESFRESH BUTTON  */}
-        {/* <Button onClick={() => handleRefresh()} disabled={loading}>
-          <RefreshCw
-            className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
-          />
-          Refresh
-        </Button> */}
       </div>
 
       {/* Filters */}
       <Card className="bg-sidebar">
         <CardContent className="p-2 shadow-sm">
-          <div className="grid grid-cols-7 gap-3 items-center">
-            <div className="flex items-center gap-2 col-span-3">
-              <Search className="size-5 text-primary" />
-              <Input
-                type="text"
-                placeholder="Search issues..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="px-2 py-1  border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Select
-                value={statusFilter}
-                onValueChange={(value) => setStatusFilter(value)}
-              >
-                <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                  <SelectValue placeholder="All Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="OPEN">Open</SelectItem>
-                  <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-                  <SelectItem value="RESOLVED">Resolved</SelectItem>
-                  <SelectItem value="CLOSED">Closed</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Select
-                value={severityFilter}
-                onValueChange={(value) => setSeverityFilter(value)}
-              >
-                <SelectTrigger className="px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                  <SelectValue placeholder="All Severity" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Severity</SelectItem>
-                  <SelectItem value="LOW">Low</SelectItem>
-                  <SelectItem value="MEDIUM">Medium</SelectItem>
-                  <SelectItem value="HIGH">High</SelectItem>
-                  <SelectItem value="CRITICAL">Critical</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Select
-                value={priorityFilter}
-                onValueChange={(value) => setPriorityFilter(value)}
-              >
-                <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                  <SelectValue placeholder="All Priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Priority</SelectItem>
-                  <SelectItem value="P1">P1</SelectItem>
-                  <SelectItem value="P2">P2</SelectItem>
-                  <SelectItem value="P3">P3</SelectItem>
-                  <SelectItem value="P4">P4</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Select
-                value={urgencyFilter}
-                onValueChange={(value) => setUrgencyFilter(value)}
-              >
-                <SelectTrigger className=" px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                  <SelectValue placeholder="Urgency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Urgency</SelectItem>
-                  <SelectItem value="HIGH">High</SelectItem>
-                  <SelectItem value="MEDIUM">Medium</SelectItem>
-                  <SelectItem value="LOW">Low</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <IssueFilter
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            severityFilter={severityFilter}
+            setSeverityFilter={setSeverityFilter}
+            priorityFilter={priorityFilter}
+            setPriorityFilter={setPriorityFilter}
+            urgencyFilter={urgencyFilter}
+            setUrgencyFilter={setUrgencyFilter}
+          />
         </CardContent>
       </Card>
 
@@ -322,65 +244,7 @@ function ProjectBugs() {
           </Card>
         ) : (
           filteredIssues.map((issue) => (
-            <Card key={issue.id} className="hover:shadow-md transition-shadow bg-sidebar">
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center gap-3">
-                    <div>
-                      <h3 className="text-lg font-semibold">
-                        {issue.issueId} {issue.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {issue.description}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2 ">
-                    <Badge
-                      className={`${getSeverityColor(issue.severity)} text-xs`}
-                    >
-                      {issue.severity.toUpperCase()}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs">
-                      {issue.state.toUpperCase()}
-                    </Badge>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <UserPlus className="w-4 h-4" />
-                    <span>
-                      Created by:{userMap[issue.createdBy] || "Loading..."}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    <span>Created: {formatDate(issue.createdAt)}</span>
-                  </div>
-                  {issue.closedAt && (
-                    <>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <UserCheck className="w-4 h-4" />
-                        <span>Closed by: {userMap[issue.closedBy] || "Loading..."}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="w-4 h-4" />
-                        <span>Closed: {formatDate(issue.closedAt)}</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                <div className="flex gap-2 pt-2">
-                  <Link to={`/bugs/${issue.id}`}>
-                    <Button size="sm" variant="outline">
-                      <Eye className="w-4 h-4 mr-1" />
-                      View Details
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+            <BugCard key={issue.issueId} issue={issue} />
           ))
         )}
       </div>
