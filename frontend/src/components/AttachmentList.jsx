@@ -15,14 +15,14 @@ export default function AttachmentList({ attachments = [] }) {
     console.log({ attachments })
 
     return (
-        <div className="mt-6 space-y-4">
+        <div className="mt-6 space-y-4 w-full">
             <h2 className="text-lg font-semibold">Attachments</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {attachments.map((attachment, idx) => {
                     const downloadUrl = `${HOST}${BUG_DOWNLOAD_ROUTE}/${attachment.filename}`;
                     return (
-                        <Card key={idx} className="shadow-md p-2">
-                            <CardContent className="flex flex-col gap-2 p-2 items-center justify-center">
+                        <Card key={idx} className="shadow-md p-1">
+                            <CardContent className="flex flex-col gap-2 p-2 items-center justify-center h-full">
                                 {isImage(attachment.originalName) ? (
                                     <img
                                         src={downloadUrl}
