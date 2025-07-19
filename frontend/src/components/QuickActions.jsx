@@ -73,7 +73,7 @@ export default function QuickActions() {
         </CardContent>
       </Card>
 
-      <Card className="bg-red-50 border-red-200">
+      <Card className="bg-red-50 border-red-200 dark:bg-red-600/10 dark:border-red-800/50">
         <CardContent className="pt-6 space-y-3">
           <div className="flex items-center gap-2 text-red-600 font-semibold text-sm">
             <AlertTriangle className="h-4 w-4" />
