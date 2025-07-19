@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "bugs")
@@ -46,6 +47,9 @@ public class Bug {
 
     private boolean fromGithub;
 
-    private List<Attachment> attachments;
-    private List<Comment> comments;
+    @Builder.Default
+    private List<Attachment> attachments = new ArrayList<>();
+
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 }
