@@ -60,7 +60,7 @@ export async function fetchIssues(octokit, owner, repo) {
 
 function extractSection(body, sectionTitle) {
     const regex = new RegExp(
-        ### ${sectionTitle}[\\s\\S]*?\\n+([\\s\\S]*?)(?=\\n###|$),
+        `### ${sectionTitle}[\\s\\S]*?\\n+([\\s\\S]*?)(?=\\n###|$)`,
         "i"
     );
     const match = body.match(regex);
@@ -93,8 +93,8 @@ export async function closeIssue(octokit, owner, repo, issue_number) {
             state: "closed",
         });
 
-        console.log(Issue #${issue_number} closed successfully!);
-        console.log(URL: ${response.data.html_url});
+        console.log(`Issue #${issue_number} closed successfully!`);
+        console.log(`URL: ${response.data.html_url}`);
     } catch (error) {
         console.error("Error closing issue:", error);
     }
