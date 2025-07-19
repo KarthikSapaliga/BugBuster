@@ -48,5 +48,4 @@ public class Bug {
 
     private List<Attachment> attachments;
     private List<Comment> comments;
-    private List<WorkRequest> requests;
 }

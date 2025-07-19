@@ -11,7 +11,6 @@ import com.bugbuster.model.Attachment;
 import com.bugbuster.model.Bug;
 import com.bugbuster.model.Comment;
 import com.bugbuster.model.Project;
-import com.bugbuster.model.WorkRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -143,8 +142,6 @@ public class BugController {
                 existingBug.setAttachments(updatedBug.getAttachments());
             if (updatedBug.getComments() != null)
                 existingBug.setComments(updatedBug.getComments());
-            if (updatedBug.getRequests() != null)
-                existingBug.setRequests(updatedBug.getRequests());
             if (updatedBug.isFromGithub())
                 existingBug.setFromGithub(true); // only true if explicitly set
 

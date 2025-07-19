@@ -19,14 +19,6 @@ public class MailService {
         sendSimpleMail(toEmail, subject, body);
     }
 
-    public void sendWorkRequestApprovalMail(String toEmail, String bugTitle) {
-        String subject = "Work Request Approved";
-        String body = "Your request to work on the bug titled '" + bugTitle +
-                "' has been approved by the tester. You can now begin work.";
-
-        sendSimpleMail(toEmail, subject, body);
-    }
-
     private void sendSimpleMail(String toEmail, String subject, String body) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
