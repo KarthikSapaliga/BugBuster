@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getUserName } from "@/lib/api";
+import BugCard from "@/components/BugCard";
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString("en-IN", {
@@ -114,73 +115,7 @@ function AssignedMe() {
               </Card>
             ) : (
               assignedBugs.map((issue) => (
-                <Card
-                  key={issue.id}
-                  className="hover:shadow-md transition-shadow bg-sidebar"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center gap-3">
-                        <div>
-                          <h3 className="text-lg font-semibold">
-                            {issue.issueId} {issue.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {issue.description}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2 ">
-                        <Badge
-                          className={`${getSeverityColor(
-                            issue.severity
-                          )} text-xs`}
-                        >
-                          {issue.severity.toUpperCase()}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {issue.state.toUpperCase()}
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <UserPlus className="w-4 h-4" />
-                        <span>
-                          Created by:{userMap[issue.createdBy] || "Loading..."}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="w-4 h-4" />
-                        <span>Created: {formatDate(issue.createdAt)}</span>
-                      </div>
-                      {issue.closedAt && (
-                        <>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <UserCheck className="w-4 h-4" />
-                            <span>
-                              Closed by:{" "}
-                              {userMap[issue.closedBy] || "Loading..."}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Calendar className="w-4 h-4" />
-                            <span>Closed: {formatDate(issue.closedAt)}</span>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    <div className="flex gap-2 pt-2">
-                      <Link to={`/bugs/${issue.id}`}>
-                        <Button size="sm" variant="outline">
-                          <Eye className="w-4 h-4 mr-1" />
-                          View Details
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
+                <BugCard key={issue.issueId} issue = {issue}/>
               ))
             )}
           </div>
