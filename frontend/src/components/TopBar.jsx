@@ -37,7 +37,7 @@ export default function TopBar() {
           {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
         </button>
         <div className="h-9 w-9 flex items-center justify-center bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold text-sm rounded-full border-2 border-primary/20 shadow-md hover:shadow-lg transition-all duration-200">
-          {user.name
+          {user?.name
             .split(" ")
             .map((n) => n[0])
             .join("")
