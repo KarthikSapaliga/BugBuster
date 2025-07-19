@@ -1,6 +1,8 @@
 import React from 'react';
 import { CheckCircle, AlertCircle, Clock, XCircle, PlayCircle } from 'lucide-react';
 import { bugData } from '@/lib/DummyData/bug-data';
+import { getStatusColor } from '@/lib/colors';
+import { formatDate } from '@/lib/utils';
 
 const getStatusIcon = (status) => {
   const iconProps = { size: 12, className: "flex-shrink-0" };
@@ -20,24 +22,6 @@ const getStatusIcon = (status) => {
       return <XCircle {...iconProps} className="text-gray-500" />;
   }
 };
-
-const getStatusColor = (status) => {
-  switch (status.toLowerCase()) {
-    case 'closed':
-      return 'text-green-700 bg-green-50 border-green-200';
-    case 'in_progress':
-      return 'text-blue-700 bg-blue-50 border-blue-200';
-    case 'assigned':
-      return 'text-orange-700 bg-orange-50 border-orange-200';
-    case 'open':
-      return 'text-red-700 bg-red-50 border-red-200';
-    case 'resolved':
-      return 'text-yellow-700 bg-yellow-50 border-yellow-200';
-    default:
-      return 'text-gray-700 bg-gray-50 border-gray-200';
-  }
-};
-
 
 export default function ActivityLog({statusHistory}) {
   return (
@@ -68,12 +52,9 @@ export default function ActivityLog({statusHistory}) {
                   </div>
 
                   <div className="flex items-center justify-between gap-1 text-xs text-muted-foreground">
-                    <span className="font-medium">{activity.by}</span>
+                    <span className="font-medium m-1">{activity.by}</span>
                     <time className="text-gray-500">
-                      {new Date(activity.date).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric'
-                      })}
+                      {formatDate(activity.date)}
                     </time>
                   </div>
                 </div>
