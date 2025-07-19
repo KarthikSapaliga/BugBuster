@@ -29,7 +29,7 @@ export default function Comment({ comment }) {
     : "Unknown time";
 
   return (
-    <Card className="border-muted/40 w-full">
+    <Card className="border-muted/80 w-full bg-sidebar">
       <CardHeader className="flex flex-row items-start justify-between gap-4 pb-2">
         <div className="flex gap-3 items-center">
           <Avatar className="h-8 w-8">
