@@ -57,7 +57,7 @@ export default function RecentBugs() {
                 <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Recent Bugs</h2>
                     <Button asChild size="sm">
-                        <Link to="/">
+                        <Link to="/all-issues">
                             <Eye className="w-4 h-4 mr-1" />
                             View All
                         </Link>
