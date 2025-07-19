@@ -106,7 +106,7 @@ const BugCard = ({ issue, userMap }) => {
 
           <div className="flex gap-2 pt-2">
             {/* TODO */}
-            {(issue.fromGithub) ? (
+            {(issue.fromGithub && issue.issue_url ) ? (
               <>
                 <Link >
                   <Button size="sm" variant="default" onClick={() => setOpenGitImportPage(true)} >
