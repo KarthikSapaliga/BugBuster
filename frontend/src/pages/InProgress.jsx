@@ -3,19 +3,24 @@ import { apiClient } from "@/lib/axios";
 
 import { InProgressTasks } from "@/lib/DummyData/in-progress";
 import { GET_ALL_BUGS_ROUTE } from "@/lib/routes";
+import { useAppStore } from "@/store/store";
 import { useEffect, useState } from "react";
 
 function InProgress() {
   const [issues, setIssues] = useState([]);
   const [InProgressIssues, setInProgressIssues] = useState([]);
-
+  const { token } = useAppStore();
   useEffect(() => {
     async function fetchAllIssues() {
       try {
-        const res = await apiClient.get(GET_ALL_BUGS_ROUTE);
+        const res = await apiClient.get(GET_ALL_BUGS_ROUTE, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const allIssues = res.data || [];
 
         setIssues(allIssues);
+
+        console.log(allIssues);
 
         const filtered = allIssues.filter(
           (issue) =>
