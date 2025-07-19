@@ -15,7 +15,7 @@ import BugActions from "@/components/BugActions";
 import CommentsContainer from "@/components/CommentsContainer";
 import ActivityLog from "@/components/BugActivityLog";
 import { useParams } from "react-router-dom";
-
+import AttachmentList from "@/components/AttachmentList";
 import { useState, useEffect } from "react";
 import { apiClient } from "@/lib/axios";
 import { GET_BUG_BY_ID_ROUTE, GET_COMMENTS_ROUTE } from "@/lib/routes";
@@ -214,22 +214,7 @@ const BugReport = () => {
 						</div>
 
 						{/* Attachments */}
-
-						{bug.attachments && bug.attachments.length > 0 && (
-							<div>
-								<h2 className="text-lg font-semibold mb-2">Attachments</h2>
-								<div className="flex gap-4 flex-wrap">
-									{bug.attachments.map((attachment, index) => (
-										<div
-											key={index}
-											className="rounded-sm w-full min-h-48 py-2 px-4 flex items-center justify-center bg-secondary"
-										>
-											{attachment.originalName}
-										</div>
-									))}
-								</div>
-							</div>
-						)}
+						<AttachmentList attachments={bug.attachments} />
 					</div>
 
 					{/* Metadata */}
