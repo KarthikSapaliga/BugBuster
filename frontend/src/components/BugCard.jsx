@@ -43,6 +43,12 @@ const BugCard = ({ issue ,userMap }) => {
               </p>
             </div>
             <div className="flex flex-wrap gap-2 ml-4 shrink-0">
+              {issue.state && (
+                <Badge variant="outline" className={`${getStatusColor(issue.state)} text-xs font-medium`}>
+                  <span className="mr-1">{getStatusIcon(issue.state)}</span>
+                  {issue.state.replace('_', ' ').toUpperCase()}
+                </Badge>
+              )}
               {issue.severity && (
                 <Badge variant="default" className={`${getSeverityColor(issue.severity)} text-xs font-medium pointer-events-none`}>
                   {issue.severity.toUpperCase()}
@@ -58,12 +64,7 @@ const BugCard = ({ issue ,userMap }) => {
                   {issue.urgency.toUpperCase()}
                 </Badge>
               )}
-              {issue.state && (
-                <Badge variant="outline" className={`${getStatusColor(issue.state)} text-xs font-medium`}>
-                  <span className="mr-1">{getStatusIcon(issue.state)}</span>
-                  {issue.state.replace('_', ' ').toUpperCase()}
-                </Badge>
-              )}
+              
             </div>
           </div>
         </CardHeader>
