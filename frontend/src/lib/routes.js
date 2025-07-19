@@ -12,7 +12,7 @@ export const GET_DEVELOPERS_AND_TESTERS_ROUTE = "/api/users/devs-and-testers"
 
 // User + Project Routes
 export const GET_DEVS_IN_TEAM_ROUTE = "/api/projects/developers"
-export const RECENT_BUGS_ROUTE = "/api/projects/recent"
+export const RECENT_BUGS_ROUTE = "/api/bugs/recent"
 
 // Project Routes
 export const CREATE_PROJECT_ROUTE = "/api/projects/create-project";
