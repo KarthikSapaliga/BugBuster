@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 import { Link } from "react-router-dom";
+import { formatDate } from "@/lib/utils";
 
 const bugs = [
     {
@@ -34,12 +35,7 @@ const bugs = [
     },
 ];
 
-function formatDate(dateString) {
-    return new Date(dateString).toLocaleString("en-IN", {
-        dateStyle: "medium",
-        timeStyle: "short",
-    });
-}
+
 
 function getSeverityColor(severity) {
     const map = {
