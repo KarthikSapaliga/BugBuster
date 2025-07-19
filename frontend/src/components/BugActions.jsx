@@ -20,14 +20,25 @@ import {
   RESOLVE_BUG_ROUTE,
   CLOSE_BUG_ROUTE,
   DELETE_BUG_ROUTE,
+  GET_PROJECT_BY_ID_ROUTE
 } from "@/lib/routes";
 import { Edit, X, Trash2, Play, CheckCircle, UserPlus } from "lucide-react";
+
+import {
+  extractGithubOwner,
+  extractGithubRepo,
+  closeGithubIssue,
+  initOctokit
+} from "@/lib/VersionControl-Integration/versioncontrol.js";
 
 function BugActions({ bug }) {
   const { user, token } = useAppStore();
   const navigate = useNavigate();
   const [developers, setDevelopers] = useState([]);
   const [selectedDev, setSelectedDev] = useState("");
+  const [project, setProject] = useState({});
+
+
 
   useEffect(() => {
     if (!bug.projectId) return;
@@ -108,16 +119,34 @@ function BugActions({ bug }) {
     if (!token) return toast.error("Unauthorized");
 
     try {
-      const res = await apiClient.patch(`${CLOSE_BUG_ROUTE}/${bug.id}`, null, {
+      if (bug.fromGithub) {
+        const projectRes = await apiClient.get(
+          `${GET_PROJECT_BY_ID_ROUTE}/${bug.projectId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const projectData = projectRes.data;
+
+        const owner = extractGithubOwner(projectData.githubLink);
+        const repo = extractGithubRepo(projectData.githubLink);
+
+        const octokit = initOctokit(projectData.githubToken);
+
+        await closeGithubIssue(octokit, owner, repo, bug.issueId);
+
+      }
+      await apiClient.patch(`${CLOSE_BUG_ROUTE}/${bug.id}`, null, {
         params: { closedBy: user.id },
         headers: { Authorization: `Bearer ${token}` },
       });
 
       toast.success("Bug closed successfully!");
     } catch (err) {
+      console.log(err)
       toast.error(err?.response?.data || "Failed to close bug.");
     }
   };
+
 
   const deleteBug = async () => {
     if (!token) return toast.error("Unauthorized");
@@ -148,13 +177,15 @@ function BugActions({ bug }) {
                 <Edit size={16} />
                 Update the Details
               </Button>
-              <Button
-                onClick={() => closeBug()}
-                className="bg-orange-500 hover:bg-orange-700 text-white flex items-center gap-2"
-              >
-                <X size={16} />
-                Close the issue
-              </Button>
+              {
+                bug && bug.state === "RESOLVED" && <Button
+                  onClick={() => closeBug()}
+                  className="bg-orange-500 hover:bg-orange-700 text-white flex items-center gap-2"
+                >
+                  <X size={16} />
+                  Close the issue
+                </Button>
+              }
               <Button
                 onClick={() => deleteBug()}
                 className="bg-red-500 hover:bg-red-700 text-white flex items-center gap-2"
@@ -209,7 +240,7 @@ function BugActions({ bug }) {
                   Start Work
                 </Button>
               )}
-              {bug.assignedTo === user.id && bug.state === "IN_PROGRESS"   && (
+              {bug.assignedTo === user.id && bug.state === "IN_PROGRESS" && (
                 <Button
                   onClick={resolveBug}
                   className="bg-emerald-500 hover:bg-emerald-700 text-white flex items-center gap-2"

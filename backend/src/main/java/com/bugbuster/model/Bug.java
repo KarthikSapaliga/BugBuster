@@ -17,7 +17,7 @@ public class Bug {
     @Id
     private String id;
 
-    private String issueId;
+    private Integer issueId;
     private String projectId;
 
     private String title;

@@ -6,6 +6,26 @@ export function initOctokit(GITHUB_TOKEN) {
     });
 }
 
+export const extractGithubOwner = (url) => {
+    try {
+        const parsed = new URL(url);
+        const parts = parsed.pathname.split("/").filter(Boolean);
+        return parts[0] || null;
+    } catch {
+        return null;
+    }
+};
+
+export const extractGithubRepo = (url) => {
+    try {
+        const parsed = new URL(url);
+        const parts = parsed.pathname.split("/").filter(Boolean);
+        return parts[1]?.replace(/\.git$/, "") || null;
+    } catch {
+        return null;
+    }
+};
+
 export async function fetchIssues(octokit, owner, repo) {
     try {
         const response = await octokit.rest.issues.listForRepo({
@@ -47,7 +67,7 @@ export async function fetchIssues(octokit, owner, repo) {
                 urgency: urgency.trim(),
                 severity: severity.trim(),
                 attachments,
-                fromGithub:true,
+                fromGithub: true,
                 issue_url: issue.html_url,
             };
         });
@@ -85,7 +105,7 @@ function extractAttachments(body) {
     });
 }
 
-export async function closeIssue(octokit, owner, repo, issue_number) {
+export async function closeGithubIssue(octokit, owner, repo, issue_number) {
     try {
         const response = await octokit.rest.issues.update({
             owner,

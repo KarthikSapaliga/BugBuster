@@ -8,6 +8,8 @@ import {
 import {
 	fetchIssues,
 	initOctokit,
+	extractGithubOwner,
+	extractGithubRepo
 } from "@/lib/VersionControl-Integration/versioncontrol";
 import { useParams } from "react-router-dom";
 import { useAppStore } from "@/store/store";
@@ -60,26 +62,6 @@ export default function VersionControl() {
 			fetchImportedIssueIds();
 		}
 	}, [projectId, token]);
-
-	function extractGithubOwner(url) {
-		try {
-			const parsed = new URL(url);
-			const parts = parsed.pathname.split("/").filter(Boolean);
-			return parts[0] || null;
-		} catch {
-			return null;
-		}
-	}
-
-	function extractGithubRepo(url) {
-		try {
-			const parsed = new URL(url);
-			const parts = parsed.pathname.split("/").filter(Boolean);
-			return parts[1]?.replace(/\.git$/, "") || null;
-		} catch {
-			return null;
-		}
-	}
 
 	const filterOnImport = async (issueId) => {
 		try {

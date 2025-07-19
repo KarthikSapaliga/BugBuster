@@ -152,6 +152,9 @@ public class BugController {
         String state = (String) payload.getOrDefault("state", "OPEN");
 
         if (issueId != null) {
+
+            newBug.setIssueId(issueId);
+
             ImportedIssue imported = new ImportedIssue();
             imported.setIssueId(issueId);
             imported.setStatus(state);
@@ -615,7 +618,7 @@ public class BugController {
             case "URGENT":
                 urgencyValue = 4;
                 break;
-            case "HHIGH":
+            case "HIGH":
                 urgencyValue = 3;
                 break;
             case "MEDIUM":

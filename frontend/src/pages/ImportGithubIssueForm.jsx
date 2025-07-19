@@ -62,7 +62,6 @@ export default function ImportGithubIssueForm({ bug, closePage }) {
             issueId: bug?.issueId,
         }
 
-        console.log({ payload })
         try {
             await apiClient.post(
                 GITHUB_IMPORT_ROUTE,
