@@ -256,7 +256,7 @@ function BugUpdateForm() {
                     {bug?.attachments?.length > 0 && (
                         <div className="space-y-2">
                             <Label className="text-sm font-medium">Existing Attachments</Label>
-                            <ul className="list-disc list-inside text-sm text-gray-700">
+                            <ul className="list-inside list-none text-sm ">
                                 {bug.attachments.map((file, idx) => (
                                     <li key={idx}>
                                         <a
