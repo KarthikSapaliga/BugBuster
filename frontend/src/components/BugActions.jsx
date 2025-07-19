@@ -172,7 +172,7 @@ function BugActions({ bug }) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <Button
                 onClick={() => updateBugDetails(bug)}
-                className="bg-blue-500 hover:bg-blue-700 text-white flex items-center gap-2"
+                className="bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-2"
               >
                 <Edit size={16} />
                 Update the Details
@@ -234,7 +234,7 @@ function BugActions({ bug }) {
               {bug.state === "OPEN" && (
                 <Button
                   onClick={startWork}
-                  className="bg-green-500 hover:bg-green-700 text-white flex items-center gap-2"
+                  className="bg-primary/90 hover:bg-primary text-white flex items-center gap-2"
                 >
                   <Play size={16} />
                   Start Work
@@ -243,7 +243,7 @@ function BugActions({ bug }) {
               {bug.assignedTo === user.id && bug.state === "IN_PROGRESS" && (
                 <Button
                   onClick={resolveBug}
-                  className="bg-emerald-500 hover:bg-emerald-700 text-white flex items-center gap-2"
+                  className="bg-primary/90 hover:bg-primary text-white flex items-center gap-2"
                 >
                   <CheckCircle size={16} />
                   Mark as Resolved

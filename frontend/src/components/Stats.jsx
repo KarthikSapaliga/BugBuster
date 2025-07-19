@@ -3,9 +3,10 @@ import { apiClient } from "@/lib/axios";
 import { GET_ALL_BUGS_ROUTE, GET_MY_PROJECTS_ROUTE } from "@/lib/routes";
 import { useAppStore } from "@/store/store";
 import React, { useEffect, useState } from "react";
+import CountUp from "./anim/CountUp";
 
 const Stats = () => {
-  const {token } = useAppStore();
+  const { token } = useAppStore();
   const [bugs, setBugs] = useState([]);
   const [stats, setStats] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -45,7 +46,16 @@ const Stats = () => {
             <h2 className="text-lg font-medium text-muted-foreground mb-2">
               {label}
             </h2>
-            <p className="text-5xl font-bold text-foreground">{value}</p>
+            <p className="text-5xl font-bold text-foreground">
+              <CountUp
+                from={0}
+                to={value}
+                separator=","
+                direction="up"
+                duration={1}
+                className="count-up-text"
+              />
+            </p>
           </div>
         ))}
       </div>
