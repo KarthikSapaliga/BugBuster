@@ -33,7 +33,7 @@ export default function Comment({ comment }) {
       <CardHeader className="flex flex-row items-start justify-between gap-4 pb-2">
         <div className="flex gap-3 items-center">
           <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground text-xs font-semibold">
+            <AvatarFallback className="bg-gradient-to-br from-primary to-primary/50 text-primary-foreground text-xs font-semibold">
               {commentAuthor?.[0]?.toUpperCase()}
             </AvatarFallback>
           </Avatar>
