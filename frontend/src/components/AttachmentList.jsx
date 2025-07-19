@@ -21,24 +21,24 @@ export default function AttachmentList({ attachments = [] }) {
                 {attachments.map((attachment, idx) => {
                     const downloadUrl = `${HOST}${BUG_DOWNLOAD_ROUTE}/${attachment.filename}`;
                     return (
-                        <Card key={idx} className="shadow-md p-1 h-52">
+                        <Card key={idx} className="shadow-md p-1 h-60">
                             <CardContent className="flex flex-col gap-2 p-2 items-center justify-between h-full">
                                 {isImage(attachment.originalName) ? (
                                     <img
                                         src={downloadUrl}
                                         alt={attachment.originalName}
-                                        className="object-contain rounded-md border border-muted"
+                                        className="max-h-40 object-contain rounded-md border border-muted"
                                         loading="lazy"
                                     />
                                 ) : (
-                                    <div className="flex flex-col items-center gap-2">
-                                        <FileText className="w-10 h-10 text-muted-foreground" />
+                                    <div className="flex flex-col justify-center items-center gap-2 max-h-40">
+                                        <FileText className="size-24 text-muted-foreground" />
                                         <p className="text-sm text-center break-words">{attachment.originalName}</p>
                                     </div>
                                 )}
 
                                 <a href={downloadUrl} download className="w-full">
-                                    <Button variant="outline" className="w-full">
+                                    <Button variant="outline" className="w-full h-10">
                                         <Download className="w-4 h-4 mr-2" />
                                         Download
                                     </Button>
