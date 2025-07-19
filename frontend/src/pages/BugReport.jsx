@@ -1,7 +1,12 @@
 import {
+	AlertCircle,
 	AlertTriangle,
 	Calendar,
+	CheckCircle,
+	Clock,
+	PlayCircle,
 	User,
+	XCircle,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 
@@ -17,6 +22,28 @@ import { GET_BUG_BY_ID_ROUTE, GET_COMMENTS_ROUTE } from "@/lib/routes";
 import toast from "react-hot-toast";
 import { getUserName } from "@/lib/api";
 import { useAppStore } from "@/store/store";
+import { getStatusColor } from "@/lib/colors";
+import { Badge } from "@/components/ui/badge";
+
+
+const getStatusIcon = (status) => {
+  const iconProps = { size: 12, className: "flex-shrink-0" };
+
+  switch (status.toLowerCase()) {
+    case 'closed':
+      return <CheckCircle {...iconProps} className="text-green-500" />;
+    case 'in_progress':
+      return <PlayCircle {...iconProps} className="text-blue-500" />;
+    case 'assigned':
+      return <Clock {...iconProps} className="text-orange-500" />;
+    case 'open':
+      return <AlertCircle {...iconProps} className="text-red-500" />;
+    case 'resolved':
+      return <XCircle {...iconProps} className="text-yellow-500" />; // Or pick a different icon if you prefer
+    default:
+      return <XCircle {...iconProps} className="text-gray-500" />;
+  }
+};
 
 const BugReport = () => {
 	const { token } = useAppStore()
@@ -33,7 +60,6 @@ const BugReport = () => {
 			try {
 				const res = await apiClient.get(`${GET_BUG_BY_ID_ROUTE}/${bugId}`);
 				setBug(res.data);
-				//console.log(res.data);
 			} catch (err) {
 				console.log(err);
 				toast.error("Failed to fetch the Bug Info");
@@ -139,9 +165,12 @@ const BugReport = () => {
 								<h1 className="text-2xl font-semibold tracking-tight mb-1">
 									Bug: {bug.title}
 								</h1>
-								<p className="text-sm text-muted-foreground leading-relaxed font-medium">
-									{bug.state}
-								</p>
+								{bug.state && (
+									<Badge variant="outline" className={`${getStatusColor(bug.state)} text-xs font-medium`}>
+										<span className="mr-1">{getStatusIcon(bug.state)}</span>
+										{bug.state.replace('_', ' ').toUpperCase()}
+									</Badge>
+              					)}
 							</div>
 							<p className="text-sm text-muted-foreground leading-relaxed">
 								Bug ID: {bug.id}
@@ -169,14 +198,14 @@ const BugReport = () => {
 						</div>
 
 						{/* Expected vs Actual Result */}
-						<div className="flex flex-col md:flex-row gap-4">
-							<div className="flex-1">
+						<div className="grid grid-cols-1  md:grid-cols-2 gap-4">
+							<div className="col-span-1">
 								<h2 className="text-lg font-semibold mb-2">Expected Result</h2>
 								<p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
 									{bug.expectedOutcome}
 								</p>
 							</div>
-							<div className="flex-1">
+							<div className="col-span-1">
 								<h2 className="text-lg font-semibold mb-2">Actual Result</h2>
 								<p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
 									{bug.actualOutcome}
@@ -193,7 +222,7 @@ const BugReport = () => {
 									{bug.attachments.map((attachment, index) => (
 										<div
 											key={index}
-											className="rounded-sm py-2 px-4 flex items-center justify-center bg-secondary"
+											className="rounded-sm w-full min-h-48 py-2 px-4 flex items-center justify-center bg-secondary"
 										>
 											{attachment.originalName}
 										</div>
@@ -210,13 +239,13 @@ const BugReport = () => {
 						</h2>
 
 						<div className="mb-2">
-							<p className="text-xs mb-2 font-medium text-muted-foreground flex items-center gap-1">
-								<AlertTriangle className="w-3 h-3" />
+							<p className="text-sm mb-2 font-medium text-muted-foreground flex items-center gap-1">
+								<AlertTriangle className="size-4" />
 								Priority
 							</p>
 							<span
 								className={cn(
-									"py-2 px-3 inline-flex items-center text-sm rounded-lg font-medium border "
+									"py-2 px-3 bg-card inline-flex items-center text-sm rounded-lg font-medium border border-gray-200 "
 								)}
 							>
 								{bug.priority}
@@ -224,7 +253,7 @@ const BugReport = () => {
 						</div>
 
 						<div className="space-y-3">
-							<div className="bg-background rounded-lg p-3 border border-gray-200 ">
+							<div className="bg-card rounded-lg p-3 border border-gray-200 ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground">
 									Project ID
 								</p>
