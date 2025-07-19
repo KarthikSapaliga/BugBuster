@@ -15,15 +15,7 @@ import { apiClient } from "@/lib/axios";
 import { GET_PROJECT_BY_ID_ROUTE } from "@/lib/routes";
 import { useAppStore } from "@/store/store";
 
-function getSeverityColor(severity) {
-  const map = {
-    low: "bg-green-100 text-green-800",
-    medium: "bg-yellow-100 text-yellow-800",
-    high: "bg-orange-100 text-orange-800",
-    critical: "bg-red-100 text-red-800",
-  };
-  return map[severity.toLowerCase()] || "bg-gray-100 text-gray-800";
-}
+import { getPriorityColor, getSeverityColor, getStatusColor, getUrgencyColor } from "@/lib/colors";
 
 const getStatusIcon = (status) => {
   const iconProps = { size: 12, className: "flex-shrink-0" };
@@ -38,28 +30,12 @@ const getStatusIcon = (status) => {
     case 'open':
       return <AlertCircle {...iconProps} className="text-red-500" />;
     case 'resolved':
-      return <XCircle {...iconProps} className="text-yellow-500" />; // Or pick a different icon if you prefer
+      return <XCircle {...iconProps} className="text-yellow-500" />;
     default:
       return <XCircle {...iconProps} className="text-gray-500" />;
   }
 };
 
-const getStatusColor = (status) => {
-  switch (status.toLowerCase()) {
-    case 'closed':
-      return 'text-green-700 bg-green-50 border-green-200';
-    case 'in_progress':
-      return 'text-blue-700 bg-blue-50 border-blue-200';
-    case 'assigned':
-      return 'text-orange-700 bg-orange-50 border-orange-200';
-    case 'open':
-      return 'text-red-700 bg-red-50 border-red-200';
-    case 'resolved':
-      return 'text-yellow-700 bg-yellow-50 border-yellow-200';
-    default:
-      return 'text-gray-700 bg-gray-50 border-gray-200';
-  }
-};
 
 function IssuesTable({ data }) {
   const [projectMap, setProjectMap] = useState({});
@@ -129,7 +105,16 @@ function IssuesTable({ data }) {
                   {bug.severity}
                 </span>
               </td>
-              <td className="px-4 py-3 text-center">{bug.priority}</td>
+              <td className={`px-4 py-3 text-center`}>
+                <span
+                  className={cn(
+                    "px-2 py-1 text-xs font-medium rounded-md",
+                    getPriorityColor(bug.priority)
+                  )}
+                >
+                  {bug.priority}
+                </span>
+              </td>
               <td className="px-4 py-3 text-center">
                 <span
                   className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded font-medium ${getStatusColor(
