@@ -8,7 +8,6 @@ import org.springframework.web.cors.*;
 
 import java.util.List;
 
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.security.config.Customizer;
 
 @Configuration
