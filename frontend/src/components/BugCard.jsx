@@ -7,6 +7,9 @@ import { Badge } from "./ui/badge";
 import { getPriorityColor, getSeverityColor, getStatusColor, getUrgencyColor } from "@/lib/colors";
 import { formatDate } from "@/lib/utils";
 
+import Modal from "./Modal";
+import ImportGithubIssueForm from "@/pages/ImportGithubIssueForm";
+import { useState } from "react";
 
 const getStatusIcon = (status) => {
   const iconProps = { size: 12, className: "flex-shrink-0" };
@@ -27,7 +30,11 @@ const getStatusIcon = (status) => {
   }
 };
 
-const BugCard = ({ issue ,userMap }) => {
+const BugCard = ({ issue, userMap }) => {
+
+  const [openGitImportPage, setOpenGitImportPage] = useState(false);
+
+  const closeGitImportPage = () => setOpenGitImportPage(false)
 
   return (
     <div>
@@ -64,7 +71,7 @@ const BugCard = ({ issue ,userMap }) => {
                   {issue.urgency.toUpperCase()}
                 </Badge>
               )}
-              
+
             </div>
           </div>
         </CardHeader>
@@ -73,11 +80,11 @@ const BugCard = ({ issue ,userMap }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <UserPlus className="w-4 h-4 shrink-0" />
-              {issue.fromGithub ||issue.issue_url ? (
-                  <span className="truncate">Created by: {issue.createdBy}</span>
-              ):(
-                  <span className="truncate">Created by: {userMap[issue.createdBy] || "Loading ..."}</span>
-              )}  
+              {issue.fromGithub || issue.issue_url ? (
+                <span className="truncate">Created by: {issue.createdBy}</span>
+              ) : (
+                <span className="truncate">Created by: {userMap[issue.createdBy] || "Loading ..."}</span>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 shrink-0" />
@@ -101,13 +108,13 @@ const BugCard = ({ issue ,userMap }) => {
             {/* TODO */}
             {(issue.fromGithub || issue.issue_url) ? (
               <>
-              <Link >
-                <Button size="sm" variant="default">
-                  <Plus className="w-4 h-4" />
-                  Create Bug
-                </Button>
-              </Link>
-              <Button size="sm" variant="outline" className="hover:bg-accent" asChild>
+                <Link >
+                  <Button size="sm" variant="default" onClick={() => setOpenGitImportPage(true)} >
+                    <Plus className="w-4 h-4" />
+                    Create Bug
+                  </Button>
+                </Link>
+                <Button size="sm" variant="outline" className="hover:bg-accent" asChild>
                   <a
                     href={issue.issue_url}
                     target="_blank"
@@ -116,22 +123,34 @@ const BugCard = ({ issue ,userMap }) => {
                     <ExternalLink className="w-4 h-4 mr-1" />
                     GitHub
                   </a>
-              </Button>
+                </Button>
               </>
-              
+
             ) : (
 
-            <Link to={`/bugs/${issue.issueId}`}>
-              <Button size="sm" variant="outline" className="hover:bg-accent">
-                <Eye className="w-4 h-4 mr-1" />
-                View Details
-              </Button>
-            </Link>
+              <Link to={`/bugs/${issue.id}`}>
+                <Button size="sm" variant="outline" className="hover:bg-accent">
+                  <Eye className="w-4 h-4 mr-1" />
+                  View Details
+                </Button>
+              </Link>
 
             )}
           </div>
         </CardContent>
       </Card>
+
+
+
+      {
+        openGitImportPage && (
+          <Modal>
+            <div className="w-full h-full overflow-auto">
+              <ImportGithubIssueForm bug={issue} closePage={closeGitImportPage} />
+            </div>
+          </Modal>
+        )
+      }
     </div>
   );
 };

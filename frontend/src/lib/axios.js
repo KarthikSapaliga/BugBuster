@@ -8,20 +8,20 @@ const apiClient = axios.create({
     },
 });
 
-apiClient.interceptors.request.use((request) => {
-    //console.log("Axios Request:\n", request);
-    return request;
-});
+// apiClient.interceptors.request.use((request) => {
+//     console.log("Axios Request:\n", request);
+//     return request;
+// });
 
-apiClient.interceptors.response.use(
-    (response) => {
-        //console.log("Axios Response:\n", response);
-        return response;
-    },
-    (error) => {
-        console.error("Axios Error Response:\n", error.response);
-        return Promise.reject(error);
-    }
-);
+// apiClient.interceptors.response.use(
+//     (response) => {
+//         console.log("Axios Response:\n", response);
+//         return response;
+//     },
+//     (error) => {
+//         console.error("Axios Error Response:\n", error.response);
+//         return Promise.reject(error);
+//     }
+// );
 
 export { apiClient };
