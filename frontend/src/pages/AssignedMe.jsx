@@ -25,23 +25,8 @@ import {
 import { Link } from "react-router-dom";
 import { getUserName } from "@/lib/api";
 import BugCard from "@/components/BugCard";
+import { formatDate } from "@/lib/utils";
 
-function formatDate(dateString) {
-  return new Date(dateString).toLocaleString("en-IN", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-}
-
-function getSeverityColor(severity) {
-  const map = {
-    low: "bg-green-100 text-green-800",
-    medium: "bg-yellow-100 text-yellow-800",
-    high: "bg-orange-100 text-orange-800",
-    critical: "bg-red-100 text-red-800",
-  };
-  return map[severity.toLowerCase()] || "bg-gray-100 text-gray-800";
-}
 
 function AssignedMe() {
   const [assignedBugs, setAssignedBugs] = useState([]);
