@@ -195,12 +195,12 @@ function BugActions({ bug }) {
         </>
       )}
 
-      {user && user.role === "DEVELOPER"&& (
+      {user && user.role === "DEVELOPER" && (
         <>
           <div>
             <h2 className="text-lg font-semibold mb-2">Actions</h2>
             <div className="flex flex-col lg:flex-row gap-4">
-              {bug.state === "OPEN" ||true && (
+              {bug.state === "OPEN" && (
                 <Button
                   onClick={startWork}
                   className="bg-green-500 hover:bg-green-700 text-white flex items-center gap-2"
