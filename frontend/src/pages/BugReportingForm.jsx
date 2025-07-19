@@ -8,8 +8,7 @@ import toast from 'react-hot-toast'
 import { Trash2, X } from 'lucide-react'
 import { apiClient } from '@/lib/axios'
 import { useAppStore } from '@/store/store'
-import { GET_MY_PROJECTS_ROUTE } from '@/lib/routes'
-import { CREATE_BUG_ROUTE } from '@/lib/routes'
+import { GET_MY_PROJECTS_ROUTE, CREATE_BUG_ROUTE, BUG_UPLOAD_ROUTE } from '@/lib/routes'
 
 function BugReportingForm() {
 
@@ -86,15 +85,12 @@ function BugReportingForm() {
                 attachments.map(async file => {
                     const fd = new FormData()
                     fd.append('file', file)
-                    const res = await apiClient.post(
-                        '/api/bugs/files/upload',
-                        fd,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                                'Content-Type': 'multipart/form-data'
-                            }
+                    const res = await apiClient.post(BUG_UPLOAD_ROUTE, fd, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data'
                         }
+                    }
                     )
                     return res.data
                 })
