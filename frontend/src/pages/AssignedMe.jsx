@@ -19,6 +19,8 @@ import {
   Filter,
   Search,
   RefreshCw,
+  UserPlus,
+  UserCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getUserName } from "@/lib/api";
@@ -106,7 +108,7 @@ function AssignedMe() {
         ) : (
           <div className="space-y-4">
             {assignedBugs.length === 0 ? (
-              <Card className="flex items-center gap-4 p-4">
+              <Card className="flex items-center gap-4 p-4 bg-sidebar">
                 <AlertTriangle className="size-5" />
                 <span> No issues Assigned to You.</span>
               </Card>
@@ -114,7 +116,7 @@ function AssignedMe() {
               assignedBugs.map((issue) => (
                 <Card
                   key={issue.id}
-                  className="hover:shadow-md transition-shadow"
+                  className="hover:shadow-md transition-shadow bg-sidebar"
                 >
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start mb-4">
@@ -143,7 +145,7 @@ function AssignedMe() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <User className="w-4 h-4" />
+                        <UserPlus className="w-4 h-4" />
                         <span>
                           Created by:{userMap[issue.createdBy] || "Loading..."}
                         </span>
@@ -155,7 +157,7 @@ function AssignedMe() {
                       {issue.closedAt && (
                         <>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <User className="w-4 h-4" />
+                            <UserCheck className="w-4 h-4" />
                             <span>
                               Closed by:{" "}
                               {userMap[issue.closedBy] || "Loading..."}
