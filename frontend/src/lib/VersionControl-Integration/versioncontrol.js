@@ -55,6 +55,7 @@ export async function fetchIssues(octokit, owner, repo) {
                 urgency: urgency.trim(),
                 severity: severity.trim(),
                 screenshot: screenshot,
+                issue_url: issue.html_url,
             };
         });
 
