@@ -40,15 +40,6 @@ import BugCard from "@/components/BugCard";
 import IssueFilter from "@/components/IssueFilter";
 import { formatDate } from "@/lib/utils";
 
-function getSeverityColor(severity) {
-  const map = {
-    low: "bg-green-100 text-green-800",
-    medium: "bg-yellow-100 text-yellow-800",
-    high: "bg-orange-100 text-orange-800",
-    critical: "bg-red-100 text-red-800",
-  };
-  return map[severity.toLowerCase()] || "bg-gray-100 text-gray-800";
-}
 
 function ProjectBugs() {
   const { projectId } = useParams();
@@ -79,6 +70,7 @@ function ProjectBugs() {
   );
 
   const [userMap, setUserMap] = useState({});
+  
 
   useEffect(() => {
     const fetchProjectInfo = async () => {
@@ -108,7 +100,7 @@ function ProjectBugs() {
           }
         );
         setBugs(res.data);
-        console.log(res.data);
+        //console.log(res.data);
       } catch (error) {
         console.error("Failed to fetch bugs:", error);
       } finally {
@@ -192,11 +184,6 @@ function ProjectBugs() {
     setFilteredIssues(filtered);
   };
 
-  function getUser(userId) {
-    const user = getUserName(userId);
-    console.log(user);
-    return user.name;
-  }
 
   if (loading) return <p>Loading bugs...</p>;
 
@@ -238,7 +225,7 @@ function ProjectBugs() {
           </Card>
         ) : (
           filteredIssues.map((issue) => (
-            <BugCard key={issue.issueId || issue.id} issue={issue} />
+            <BugCard key={issue.issueId || issue.id} issue={issue} userMap = {userMap} />
           ))
         )}
       </div>
