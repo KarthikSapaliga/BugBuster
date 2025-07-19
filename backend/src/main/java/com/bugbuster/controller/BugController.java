@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -73,6 +74,75 @@ public class BugController {
         bug.setPriority(priority);
 
         return bugService.createBug(bug);
+    }
+
+    @PostMapping("/github-import")
+    public ResponseEntity<Bug> importExternalBug(
+            @RequestBody Map<String, Object> payload,
+            @RequestHeader("Authorization") String authHeader) {
+
+        String userId = extractUserId(authHeader);
+
+        // Extract fields from the raw map
+        Bug newBug = new Bug();
+        newBug.setTitle((String) payload.get("title"));
+        newBug.setDescription((String) payload.get("description"));
+        newBug.setReproductionSteps((String) payload.get("reproductionSteps"));
+        newBug.setExpectedOutcome((String) payload.get("expectedOutcome"));
+        newBug.setActualOutcome((String) payload.get("actualOutcome"));
+        newBug.setSeverity((String) payload.get("severity"));
+        newBug.setUrgency((String) payload.get("urgency"));
+        newBug.setState("OPEN");
+        newBug.setProjectId((String) payload.get("projectId"));
+        newBug.setFromGithub(true);
+        newBug.setCreatedBy(userId);
+        newBug.setCreatedAt(LocalDateTime.now());
+
+        List<Object> attachmentsRaw = (List<Object>) payload.get("attachments");
+        List<Attachment> processedAttachments = new ArrayList<>();
+
+        if (attachmentsRaw != null) {
+            for (Object obj : attachmentsRaw) {
+                if (obj instanceof Map) {
+                    Map<String, Object> attMap = (Map<String, Object>) obj;
+                    String url = (String) attMap.get("url");
+
+                    if (url != null && !url.isBlank()) {
+                        Attachment att = new Attachment();
+                        att.setFilename(url);
+                        att.setOriginalName(url);
+                        att.setSize(0L);
+                        att.setUploadedAt(LocalDateTime.now());
+                        processedAttachments.add(att);
+                    }
+                }
+            }
+        }
+
+        newBug.setAttachments(processedAttachments);
+
+        String severity = (String) payload.get("severity");
+        String urgency = (String) payload.get("urgency");
+
+        String priority = "";
+        int severityValue = getSeverityValue(severity.toUpperCase());
+        int urgencyValue = getUrgencyValue(urgency.toUpperCase());
+        int weightedScore = severityValue + urgencyValue;
+
+        if (weightedScore >= 7) {
+            priority = "P1";
+        } else if (weightedScore >= 5) {
+            priority = "P2";
+        } else if (weightedScore >= 3) {
+            priority = "P3";
+        } else {
+            priority = "P4";
+        }
+
+        newBug.setPriority(priority);
+
+        Bug savedBug = bugService.createBug(newBug);
+        return ResponseEntity.ok(savedBug);
     }
 
     // Get Bug by ID

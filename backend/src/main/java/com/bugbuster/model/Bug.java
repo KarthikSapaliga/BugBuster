@@ -41,8 +41,12 @@ public class Bug {
     private String expectedOutcome;
     private String actualOutcome;
 
-    private String urgency;
-    private String severity;
+    @Builder.Default
+    private String severity = "LOW";
+
+    @Builder.Default
+    private String urgency = "LOW";
+
     private String priority;
 
     private boolean fromGithub;

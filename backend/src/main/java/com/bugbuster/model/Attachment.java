@@ -3,7 +3,7 @@ package com.bugbuster.model;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -12,5 +12,5 @@ public class Attachment implements Serializable {
     private String filename;
     private String originalName;
     private long size;
-    private Date uploadedAt;
+    private LocalDateTime uploadedAt;
 }

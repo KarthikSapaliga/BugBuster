@@ -7,39 +7,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import toast from 'react-hot-toast'
 import { apiClient } from '@/lib/axios'
 import { useAppStore } from '@/store/store'
-import { GET_MY_PROJECTS_ROUTE, CREATE_BUG_ROUTE } from '@/lib/routes'
+import { GITHUB_IMPORT_ROUTE } from '@/lib/routes'
+import { useParams } from 'react-router-dom'
 
 export default function ImportGithubIssueForm({ bug, closePage }) {
     const { user, token } = useAppStore()
-    const [projects, setProjects] = useState([])
+
+    const { projectId } = useParams()
 
     console.log({ bug })
 
     const [formData, setFormData] = useState({
         title: bug?.title || '',
         description: bug?.description || '',
-        steps: '',
-        expected: '',
-        actual: '',
-        severity: '',
-        urgency: '',
-        project: ''
+        steps: bug?.steps || '',
+        expected: bug?.expected || '',
+        actual: bug?.actual || '',
+        severity: bug?.severity.toLowerCase() || '',
+        urgency: bug?.urgency.toLowerCase() || '',
+        project: projectId,
     })
-
-    useEffect(() => {
-        const fetchProjects = async () => {
-            try {
-                const res = await apiClient.get(GET_MY_PROJECTS_ROUTE, {
-                    headers: { Authorization: `Bearer ${token}` }
-                })
-                setProjects(res.data || [])
-            } catch (err) {
-                console.error("Failed to fetch projects", err)
-            }
-        }
-
-        if (user) fetchProjects()
-    }, [user])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -68,13 +55,15 @@ export default function ImportGithubIssueForm({ bug, closePage }) {
             severity: formData.severity,
             urgency: formData.urgency,
             projectId: formData.project,
+            attachments: bug?.attachments,
             fromGithub: true,
-            attachments: []
+            issueId: bug?.issueId,
         }
 
+        console.log({ payload })
         try {
             await apiClient.post(
-                CREATE_BUG_ROUTE,
+                GITHUB_IMPORT_ROUTE,
                 payload,
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -88,7 +77,7 @@ export default function ImportGithubIssueForm({ bug, closePage }) {
     return (
         <main className="p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background ">
             <div className="bg-card border border-border rounded-xl p-6 dark:bg-sidebar shadow-md">
-                <div className='flex'>
+                <div className='flex justify-between'>
                     <div>
                         <h1 className="text-2xl font-semibold text-foreground mb-2">Import External Issue</h1>
                         <p className="text-muted-foreground mb-4">
@@ -96,7 +85,7 @@ export default function ImportGithubIssueForm({ bug, closePage }) {
                         </p>
                     </div>
                     <div>
-                        <button onClick={closePage}>Close</button>
+                        <button onClick={closePage} className='bg-red-400 p-2 rounded-sm'>Close</button>
                     </div>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -162,24 +151,6 @@ export default function ImportGithubIssueForm({ bug, closePage }) {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="space-y-2">
-                            <Label>Project</Label>
-                            <Select
-                                value={formData.project}
-                                onValueChange={(value) => handleSelectChange("project", value)}
-                            >
-                                <SelectTrigger id="project">
-                                    <SelectValue placeholder="Select Project" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {projects.map(project => (
-                                        <SelectItem key={project.id} value={project.id}>
-                                            {project.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
 
                         <div className="space-y-2">
                             <Label>Severity</Label>

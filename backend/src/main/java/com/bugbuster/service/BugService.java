@@ -54,4 +54,8 @@ public class BugService {
         return bugRepository.findByProjectIdIn(projectIds);
     }
 
+    public boolean existsByIssueIdAndFromGithub(String issueId, boolean fromGithub) {
+        return bugRepository.existsByIssueIdAndFromGithub(issueId, fromGithub);
+    }
+
 }
