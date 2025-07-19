@@ -80,7 +80,7 @@ const BugCard = ({ issue, userMap }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <UserPlus className="w-4 h-4 shrink-0" />
-              {issue.fromGithub || issue.issue_url ? (
+              {issue.fromGithub ? (
                 <span className="truncate">Created by: {issue.createdBy}</span>
               ) : (
                 <span className="truncate">Created by: {userMap[issue.createdBy] || "Loading ..."}</span>
@@ -106,7 +106,7 @@ const BugCard = ({ issue, userMap }) => {
 
           <div className="flex gap-2 pt-2">
             {/* TODO */}
-            {(issue.fromGithub || issue.issue_url) ? (
+            {(issue.fromGithub) ? (
               <>
                 <Link >
                   <Button size="sm" variant="default" onClick={() => setOpenGitImportPage(true)} >
