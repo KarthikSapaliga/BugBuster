@@ -221,7 +221,7 @@ export default function VersionControl() {
 								/>
 							</div>
 							<Select value={statusFilter} onValueChange={setStatusFilter}>
-								<SelectTrigger className="w-[180px] px-3 py-1 border border-border rounded-md">
+								<SelectTrigger className="px-3 py-1 border border-border rounded-md">
 									<SelectValue placeholder="All Status" />
 								</SelectTrigger>
 								<SelectContent>
@@ -336,7 +336,7 @@ export default function VersionControl() {
 										</Link>
 										<Button size="sm" variant="outline" asChild>
 											<a
-												href={`https://github.com/${project.github_owner}/${project.github_repo}/issues/${issue.issueId}`}
+												href={issue.issue_url}
 												target="_blank"
 												rel="noopener noreferrer"
 											>
