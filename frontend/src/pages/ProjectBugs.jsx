@@ -123,14 +123,14 @@ function ProjectBugs() {
     if (projectId) fetchBugs();
   }, [projectId, token]);
 
-  
+
   useEffect(() => {
     async function fetchUserNames() {
       const newUserMap = {};
 
       await Promise.all(
         uniqueUserIds.map(async (userId) => {
-          const name = await getUserName({ userId });
+          const name = await getUserName(userId);
           newUserMap[userId] = name || "Unknown User";
         })
       );

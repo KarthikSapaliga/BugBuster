@@ -83,7 +83,7 @@ function AssignedMe() {
 
       await Promise.all(
         uniqueUserIds.map(async (userId) => {
-          const name = await getUserName({ userId });
+          const name = await getUserName(userId);
           newUserMap[userId] = name || "Unknown User";
         })
       );
