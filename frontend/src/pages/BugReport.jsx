@@ -27,22 +27,22 @@ import { Badge } from "@/components/ui/badge";
 
 
 const getStatusIcon = (status) => {
-  const iconProps = { size: 12, className: "flex-shrink-0" };
+	const iconProps = { size: 12, className: "flex-shrink-0" };
 
-  switch (status.toLowerCase()) {
-    case 'closed':
-      return <CheckCircle {...iconProps} className="text-green-500" />;
-    case 'in_progress':
-      return <PlayCircle {...iconProps} className="text-blue-500" />;
-    case 'assigned':
-      return <Clock {...iconProps} className="text-orange-500" />;
-    case 'open':
-      return <AlertCircle {...iconProps} className="text-red-500" />;
-    case 'resolved':
-      return <XCircle {...iconProps} className="text-yellow-500" />; // Or pick a different icon if you prefer
-    default:
-      return <XCircle {...iconProps} className="text-gray-500" />;
-  }
+	switch (status.toLowerCase()) {
+		case 'closed':
+			return <CheckCircle {...iconProps} className="text-green-500" />;
+		case 'in_progress':
+			return <PlayCircle {...iconProps} className="text-blue-500" />;
+		case 'assigned':
+			return <Clock {...iconProps} className="text-orange-500" />;
+		case 'open':
+			return <AlertCircle {...iconProps} className="text-red-500" />;
+		case 'resolved':
+			return <XCircle {...iconProps} className="text-yellow-500" />; // Or pick a different icon if you prefer
+		default:
+			return <XCircle {...iconProps} className="text-gray-500" />;
+	}
 };
 
 const BugReport = () => {
@@ -170,7 +170,7 @@ const BugReport = () => {
 										<span className="mr-1">{getStatusIcon(bug.state)}</span>
 										{bug.state.replace('_', ' ').toUpperCase()}
 									</Badge>
-              					)}
+								)}
 							</div>
 							<p className="text-sm text-muted-foreground leading-relaxed">
 								Bug ID: {bug.id}
@@ -230,7 +230,7 @@ const BugReport = () => {
 							</p>
 							<span
 								className={cn(
-									"py-2 px-3 bg-background inline-flex items-center text-sm rounded-lg font-medium border border-border "
+									"py-2 px-3 bg-muted inline-flex items-center text-sm rounded-lg font-medium border border-border "
 								)}
 							>
 								{bug.priority}
@@ -238,7 +238,7 @@ const BugReport = () => {
 						</div>
 
 						<div className="space-y-3">
-							<div className="bg-background rounded-lg p-3 border border-border ">
+							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground">
 									Project ID
 								</p>
@@ -247,7 +247,7 @@ const BugReport = () => {
 								</h3>
 							</div>
 
-							<div className="bg-background rounded-lg p-3 border border-border ">
+							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
 									<User className="w-3 h-3" />
 									Reporter
@@ -257,7 +257,7 @@ const BugReport = () => {
 								</h3>
 							</div>
 
-							<div className="bg-background rounded-lg p-3 border border-border ">
+							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
 									<User className="w-3 h-3" />
 									Assignee
@@ -267,7 +267,7 @@ const BugReport = () => {
 								</h3>
 							</div>
 
-							<div className="bg-background rounded-lg p-3 border border-border ">
+							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
 									<Calendar className="w-3 h-3" />
 									Date Created
@@ -277,7 +277,7 @@ const BugReport = () => {
 								</h3>
 							</div>
 
-							<div className="bg-background rounded-lg p-3 border border-border ">
+							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
 								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
 									<Calendar className="w-3 h-3" />
 									Date Resolved
