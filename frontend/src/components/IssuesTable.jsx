@@ -124,7 +124,7 @@ function IssuesTable({ data }) {
               </td>
               <td className="flex gap-2 py-3 justify-center items-center">
                 <Link to={`/bugs/${bug.id}`}>
-                  <Button variant="ghost" size="sm" className="text-primary">
+                  <Button variant="ghost" size="sm" >
                     <Eye size={16} />
                     View
                   </Button>

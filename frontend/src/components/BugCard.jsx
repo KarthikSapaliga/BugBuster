@@ -38,7 +38,7 @@ const BugCard = ({ issue, userMap }) => {
 
   return (
     <div>
-      <Card className="hover:shadow-md bg-sidebar transition-shadow duration-200">
+      <Card className="hover:shadow-md bg-card transition-shadow duration-200">
         <CardHeader className="pb-0">
           <div className="flex justify-between items-start">
             <div className="flex-1 min-w-0">

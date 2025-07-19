@@ -199,7 +199,7 @@ function ProjectBugs() {
       </div>
 
       {/* Filters */}
-      <Card className="bg-sidebar">
+      <Card className="">
         <CardContent className="p-2 shadow-sm">
           <IssueFilter
             searchTerm={searchTerm}
