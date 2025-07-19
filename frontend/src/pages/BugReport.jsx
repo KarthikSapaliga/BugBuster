@@ -78,7 +78,7 @@ const BugReport = () => {
 
 			await Promise.all(
 				userIds.map(async (userId) => {
-					const name = await getUserName({ userId });
+					const name = await getUserName(userId);
 					newUserMap[userId] = name || "Unknown User";
 				})
 			);
