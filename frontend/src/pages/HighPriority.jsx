@@ -2,15 +2,18 @@ import { useEffect, useState } from "react";
 import { apiClient } from "@/lib/axios";
 import { GET_ALL_BUGS_ROUTE } from "@/lib/routes";
 import IssuesTable from "@/components/IssuesTable";
+import { useAppStore } from "@/store/store";
 
 function HighPriority() {
   const [issues, setIssues] = useState([]);
   const [highPriorityIssues, setHighPriorityIssues] = useState([]);
-
+  const { token } = useAppStore();
   useEffect(() => {
     async function fetchAllIssues() {
       try {
-        const res = await apiClient.get(GET_ALL_BUGS_ROUTE);
+        const res = await apiClient.get(GET_ALL_BUGS_ROUTE,{
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const allIssues = res.data || [];
 
         setIssues(allIssues);
