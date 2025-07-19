@@ -1,53 +1,56 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { AlertCircle, Calendar, CheckCircle, Clock, Eye, PlayCircle, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatDate } from "@/lib/utils";
-
-const bugs = [
-    {
-        id: "BUG-1023",
-        title: "Login fails when using Google Auth",
-        description: "Users report a blank screen when attempting to login using Google OAuth on mobile devices.",
-        severity: "critical",
-        status: "open",
-        createdAt: "2025-07-15T10:32:00Z",
-        assignedTo: "Ananya Joshi",
-    },
-    {
-        id: "BUG-1024",
-        title: "Dashboard chart not rendering",
-        description: "The analytics chart is not visible on Safari due to a possible rendering issue with the Chart.js library.",
-        severity: "high",
-        status: "in progress",
-        createdAt: "2025-07-14T16:45:00Z",
-        assignedTo: "Rahul Mehta",
-    },
-    {
-        id: "BUG-1025",
-        title: "Incorrect total in invoice PDF",
-        description: "PDF exports show incorrect total amount when discount coupons are applied twice.",
-        severity: "medium",
-        status: "open",
-        createdAt: "2025-07-13T09:18:00Z",
-        assignedTo: "Unassigned",
-    },
-];
+import { useEffect, useState } from "react";
+import { getSeverityColor, getStatusColor } from "@/lib/colors";
+import { apiClient } from "@/lib/axios";
+import { RECENT_BUGS_ROUTE } from "@/lib/routes";
+import { useAppStore } from "@/store/store";
 
 
+const getStatusIcon = (status) => {
+  const iconProps = { size: 12, className: "flex-shrink-0" };
 
-function getSeverityColor(severity) {
-    const map = {
-        low: "bg-green-100 text-green-800",
-        medium: "bg-yellow-100 text-yellow-800",
-        high: "bg-orange-100 text-orange-800",
-        critical: "bg-red-100 text-red-800",
-    };
-    return map[severity] || "bg-gray-100 text-gray-800";
-}
+  switch (status.toLowerCase()) {
+    case 'closed':
+      return <CheckCircle {...iconProps} className="text-green-500" />;
+    case 'in_progress':
+      return <PlayCircle {...iconProps} className="text-blue-500" />;
+    case 'assigned':
+      return <Clock {...iconProps} className="text-orange-500" />;
+    case 'open':
+      return <AlertCircle {...iconProps} className="text-red-500" />;
+    case 'resolved':
+      return <XCircle {...iconProps} className="text-yellow-500" />;
+    default:
+      return <XCircle {...iconProps} className="text-gray-500" />;
+  }
+};
 
 export default function RecentBugs() {
+    const [bugs,setBugs] = useState([]);
+    const {token} = useAppStore();
+
+    useEffect(()=>{
+        async function getRecentBugs() {
+            const res = await apiClient.get(RECENT_BUGS_ROUTE,{
+                params: {
+                    n: 2 
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setBugs(res.data);
+        }
+
+        getRecentBugs();
+    },[])
+
     return (
         <Card className="bg-muted w-full">
             <CardContent className="pt-6 space-y-5">
@@ -67,20 +70,22 @@ export default function RecentBugs() {
                             <CardContent className="p-4 space-y-2">
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <h3 className="text-sm font-medium text-muted-foreground">
-                                            {bug.id}
-                                        </h3>
                                         <p className="text-base font-semibold text-foreground">
                                             {bug.title}
                                         </p>
                                     </div>
                                     <div className="flex gap-2 flex-wrap justify-end">
-                                        <Badge className={`${getSeverityColor(bug.severity)} text-xs`}>
-                                            {bug.severity.toUpperCase()}
-                                        </Badge>
-                                        <Badge variant="outline" className="text-xs">
-                                            {bug.status.toUpperCase()}
-                                        </Badge>
+                                        {bug.state && (
+                                            <Badge variant="outline" className={`${getStatusColor(bug.state)} text-xs font-medium`}>
+                                                <span className="mr-1">{getStatusIcon(bug.state)}</span>
+                                                      {bug.state.toUpperCase()}
+                                            </Badge>
+                                        )}
+                                        {bug.severity && (
+                                            <Badge variant="default" className={`${getSeverityColor(bug.severity)} text-xs font-medium pointer-events-none`}>
+                                                {bug.severity.toUpperCase()}
+                                            </Badge>
+                                        )}
                                     </div>
                                 </div>
 
@@ -88,14 +93,16 @@ export default function RecentBugs() {
                                     {bug.description}
                                 </p>
 
-                                <div className="text-xs text-muted-foreground space-y-1">
-                                    <p>
-                                        Assigned To:{" "}
-                                        <span className="font-medium text-foreground">
-                                            {bug.assignedTo}
-                                        </span>
-                                    </p>
-                                    <p>Created: {formatDate(bug.createdAt)}</p>
+                                <div className="flex justify-between text-xs text-muted-foreground space-y-1">
+                                    <p>Created At: {formatDate(bug.createdAt)}</p>
+                                    {bug.closedAt && (
+                                        <>
+                                            <div className="flex items-center gap-2">
+                                                <Calendar className="w-4 h-4 shrink-0" />
+                                                <span>Closed At: {formatDate(bug.closedAt)}</span>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
 
                                 <div className="pt-2">
