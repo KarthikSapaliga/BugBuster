@@ -143,7 +143,7 @@ public class BugController {
             if (updatedBug.getComments() != null)
                 existingBug.setComments(updatedBug.getComments());
             if (updatedBug.isFromGithub())
-                existingBug.setFromGithub(true); // only true if explicitly set
+                existingBug.setFromGithub(true);
 
             Bug savedBug = bugService.updateBug(existingBug);
 
@@ -288,20 +288,41 @@ public class BugController {
         try {
             String userId = extractUserId(authHeader);
 
-            // Get all projects user created or is part of
             List<Project> userProjects = userService.getProjectsByCreatorOrMember(userId);
 
-            // Extract project IDs
             List<String> projectIds = userProjects.stream()
                     .map(Project::getId)
                     .toList();
 
-            // Get bugs in those projects
             List<Bug> bugs = bugService.getBugsByProjectIds(projectIds);
 
             return ResponseEntity.ok(bugs);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error fetching bugs: " + e.getMessage());
+        }
+    }
+
+    // Get recent bugs of user
+    @GetMapping("/recent")
+    public ResponseEntity<?> getRecentBugsForUserProjects(@RequestParam(defaultValue = "3") int n,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String userId = extractUserId(authHeader);
+
+            List<Project> userProjects = userService.getProjectsByCreatorOrMember(userId);
+            List<String> projectIds = userProjects.stream()
+                    .map(Project::getId)
+                    .toList();
+
+            List<Bug> bugs = bugService.getBugsByProjectIds(projectIds);
+
+            bugs.sort((b1, b2) -> b2.getCreatedAt().compareTo(b1.getCreatedAt()));
+
+            List<Bug> recentBugs = bugs.stream().limit(n).toList();
+
+            return ResponseEntity.ok(recentBugs);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching recent bugs: " + e.getMessage());
         }
     }
 
@@ -427,7 +448,7 @@ public class BugController {
     }
 
     // Get All Comments
-    @GetMapping("/{id}/comments")
+    @GetMapping("/comments/{id}")
     public ResponseEntity<?> getComments(@PathVariable String id) {
         Optional<Bug> bugOpt = bugService.getBugById(id);
 
