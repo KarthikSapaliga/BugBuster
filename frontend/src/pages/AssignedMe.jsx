@@ -1,31 +1,17 @@
 import { useEffect, useState } from "react";
-import IssuesTable from "@/components/IssuesTable";
 import { apiClient } from "@/lib/axios";
 import { GET_ASSIGNED_BUGS_ROUTE } from "@/lib/routes";
 import { useAppStore } from "@/store/store";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card} from "@/components/ui/card";
+
 import {
-  Eye,
-  ExternalLink,
-  User,
-  Calendar,
   AlertTriangle,
-  CheckCircle,
-  Clock,
-  X,
-  Filter,
-  Search,
-  RefreshCw,
-  UserPlus,
-  UserCheck,
+
 } from "lucide-react";
-import { Link } from "react-router-dom";
+
 import { getUserName } from "@/lib/api";
 import BugCard from "@/components/BugCard";
-import { formatDate } from "@/lib/utils";
 
 
 function AssignedMe() {
