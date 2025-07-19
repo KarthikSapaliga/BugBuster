@@ -57,7 +57,7 @@ function Analytics() {
 
       {/* Charts */}
       <div className="grid grid-cols-1  gap-6">
-        <div className="bg-card dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+        <div className="bg-sidebar  border border-border shadow-md rounded-xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Weekly Progress
           </h2>
@@ -66,13 +66,13 @@ function Analytics() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className=" bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+        <div className=" bg-sidebar  border border-border shadow-md rounded-xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Bug Status
           </h2>
           <BugStatusPieChart data={pieData} />
         </div>
-        <div className=" bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+        <div className=" bg-sidebar  border border-border shadow-md rounded-xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Bug Status Bar Chart
           </h2>
@@ -81,7 +81,7 @@ function Analytics() {
       </div>
 
       <div className="grid grid-cols-1  gap-6">
-        <div className="col-span-1 bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+        <div className="col-span-1 bg-sidebar border border-border shadow-md rounded-xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Monthly Progress
           </h2>
@@ -90,7 +90,7 @@ function Analytics() {
       </div>
 
       {/* History */}
-      <div className="bg-white dark:bg-zinc-900 border border-border shadow-md rounded-xl p-6">
+      <div className="bg-sidebar border border-border shadow-md rounded-xl p-6">
         <h2 className="text-xl font-semibold text-foreground mb-4">History</h2>
         <IssuesTable  data = {closedBugs}/>
       </div>
