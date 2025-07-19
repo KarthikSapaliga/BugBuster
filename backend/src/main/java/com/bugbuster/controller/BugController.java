@@ -10,7 +10,10 @@ import io.jsonwebtoken.Claims;
 import com.bugbuster.model.Attachment;
 import com.bugbuster.model.Bug;
 import com.bugbuster.model.Comment;
+import com.bugbuster.model.ImportedIssue;
 import com.bugbuster.model.Project;
+import com.bugbuster.repository.ImportedIssueRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -45,6 +48,9 @@ public class BugController {
     // private MailService mailService;
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private ImportedIssueRepository importedIssueRepository;
 
     // Create Bug
     @PostMapping
@@ -141,6 +147,18 @@ public class BugController {
         }
 
         newBug.setPriority(priority);
+
+        Integer issueId = (Integer) payload.get("issueId");
+        String state = (String) payload.getOrDefault("state", "OPEN");
+
+        if (issueId != null) {
+            ImportedIssue imported = new ImportedIssue();
+            imported.setIssueId(issueId);
+            imported.setStatus(state);
+            imported.setProjectId((String) payload.get("projectId"));
+
+            importedIssueRepository.save(imported);
+        }
 
         Bug savedBug = bugService.createBug(newBug);
         return ResponseEntity.ok(savedBug);
@@ -338,6 +356,7 @@ public class BugController {
 
             bug.setState("RESOLVED");
             bug.setResolvedAt(LocalDateTime.now());
+            bug.setResolvedBy(userId);
 
             return ResponseEntity.ok(bugService.updateBug(bug));
 
