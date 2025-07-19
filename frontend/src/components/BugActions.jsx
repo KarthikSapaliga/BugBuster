@@ -1,166 +1,229 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from '@/components/ui/button';
-
-import { useAppStore } from '@/store/store';
-import { apiClient } from '@/lib/axios';
 import {
-    GET_DEVS_IN_TEAM_ROUTE,
-    START_WORKING_ROUTE,
-    ASSIGN_BUG_ROUTE,
-    RESOLVE_BUG_ROUTE,
-    CLOSE_BUG_ROUTE,
-    DELETE_BUG_ROUTE,
-} from '@/lib/routes';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+
+import { useAppStore } from "@/store/store";
+import { apiClient } from "@/lib/axios";
+import {
+  GET_DEVS_IN_TEAM_ROUTE,
+  START_WORKING_ROUTE,
+  ASSIGN_BUG_ROUTE,
+  RESOLVE_BUG_ROUTE,
+  CLOSE_BUG_ROUTE,
+  DELETE_BUG_ROUTE,
+} from "@/lib/routes";
+import { Edit, X, Trash2, Play, CheckCircle, UserPlus } from "lucide-react";
 
 function BugActions({ bug }) {
-    const { user, token } = useAppStore();
-    const navigate = useNavigate();
-    const [developers, setDevelopers] = useState([]);
-    const [selectedDev, setSelectedDev] = useState("");
+  const { user, token } = useAppStore();
+  const navigate = useNavigate();
+  const [developers, setDevelopers] = useState([]);
+  const [selectedDev, setSelectedDev] = useState("");
 
-    useEffect(() => {
-        if(!bug.projectId) return;
+  useEffect(() => {
+    if (!bug.projectId) return;
 
-        const fetchDevelopers = async () => {
-            const res = await apiClient.get(`${GET_DEVS_IN_TEAM_ROUTE}/${bug.projectId}`);
-            setDevelopers(res.data);
-        }
-        if (bug) {
-            fetchDevelopers();
-        }
-    }, [bug.projectId])
-
-    const updateBugDetails = (bug) => {
-        navigate(`/bugs/update-bug/${bug.id}`)
+    const fetchDevelopers = async () => {
+      const res = await apiClient.get(
+        `${GET_DEVS_IN_TEAM_ROUTE}/${bug.projectId}`
+      );
+      setDevelopers(res.data);
+    };
+    if (bug) {
+      fetchDevelopers();
     }
+  }, [bug.projectId]);
 
-    const startWork = async () => {
-        if (!token) return toast.error("Unauthorized");
+  const updateBugDetails = (bug) => {
+    navigate(`/bugs/update-bug/${bug.id}`);
+  };
 
-        try {
-            const res = await apiClient.patch(`${START_WORKING_ROUTE}/${bug.id}`, null, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+  const startWork = async () => {
+    if (!token) return toast.error("Unauthorized");
 
-            toast.success("Bug marked as In Progress!");
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Failed to start working on bug.");
+    try {
+      const res = await apiClient.patch(
+        `${START_WORKING_ROUTE}/${bug.id}`,
+        null,
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
-    };
+      );
 
+      toast.success("Bug marked as In Progress!");
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.message || "Failed to start working on bug."
+      );
+    }
+  };
 
-    const assignUser = async () => {
-        if (!token) return toast.error("Unauthorized");
+  const assignUser = async () => {
+    if (!token) return toast.error("Unauthorized");
 
-        if (!selectedDev) return toast.error("Please select a developer");
+    if (!selectedDev) return toast.error("Please select a developer");
 
-        try {
-            const res = await apiClient.patch(`${ASSIGN_BUG_ROUTE}/${bug.id}`, null, {
-                params: { developerId: selectedDev },
-                headers: { Authorization: `Bearer ${token}` }
-            });
+    try {
+      const res = await apiClient.patch(`${ASSIGN_BUG_ROUTE}/${bug.id}`, null, {
+        params: { developerId: selectedDev },
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-            toast.success("Developer assigned successfully!");
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Failed to assign developer.");
+      toast.success("Developer assigned successfully!");
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.message || "Failed to assign developer."
+      );
+    }
+  };
+
+  const resolveBug = async () => {
+    if (!token) return toast.error("Unauthorized");
+
+    try {
+      const res = await apiClient.patch(
+        `${RESOLVE_BUG_ROUTE}/${bug.id}`,
+        null,
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
-    };
+      );
 
-    const resolveBug = async () => {
-        if (!token) return toast.error("Unauthorized");
+      toast.success("Bug marked as resolved!");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to resolve bug.");
+    }
+  };
 
-        try {
-            const res = await apiClient.patch(`${RESOLVE_BUG_ROUTE}/${bug.id}`, null, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+  const closeBug = async () => {
+    if (!token) return toast.error("Unauthorized");
 
-            toast.success("Bug marked as resolved!");
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Failed to resolve bug.");
-        }
-    };
+    try {
+      const res = await apiClient.patch(`${CLOSE_BUG_ROUTE}/${bug.id}`, null, {
+        params: { closedBy: user.id },
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    const closeBug = async () => {
-        if (!token) return toast.error("Unauthorized");
+      toast.success("Bug closed successfully!");
+    } catch (err) {
+      toast.error(err?.response?.data || "Failed to close bug.");
+    }
+  };
 
-        try {
-            const res = await apiClient.patch(`${CLOSE_BUG_ROUTE}/${bug.id}`, null, {
-                params: { closedBy: user.id },
-                headers: { Authorization: `Bearer ${token}` }
-            });
+  const deleteBug = async () => {
+    if (!token) return toast.error("Unauthorized");
 
-            toast.success("Bug closed successfully!");
-        } catch (err) {
-            toast.error(err?.response?.data || "Failed to close bug.");
-        }
-    };
+    try {
+      const res = await apiClient.delete(`${DELETE_BUG_ROUTE}/${bug.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    const deleteBug = async () => {
-        if (!token) return toast.error("Unauthorized");
+      toast.success("Bug deleted successfully!");
+      navigate("/dashboard");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to delete bug.");
+    }
+  };
 
-        try {
-            const res = await apiClient.delete(`${DELETE_BUG_ROUTE}/${bug.id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+  return (
+    <div className="flex flex-col gap-4">
+      {user && user.role === "TESTER" && (
+        <>
+          <div>
+            <h2 className="text-lg font-semibold mb-2">Actions</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <Button
+                onClick={() => updateBugDetails(bug)}
+                className="bg-blue-500 hover:bg-blue-700 text-white flex items-center gap-2"
+              >
+                <Edit size={16} />
+                Update the Details
+              </Button>
+              <Button
+                onClick={() => closeBug()}
+                className="bg-orange-500 hover:bg-orange-700 text-white flex items-center gap-2"
+              >
+                <X size={16} />
+                Close the issue
+              </Button>
+              <Button
+                onClick={() => deleteBug()}
+                className="bg-red-500 hover:bg-red-700 text-white flex items-center gap-2"
+              >
+                <Trash2 size={16} />
+                Delete
+              </Button>
+            </div>
+          </div>
 
-            toast.success("Bug deleted successfully!");
-            navigate("/dashboard");
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Failed to delete bug.");
-        }
-    };
+          {bug.state === "OPEN" && (
+            <div className="space-y-2 w-full">
+              <h2 className="text-lg font-semibold mb-2">Assign To</h2>
+              <div className="flex gap-4">
+                <Select onValueChange={setSelectedDev}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select member" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {developers.map((developer) => (
+                      <SelectItem key={developer.id} value={developer.id}>
+                        {developer.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  disabled={!selectedDev}
+                  onClick={() => assignUser()}
+                  className="bg-primary disabled:bg-gray-400 text-primary-foreground flex items-center gap-2"
+                >
+                  <UserPlus size={16} />
+                  Assign
+                </Button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
 
-
-    return (
-        <div className='flex flex-col gap-4'>
-            {user && user.role === "TESTER" &&
-                <>
-                    <div>
-                        <h2 className="text-lg font-semibold mb-2">Actions</h2>
-                        <div className='grid grid-cols-1 lg:grid-cols-3 gap-4'>
-                            <Button onClick={() => updateBugDetails(bug)}>Update the Details</Button>
-                            <Button onClick={() => closeBug()}>Close the issue</Button>
-                            <Button onClick={() => deleteBug()}>Delete</Button>
-                        </div>
-                    </div>
-
-                    {bug.state === "OPEN" && <div className="space-y-2 w-full">
-                        <h2 className="text-lg font-semibold mb-2">Assign To</h2>
-                        <div className="flex gap-4">
-                            <Select onValueChange={setSelectedDev}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select member" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {developers.map((developer) => (
-                                        <SelectItem key={developer.id} value={developer.id} >{developer.name}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <Button disabled={!selectedDev} onClick={() => assignUser()}>Assign</Button>
-                        </div>
-                    </div>}
-
-                </>
-            }
-
-            {user && user.role === "DEVELOPER" &&
-                <>
-                    <div>
-                        <h2 className="text-lg font-semibold mb-2">Actions</h2>
-                        <div className='flex flex-col lg:flex-row gap-4'>
-                            {bug.state === "OPEN" && <Button onClick={startWork} >Start Work</Button>}
-                            {bug.assignedTo === user.id && bug.state === "IN_PROGRESS" && <Button onClick={resolveBug}>Mark as Resolved</Button>}
-                        </div>
-                    </div>
-                </>
-            }
-        </div>
-    )
+      {user && user.role === "DEVELOPER"&& (
+        <>
+          <div>
+            <h2 className="text-lg font-semibold mb-2">Actions</h2>
+            <div className="flex flex-col lg:flex-row gap-4">
+              {bug.state === "OPEN" ||true && (
+                <Button
+                  onClick={startWork}
+                  className="bg-green-500 hover:bg-green-700 text-white flex items-center gap-2"
+                >
+                  <Play size={16} />
+                  Start Work
+                </Button>
+              )}
+              {bug.assignedTo === user.id && bug.state === "IN_PROGRESS"   && (
+                <Button
+                  onClick={resolveBug}
+                  className="bg-emerald-500 hover:bg-emerald-700 text-white flex items-center gap-2"
+                >
+                  <CheckCircle size={16} />
+                  Mark as Resolved
+                </Button>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
 
-export default BugActions
+export default BugActions;
