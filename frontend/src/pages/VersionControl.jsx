@@ -12,7 +12,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useAppStore } from "@/store/store";
 import { apiClient } from "@/lib/axios";
-import { GET_PROJECT_BY_ID_ROUTE } from "@/lib/routes";
+import { GET_PROJECT_BY_ID_ROUTE, IMPORTED_ISSUE_IDS } from "@/lib/routes";
 import BugCard from "@/components/BugCard";
 import IssueFilter from "@/components/IssueFilter";
 
@@ -30,15 +30,15 @@ export default function VersionControl() {
 	const projectId = params.projectId;
 	const { token } = useAppStore();
 	const [project, setProject] = useState({});
+	const [importedIds, setImportedIds] = useState([]);
+
 
 	useEffect(() => {
 		const fetchProjectInfo = async () => {
 			try {
 				const res = await apiClient.get(
 					`${GET_PROJECT_BY_ID_ROUTE}/${projectId}`,
-					{
-						headers: { Authorization: `Bearer ${token}` },
-					}
+					{ headers: { Authorization: `Bearer ${token}` } }
 				);
 				setProject(res.data);
 			} catch (error) {
@@ -46,7 +46,19 @@ export default function VersionControl() {
 			}
 		};
 
-		fetchProjectInfo();
+		const fetchImportedIssueIds = async () => {
+			try {
+				const res = await apiClient.get(`${IMPORTED_ISSUE_IDS}/${projectId}`);
+				setImportedIds(res.data);
+			} catch (error) {
+				console.error("Failed to fetch imported issue IDs:", error);
+			}
+		};
+
+		if (projectId) {
+			fetchProjectInfo();
+			fetchImportedIssueIds();
+		}
 	}, [projectId, token]);
 
 	function extractGithubOwner(url) {
@@ -69,6 +81,19 @@ export default function VersionControl() {
 		}
 	}
 
+	const filterOnImport = async (issueId) => {
+		try {
+			const res = await apiClient.get(`${IMPORTED_ISSUE_IDS}/${projectId}`);
+			setImportedIds(res.data);
+
+			setIssues((prev) => prev.filter((issue) => issue.issueId !== issueId));
+			setFilteredIssues((prev) => prev.filter((issue) => issue.issueId !== issueId));
+			setImportedIds((prev) => [...prev, issueId]);
+		} catch (err) {
+			console.error("Failed to import GitHub issue:", err);
+		}
+	};
+
 	const handleRefresh = async () => {
 		if (!project.githubToken || !project.githubLink) return;
 
@@ -80,14 +105,18 @@ export default function VersionControl() {
 			const octokit = initOctokit(project.githubToken);
 			const data = await fetchIssues(octokit, owner, repo);
 			const parsedIssues = JSON.parse(data);
-			setIssues(parsedIssues);
+
+			const filtered = parsedIssues.filter(
+				(issue) => !importedIds.includes(issue.issueId)
+			);
+			setIssues(filtered);
 		} catch (err) {
 			console.error("Error fetching GitHub issues:", err);
 		}
 		setLoading(false);
 	};
 
-	useEffect(() => {
+	const refilterIssues = () => {
 		let filtered = [...issues];
 
 		if (searchTerm)
@@ -108,24 +137,22 @@ export default function VersionControl() {
 				(issue) => issue.severity?.toUpperCase() === severityFilter
 			);
 
-		//Filter by Priority
-		if (priorityFilter != "all") {
+		if (priorityFilter !== "all")
 			filtered = filtered.filter(
-				(issue) => issue.priority.toUpperCase() === priorityFilter
+				(issue) => issue.priority?.toUpperCase() === priorityFilter
 			);
-		}
 
-		//Filter by Urgency
-		if (urgencyFilter != "all") {
+		if (urgencyFilter !== "all")
 			filtered = filtered.filter(
-				(issue) => issue.urgency.toUpperCase() === urgencyFilter
+				(issue) => issue.urgency?.toUpperCase() === urgencyFilter
 			);
-		}
 
 		setFilteredIssues(filtered);
-	}, [searchTerm, statusFilter, severityFilter, issues]);
+	};
 
-	console.log(issues);
+	useEffect(() => {
+		refilterIssues();
+	}, [issues, searchTerm, statusFilter, severityFilter, priorityFilter, urgencyFilter]);
 
 	return (
 		<div className="min-h-screen bg-background p-4 md:p-8 lg:p-12">
@@ -173,7 +200,7 @@ export default function VersionControl() {
 						</Card>
 					) : (
 						filteredIssues.map((issue) => (
-							<BugCard key={issue.issueId} issue={issue} />
+							<BugCard key={issue.issueId} issue={issue} filterOnImport={filterOnImport} />
 						))
 					)}
 				</div>

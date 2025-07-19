@@ -9,9 +9,11 @@ import { apiClient } from '@/lib/axios'
 import { useAppStore } from '@/store/store'
 import { GITHUB_IMPORT_ROUTE } from '@/lib/routes'
 import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function ImportGithubIssueForm({ bug, closePage }) {
     const { user, token } = useAppStore()
+    const navigate = useNavigate()
 
     const { projectId } = useParams()
 
@@ -68,6 +70,7 @@ export default function ImportGithubIssueForm({ bug, closePage }) {
                 { headers: { Authorization: `Bearer ${token}` } }
             )
             toast.success("Imported issue created successfully!")
+            navigate(`projects/vcs/${projectId}`)
         } catch (err) {
             console.error(err)
             toast.error("Failed to import issue.")
@@ -191,7 +194,7 @@ export default function ImportGithubIssueForm({ bug, closePage }) {
 
                     <div className="pt-4">
                         <Button type="submit" className="w-full sm:w-auto">
-                            Create Bug
+                            Import Bug
                         </Button>
                     </div>
                 </form>
