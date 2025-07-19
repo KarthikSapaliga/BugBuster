@@ -29,152 +29,27 @@ function App() {
     <Layout>
       <Routes>
         {/* Public Routes (in modal) */}
-        <Route
-          path="/signin"
-          element={
-            <Modal>
-              <SignInPage />
-            </Modal>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <Modal>
-              <SignUpPage />
-            </Modal>
-          }
-        />
+        <Route path="/signin" element={<Modal> <SignInPage /> </Modal>} />
+        <Route path="/signup" element={<Modal> <SignUpPage /> </Modal>} />
 
         {/* Protected Routes */}
-        <Route
-          path="*"
-          element={
-            <ProtectedRoute>
-              <Navigate to="/dashboard" />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/analytics-reports"
-          element={
-            <ProtectedRoute>
-              <Analytics />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/all-issues"
-          element={
-            <ProtectedRoute>
-              <AllIsues />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/in-progress"
-          element={
-            <ProtectedRoute>
-              <InProgress />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/high-priority"
-          element={
-            <ProtectedRoute>
-              <HighPriority />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/assigned-me"
-          element={
-            <ProtectedRoute>
-              <AssignedMe />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/report-bug"
-          element={
-            <ProtectedRoute>
-              <BugReportingForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/project-settings"
-          element={
-            <ProtectedRoute>
-              <div>Settings</div>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/create-project"
-          element={
-            <ProtectedRoute>
-              <CreateProjectForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="projects/bugs/:projectId"
-          element={
-            <ProtectedRoute>
-              <ProjectBugs />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="projects/vcs/:projectId"
-          element={
-            <ProtectedRoute>
-              <VersionControl />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="projects/team/:projectId"
-          element={
-            <ProtectedRoute>
-              <Teams />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="projects/update-project/:projectId"
-          element={
-            <ProtectedRoute>
-              <UpdateProjectForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/bugs/:id"
-          element={
-            <ProtectedRoute>
-              <BugReport />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/bugs/update-bug/:id"
-          element={
-            <ProtectedRoute>
-              <BugUpdateForm />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="*" element={<ProtectedRoute> <Navigate to="/dashboard" /> </ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute> <Dashboard /> </ProtectedRoute>} />
+        <Route path="/analytics-reports" element={<ProtectedRoute> <Analytics /> </ProtectedRoute>} />
+        <Route path="/all-issues" element={<ProtectedRoute> <AllIsues /> </ProtectedRoute>} />
+        <Route path="/in-progress" element={<ProtectedRoute> <InProgress /> </ProtectedRoute>} />
+        <Route path="/high-priority" element={<ProtectedRoute> <HighPriority /> </ProtectedRoute>} />
+        <Route path="/assigned-me" element={<ProtectedRoute> <AssignedMe /> </ProtectedRoute>} />
+
+        <Route path="/create-project" element={<ProtectedRoute> <CreateProjectForm /> </ProtectedRoute>} />
+        <Route path="projects/bugs/:projectId" element={<ProtectedRoute> <ProjectBugs /> </ProtectedRoute>} />
+        <Route path="projects/vcs/:projectId" element={<ProtectedRoute> <VersionControl /> </ProtectedRoute>} />
+        <Route path="projects/team/:projectId" element={<ProtectedRoute> <Teams /> </ProtectedRoute>} />
+        <Route path="projects/update-project/:projectId" element={<ProtectedRoute><UpdateProjectForm /> </ProtectedRoute>} />
+
+        <Route path="/report-bug" element={<ProtectedRoute> <BugReportingForm /> </ProtectedRoute>} />
+        <Route path="/bugs/:id" element={<ProtectedRoute> <BugReport /> </ProtectedRoute>} />
+        <Route path="/bugs/update-bug/:id" element={<ProtectedRoute> <BugUpdateForm /> </ProtectedRoute>} />
       </Routes>
     </Layout>
   );
