@@ -1,53 +1,20 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import {
-	Eye,
-	ExternalLink,
-	User,
-	Calendar,
 	AlertTriangle,
-	Search,
 	RefreshCw,
-	UserCheck,
-	UserPlus,
 } from "lucide-react";
 import {
 	fetchIssues,
 	initOctokit,
 } from "@/lib/VersionControl-Integration/versioncontrol";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAppStore } from "@/store/store";
 import { apiClient } from "@/lib/axios";
 import { GET_PROJECT_BY_ID_ROUTE } from "@/lib/routes";
 import BugCard from "@/components/BugCard";
 import IssueFilter from "@/components/IssueFilter";
-
-function formatDate(dateString) {
-	return new Date(dateString).toLocaleString("en-IN", {
-		dateStyle: "medium",
-		timeStyle: "short",
-	});
-}
-
-function getSeverityColor(severity) {
-	const map = {
-		LOW: "bg-green-100 text-green-800",
-		MEDIUM: "bg-yellow-100 text-yellow-800",
-		HIGH: "bg-orange-100 text-orange-800",
-		CRITICAL: "bg-red-100 text-red-800",
-	};
-	return map[severity?.toUpperCase()] || "bg-gray-100 text-gray-800";
-}
 
 export default function VersionControl() {
 	const [issues, setIssues] = useState([]);
