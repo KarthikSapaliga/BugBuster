@@ -31,8 +31,8 @@ export default function AttachmentList({ attachments = [] }) {
                                         loading="lazy"
                                     />
                                 ) : (
-                                    <div className="flex flex-col justify-center items-center gap-2 max-h-40">
-                                        <FileText className="size-24 text-muted-foreground" />
+                                    <div className="flex flex-col justify-center items-center gap-2 h-40">
+                                        <FileText className="size-16 text-muted-foreground" />
                                         <p className="text-sm text-center break-words">{attachment.originalName}</p>
                                     </div>
                                 )}
