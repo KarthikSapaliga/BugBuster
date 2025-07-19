@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { format } from "date-fns"
-import { getUserName } from "@/lib/api";
+import { getUserName } from "@/lib/api"
+import { apiClient } from "@/lib/axios"
+import { GET_USER_ROUTE } from "@/lib/routes"
 
 export default function Comment({ comment }) {
     const { author, content, timestamp } = comment
+
 
     const [commentAuthor, SetCommentAuthor] = useState("");
 
