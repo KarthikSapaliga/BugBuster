@@ -87,7 +87,7 @@ export default function ImportGithubIssueForm({ bug, closePage }) {
                         </p>
                     </div>
                     <div>
-                        <button onClick={closePage} className='bg-red-400 p-2 rounded-sm'>Close</button>
+                        <Button onClick={closePage} variant="destructive" className=' px-5 rounded-sm'>Close</Button>
                     </div>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-6">
