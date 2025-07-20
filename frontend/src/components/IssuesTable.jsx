@@ -89,7 +89,8 @@ function IssuesTable({ data }) {
           </tr>
         </thead>
         <tbody className="divide-y">
-          {data.map((bug) => (
+
+          {data.length!=0 ? data.map((bug) => (
             <tr key={bug.id} className="hover:bg-muted/50">
               <td className="px-4 py-3">{bug.title}</td>
               <td className="px-4 py-3">{projectMap[bug.projectId]?.name || "Loading..."}</td>
@@ -131,7 +132,13 @@ function IssuesTable({ data }) {
                 </Link>
               </td>
             </tr>
-          ))}
+          )) : (
+            <tr>
+              <td colSpan={6} className=" text-center py-5 text-md text-muted-foreground font-semibold"> 
+                <p> No Bugs Found </p>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
