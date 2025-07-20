@@ -278,7 +278,7 @@ function BugReportingForm() {
                     {/* File Upload */}
                     <div className="space-y-2">
                         <Label htmlFor="attachments" className="text-sm font-medium">
-                            Attachments
+                            Attachments <span className='ml-1.5 uppercase text-muted-foreground text-xs'>(MAX 1MB)</span>
                         </Label>
                         <input
                             type="file"
