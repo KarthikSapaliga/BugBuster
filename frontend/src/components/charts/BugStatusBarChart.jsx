@@ -51,7 +51,7 @@ export default function BugStatusBarChart({ data }) {
 
 
   return (
-    <div className="w-full h-[350px] rounded-2xl backdrop-blur-sm shadow-inner ">
+    <div className="w-full h-[350px] rounded-2xl backdrop-blur-sm">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
