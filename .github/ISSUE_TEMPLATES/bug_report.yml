@@ -1,5 +1,5 @@
-name: "Bug Report"
-description: "File a bug report with detailed reproduction steps"
+name: "🐞 Bug Report"
+description: "File a bug report with detailed reproduction steps."
 title: "[Bug]: "
 labels: ["bug"]
 assignees: []
@@ -8,17 +8,17 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Description
-      description: Provide a clear and concise description of the issue.
-      placeholder: Describe the issue...
+      label: "📝 Description"
+      description: "Provide a clear and concise description of the issue."
+      placeholder: "Describe the issue..."
     validations:
       required: true
 
   - type: textarea
     id: steps
     attributes:
-      label: Steps to Reproduce
-      description: A step-by-step guide to reproduce the bug.
+      label: "🔁 Steps to Reproduce"
+      description: "A step-by-step guide to reproduce the bug."
       placeholder: |
         1. Go to '...'
         2. Click on '...'
@@ -30,26 +30,26 @@ body:
   - type: textarea
     id: expected
     attributes:
-      label: Expected Behavior
-      description: What did you expect to happen?
-      placeholder: Describe the expected outcome.
+      label: "✅ Expected Behavior"
+      description: "What did you expect to happen?"
+      placeholder: "Describe the expected outcome."
     validations:
       required: true
 
   - type: textarea
     id: actual
     attributes:
-      label: Actual Behavior
-      description: What actually happened?
-      placeholder: Describe what really happened.
+      label: "❌ Actual Behavior"
+      description: "What actually happened?"
+      placeholder: "Describe what really happened."
     validations:
       required: true
-      
+
   - type: textarea
     id: attachments
     attributes:
-      label: Attachments
-      description: You can paste images directly into this field or upload them using the UI.
-      placeholder: Paste or upload screenshots here (if available)
+      label: "📎 Attachments"
+      description: "You can paste images directly into this field or upload them using the GitHub UI."
+      placeholder: "Paste or upload screenshots here (if available)."
     validations:
       required: false
