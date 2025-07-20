@@ -67,7 +67,7 @@ export default function RecentBugs() {
 
                     <div className="space-y-4">
                         {bugs.map((bug) => (
-                            <Card key={bug.id} className="shadow-sm border-muted">
+                            <Card key={bug.id} className="shadow-sm border-border bg-muted/40">
                                 <CardContent className="p-4 space-y-2">
                                     <div className="flex justify-between items-start">
                                         <div>
@@ -107,7 +107,7 @@ export default function RecentBugs() {
                                     </div>
 
                                     <div className="pt-2">
-                                        <Button size="sm" variant="secondary" asChild>
+                                        <Button size="sm" variant="secondary" asChild className="border-border border shadow-sm">
                                             <Link to={`/bugs/${bug.id.toLowerCase()}`}>
                                                 <Eye className="w-4 h-4 mr-1" />
                                                 View
