@@ -64,11 +64,6 @@ function CreateProjectForm() {
             return
         }
 
-        if (formData.teamMembers.length === 0) {
-            toast.error("Please select at least one team member")
-            return
-        }
-
         try {
             setLoading(true)
             await apiClient.post(CREATE_PROJECT_ROUTE, formData, {
