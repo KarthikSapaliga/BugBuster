@@ -6,7 +6,6 @@ import com.bugbuster.utils.JwtUtil;
 
 import io.jsonwebtoken.Claims;
 
-// import com.bugbuster.service.MailService;
 import com.bugbuster.model.Attachment;
 import com.bugbuster.model.Bug;
 import com.bugbuster.model.Comment;
@@ -44,8 +43,7 @@ public class BugController {
     private BugService bugService;
     @Autowired
     private UserService userService;
-    // @Autowired
-    // private MailService mailService;
+
     @Autowired
     private JwtUtil jwtUtil;
 
