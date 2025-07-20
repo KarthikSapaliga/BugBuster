@@ -31,7 +31,7 @@ export async function fetchIssues(octokit, owner, repo) {
         const response = await octokit.rest.issues.listForRepo({
             owner: owner,
             repo: repo,
-            state: "all",
+            state: "open",
         });
 
         const issues = response.data;
@@ -88,23 +88,6 @@ function extractSection(body, sectionTitle) {
     return match ? match[1].trim() : "";
 }
 
-// Extract attachment URLs starting with https://github.com/user-attachments/
-// function extractAttachments(body) {
-//     const urlRegex = /https:\/\/github\.com\/user-attachments\/[^\s)"']+/g;
-//     const matches = body.match(urlRegex) || [];
-
-//     return matches.map((url) => {
-//         const filename = url.split("/").pop();
-//         return {
-//             filename,
-//             originalName: filename,
-//             size: "unknown",
-//             uploadedAt: null,
-//             url,
-//         };
-//     });
-// }
-
 function extractAttachments(body) {
   const attachments = [];
 
@@ -159,7 +142,6 @@ function extractAttachments(body) {
 
   return attachments;
 }
-
 
 export async function closeGithubIssue(octokit, owner, repo, issue_number) {
     try {
