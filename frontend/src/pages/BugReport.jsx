@@ -214,7 +214,7 @@ const BugReport = () => {
 						</div>
 
 						{/* Attachments */}
-						<AttachmentList attachments={bug.attachments} />
+						<AttachmentList attachments={bug.attachments} fromGithub={bug.fromGithub} />
 					</div>
 
 					{/* Metadata */}
