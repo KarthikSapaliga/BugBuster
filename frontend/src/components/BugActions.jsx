@@ -172,29 +172,38 @@ function BugActions({ bug }) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <Button
                 onClick={() => updateBugDetails(bug)}
-                className="bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-2"
+                className="bg-blue-100 text-blue-800 hover:bg-blue-200 
+                 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 
+                 flex items-center gap-2"
               >
                 <Edit size={16} />
                 Update the Details
               </Button>
-              {
-                bug && bug.state === "RESOLVED" && <Button
+
+              {bug?.state === "RESOLVED" && (
+                <Button
                   onClick={() => closeBug()}
-                  className="bg-orange-500 hover:bg-orange-700 text-white flex items-center gap-2"
+                  className="bg-amber-100 text-amber-800 hover:bg-amber-200 
+                   dark:bg-amber-900 dark:text-amber-100 dark:hover:bg-amber-800 
+                   flex items-center gap-2"
                 >
                   <X size={16} />
                   Close the issue
                 </Button>
-              }
+              )}
+
               <Button
                 onClick={() => deleteBug()}
-                className="bg-red-500 hover:bg-red-700 text-white flex items-center gap-2"
+                className="bg-rose-100 text-rose-800 hover:bg-rose-200 
+                 dark:bg-rose-900 dark:text-rose-100 dark:hover:bg-rose-800 
+                 flex items-center gap-2"
               >
                 <Trash2 size={16} />
                 Delete
               </Button>
             </div>
           </div>
+
 
           {bug.state === "OPEN" && (
             <div className="space-y-2 w-full">
