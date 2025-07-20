@@ -113,6 +113,7 @@ public class BugController {
                 if (obj instanceof Map) {
                     Map<String, Object> attMap = (Map<String, Object>) obj;
                     String url = (String) attMap.get("url");
+                    String type = (String) attMap.get("type");
 
                     if (url != null && !url.isBlank()) {
                         Attachment att = new Attachment();
@@ -120,6 +121,7 @@ public class BugController {
                         att.setOriginalName(url);
                         att.setSize(0L);
                         att.setUploadedAt(LocalDateTime.now());
+                        att.setType(type);
                         processedAttachments.add(att);
                     }
                 }
@@ -487,7 +489,7 @@ public class BugController {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             Attachment attachment = new Attachment(filename, file.getOriginalFilename(), file.getSize(),
-                    LocalDateTime.now());
+                    LocalDateTime.now(),null);
             return ResponseEntity.ok(attachment);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error uploading file: " + e.getMessage());
