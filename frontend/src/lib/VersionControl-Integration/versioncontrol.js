@@ -89,21 +89,77 @@ function extractSection(body, sectionTitle) {
 }
 
 // Extract attachment URLs starting with https://github.com/user-attachments/
-function extractAttachments(body) {
-    const urlRegex = /https:\/\/github\.com\/user-attachments\/[^\s)"']+/g;
-    const matches = body.match(urlRegex) || [];
+// function extractAttachments(body) {
+//     const urlRegex = /https:\/\/github\.com\/user-attachments\/[^\s)"']+/g;
+//     const matches = body.match(urlRegex) || [];
 
-    return matches.map((url) => {
-        const filename = url.split("/").pop();
-        return {
-            filename,
-            originalName: filename,
-            size: "unknown",
-            uploadedAt: null,
-            url,
-        };
+//     return matches.map((url) => {
+//         const filename = url.split("/").pop();
+//         return {
+//             filename,
+//             originalName: filename,
+//             size: "unknown",
+//             uploadedAt: null,
+//             url,
+//         };
+//     });
+// }
+
+function extractAttachments(body) {
+  const attachments = [];
+
+  // 1️⃣ Extract inline images: ![alt](url)
+  const imageRegex = /!\[[^\]]*\]\((https:\/\/github\.com\/user-attachments\/[^\s)]+)\)/g;
+  let imgMatch;
+  while ((imgMatch = imageRegex.exec(body)) !== null) {
+    const url = imgMatch[1];
+    attachments.push({
+      filename: url,
+      originalName: url,
+      url,
+      type: 'image',
+      uploadedAt: null,
+      size: 0,
     });
+  }
+
+  // 2️⃣ Extract all raw links (files)
+  const fileRegex = /(?<!\!)\[[^\]]*\]\((https:\/\/github\.com\/user-attachments\/[^\s)]+)\)/g;
+  let fileMatch;
+  while ((fileMatch = fileRegex.exec(body)) !== null) {
+    const url = fileMatch[1];
+    // Skip if already added
+    if (!attachments.some((a) => a.url === url)) {
+      attachments.push({
+        filename: url,
+        originalName: url,
+        url,
+        type: 'file',
+        uploadedAt: null,
+        size: 0,
+      });
+    }
+  }
+
+  // 3️⃣ Fallback: plain pasted links (very rare, but possible)
+  const urlRegex = /https:\/\/github\.com\/user-attachments\/[^\s)"']+/g;
+  const matches = body.match(urlRegex) || [];
+  matches.forEach((url) => {
+    if (!attachments.some((a) => a.url === url)) {
+      attachments.push({
+        filename: url,
+        originalName: url,
+        url,
+        type: 'file',
+        uploadedAt: null,
+        size: 0,
+      });
+    }
+  });
+
+  return attachments;
 }
+
 
 export async function closeGithubIssue(octokit, owner, repo, issue_number) {
     try {
