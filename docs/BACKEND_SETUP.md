@@ -27,12 +27,6 @@
 4. **Run the Spring Boot Application**
 
     ```bash
-    ./mvnw spring-boot:run
-    ```
-
-    Or if Maven is installed globally:
-
-    ```bash
     mvn spring-boot:run
     ```
 
