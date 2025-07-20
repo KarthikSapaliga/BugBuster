@@ -13,4 +13,5 @@ public class Attachment implements Serializable {
     private String originalName;
     private long size;
     private LocalDateTime uploadedAt;
+    private String type;
 }
