@@ -66,7 +66,7 @@ export default function RecentBugs() {
                     </div>
 
                     <div className="space-y-4">
-                        {bugs.map((bug) => (
+                        {bugs.length!=0 ?  bugs.map((bug) => (
                             <Card key={bug.id} className="shadow-sm border-border bg-muted/40">
                                 <CardContent className="p-4 space-y-2">
                                     <div className="flex justify-between items-start">
@@ -116,7 +116,12 @@ export default function RecentBugs() {
                                     </div>
                                 </CardContent>
                             </Card>
-                        ))}
+                        )):(
+                            <Card className="w-full h-36 flex justify-center items-center  gap-3 text-lg font-semibold text-muted-foreground"> 
+                            <AlertCircle  />
+                            No Recent Bugs Found
+                            </Card>
+                        )}
                     </div>
                 </CardContent>
             </Card>
