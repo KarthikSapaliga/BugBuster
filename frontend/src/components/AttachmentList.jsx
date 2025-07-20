@@ -10,7 +10,7 @@ export function isImageAttachment(attachment) {
 
   //For local files
   const ext = attachment.filename.split('.').pop().toLowerCase();
-  return ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
+  return ['jpg', 'jpeg', 'png', 'gif', 'webp','svg'].includes(ext);
 }
 
 export default function AttachmentList({  attachments = [],fromGithub = false,}) {
