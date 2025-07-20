@@ -10,6 +10,7 @@ import MultiSelect from '@/components/MultiSelect'
 import { apiClient } from '@/lib/axios.js'
 import { CREATE_PROJECT_ROUTE, GET_DEVELOPERS_AND_TESTERS_ROUTE } from '@/lib/routes'
 import { useAppStore } from '@/store/store'
+import { checkGithubConnection } from '@/lib/VersionControl-Integration/versioncontrol'
 
 function CreateProjectForm() {
     const { token } = useAppStore()
@@ -24,6 +25,8 @@ function CreateProjectForm() {
     const [loading, setLoading] = useState(false)
     const [userOptions, setUserOptions] = useState([])
     const [usersLoading, setUsersLoading] = useState(true)
+
+
 
     // Fetch developers and testers
     useEffect(() => {
@@ -70,11 +73,15 @@ function CreateProjectForm() {
         }
 
         try {
+
+            await checkGithubConnection(formData.githubToken , formData.githubLink);
+
             setLoading(true)
             await apiClient.post(CREATE_PROJECT_ROUTE, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             })
-            toast.success('Project created successfully!')
+
+            toast.success('Project created successfully!');
 
             setFormData({
                 name: '',
@@ -84,7 +91,7 @@ function CreateProjectForm() {
                 teamMembers: [],
             })
         } catch (err) {
-            console.error(err)
+            //console.error(err)
             toast.error(err?.response?.data?.message || err.message || 'Something went wrong')
         } finally {
             setLoading(false)
