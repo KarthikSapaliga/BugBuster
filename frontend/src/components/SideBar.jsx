@@ -73,7 +73,7 @@ export const bugManagementMenu = [
     title: "Report New Bug",
     url: "/report-bug",
     icon: PlusCircle,
-    roles: ["TESTER"],
+    roles: ["TESTER", "DEVELOPER"],
   },
 ];
 
