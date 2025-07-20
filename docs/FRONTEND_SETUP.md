@@ -62,22 +62,3 @@ Local:   http://localhost:5173/
 
 🖥️ Open your browser and visit `http://localhost:5173` to view the app.
 
----
-
-## 📁 Suggested Folder Structure
-
-```
-frontend/
-├── src/
-│   ├── components/       # Reusable components
-│   ├── lib/              # Dummy data, utilities, API functions
-│   ├── pages/            # Route-based pages
-│   ├── App.jsx           # Root component
-│   └── main.jsx          # Vite entry point
-├── public/               # Static assets
-├── tailwind.config.js    # Tailwind configuration
-└── vite.config.js        # Vite configuration
-
-```
-
----
