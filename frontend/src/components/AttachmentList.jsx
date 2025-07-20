@@ -3,23 +3,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { HOST, BUG_DOWNLOAD_ROUTE } from "@/lib/routes";
 
+
 export function isImageAttachment(attachment) {
+  //For github
   if (attachment?.type === "image") return true;
 
-  try {
-    const url = new URL(attachment.filename);
-    const last = url.pathname.split("/").pop();
-    const ext = last.split(".").pop().toLowerCase();
-    return ["jpg", "jpeg", "png", "webp", "gif"].includes(ext);
-  } catch {
-    return false;
-  }
+  //For local files
+  const ext = attachment.filename.split('.').pop().toLowerCase();
+  return ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
 }
 
-export default function AttachmentList({
-  attachments = [],
-  fromGithub = false,
-}) {
+export default function AttachmentList({  attachments = [],fromGithub = false,}) {
   if (!attachments.length) return null;
 
   console.log(attachments);
