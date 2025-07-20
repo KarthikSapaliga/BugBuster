@@ -67,11 +67,6 @@ function CreateProjectForm() {
             return
         }
 
-        if (formData.teamMembers.length === 0) {
-            toast.error("Please select at least one team member")
-            return
-        }
-
         try {
 
             await checkGithubConnection(formData.githubToken , formData.githubLink);
