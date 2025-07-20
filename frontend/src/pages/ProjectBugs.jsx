@@ -127,7 +127,7 @@ function ProjectBugs() {
     }
 
     fetchUserNames();
-  }, [filteredIssues]);
+  }, [token,projectId,uniqueUserIds]);
 
   useEffect(() => {
     filterIssues();
@@ -219,7 +219,7 @@ function ProjectBugs() {
       {/* BUG LIST  */}
       <div className="space-y-4">
         {filteredIssues.length === 0 ? (
-          <Card className="flex items-center gap-4 p-4 bg-sidebar">
+          <Card className="flex items-center justify-center gap-4 p-4 h-48 bg-sidebar">
             <AlertTriangle className="size-5" />
             <span> No issues found matching your filters.</span>
           </Card>
