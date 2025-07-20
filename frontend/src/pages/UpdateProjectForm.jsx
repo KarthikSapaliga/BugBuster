@@ -15,6 +15,7 @@ import {
 } from '@/lib/routes'
 import { useAppStore } from '@/store/store'
 import { useParams } from 'react-router-dom'
+import { checkGithubConnection } from '@/lib/VersionControl-Integration/versioncontrol'
 
 function UpdateProjectForm() {
     const params = useParams();
@@ -100,6 +101,9 @@ function UpdateProjectForm() {
 
         try {
             setLoading(true)
+
+            await checkGithubConnection(formData.githubToken , formData.githubLink);
+
             await apiClient.put(`${UPDATE_PROJECT_ROUTE}/${projectId}`, {
                 name: formData.name,
                 description: formData.description,
