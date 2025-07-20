@@ -88,7 +88,7 @@ const BugCard = ({ issue, userMap }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <UserPlus className="w-4 h-4 shrink-0" />
-              {issue.fromGithub ? (
+              {issue.fromGithub && issue.issue_url ? (
                 <span className="truncate">Created by: {issue.createdBy}</span>
               ) : (
                 <span className="truncate">Created by: {userMap[issue.createdBy] || "Loading ..."}</span>
