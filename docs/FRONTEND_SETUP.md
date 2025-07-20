@@ -25,12 +25,12 @@
 
 ## 🟦 Step 2: Clone the Repository
 
-1. Open terminal and clone the repository:
+Open terminal and clone the repository:
 
-    ```bash
-    git clone https://github.com/KarthikSapaliga/BugBuster.git
-    cd BugBuster/frontend
-    ```
+ ```bash
+git clone https://github.com/KarthikSapaliga/BugBuster.git
+cd BugBuster/frontend
+```
 
 ---
 
