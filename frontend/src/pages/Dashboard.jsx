@@ -16,7 +16,6 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const createProject = () => {
-    // alert("create project")
     navigate("/create-project");
   };
 
@@ -28,7 +27,9 @@ function Dashboard() {
             {user.name
               .split(" ")
               .map((n) => n[0])
-              .join("")}
+              .join("")
+              .toUpperCase()
+              }
           </div>
           <div>
             <h1 className="text-3xl font-bold mb-2 text-foreground">
