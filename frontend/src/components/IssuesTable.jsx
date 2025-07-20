@@ -84,6 +84,7 @@ function IssuesTable({ data }) {
             <th className="px-4 py-3 font-medium">Project</th>
             <th className="px-4 py-3 font-medium">Severity</th>
             <th className="px-4 py-3 font-medium">Priority</th>
+            <th className="px-4 py-3 font-medium">Urgency</th>
             <th className="px-4 py-3 font-medium text-center">Status</th>
             <th className="px-4 py-3 font-medium text-center">Actions</th>
           </tr>
@@ -114,6 +115,16 @@ function IssuesTable({ data }) {
                   {bug.priority}
                 </span>
               </td>
+              <td className={`px-4 py-3 text-center`}>
+                <span
+                  className={cn(
+                    "px-2 py-1 text-xs font-medium rounded-md",
+                    getUrgencyColor(bug.urgency)
+                  )}
+                >
+                  {bug.urgency}
+                </span>
+              </td>
               <td className="px-4 py-3 text-center">
                 <span
                   className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded font-medium ${getStatusColor(
@@ -134,7 +145,7 @@ function IssuesTable({ data }) {
             </tr>
           )) : (
             <tr>
-              <td colSpan={6} className=" text-center py-5 text-md text-muted-foreground font-semibold"> 
+              <td colSpan={7} className=" text-center py-5 text-md text-muted-foreground font-semibold"> 
                 <p> No Bugs Found </p>
               </td>
             </tr>
