@@ -36,6 +36,8 @@ const BugCard = ({ issue, userMap }) => {
 
   const closeGitImportPage = () => setOpenGitImportPage(false)
 
+  console.log(issue);
+
   return (
     <div>
       <Card className="hover:shadow-md bg-card transition-shadow duration-200">
