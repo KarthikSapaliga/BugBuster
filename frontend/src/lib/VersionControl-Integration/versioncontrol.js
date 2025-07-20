@@ -6,6 +6,19 @@ export function initOctokit(GITHUB_TOKEN) {
     });
 }
 
+export async function checkGithubConnection(GITHUB_TOKEN,repoUrl){
+    const owner = extractGithubOwner(repoUrl);
+    const repo = extractGithubRepo(repoUrl);
+    const octokit = initOctokit(GITHUB_TOKEN);
+    try {
+        
+        const res = await octokit.rest.repos.get({owner,repo});
+        return true;
+    } catch (error) {
+        throw new Error("Invalid Token or Repository is inaccessible");
+    }
+}
+
 export const extractGithubOwner = (url) => {
     try {
         const parsed = new URL(url);
