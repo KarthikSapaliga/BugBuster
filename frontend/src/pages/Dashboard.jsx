@@ -10,7 +10,6 @@ import { apiClient } from "@/lib/axios";
 import { calculateBugStats } from "@/lib/analytics";
 import Stats from "@/components/Stats";
 import { Badge } from "@/components/ui/badge";
-import BottomToTopReveal from "@/components/anim/BottomToTopReveal";
 
 function Dashboard() {
   const { user } = useAppStore();
@@ -64,10 +63,7 @@ function Dashboard() {
         <Stats />
       </div>
       <div className="flex flex-col md:flex-row md:gap-4 lg:gap-6">
-        <BottomToTopReveal>
-          <RecentBugs />
-        </BottomToTopReveal>
-
+        <RecentBugs />
         <QuickActions />
 
       </div>
