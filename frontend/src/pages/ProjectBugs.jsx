@@ -127,7 +127,7 @@ function ProjectBugs() {
     }
 
     fetchUserNames();
-  }, [token,projectId,uniqueUserIds]);
+  }, [uniqueUserIds]);
 
   useEffect(() => {
     filterIssues();
