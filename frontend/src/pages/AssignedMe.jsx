@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { apiClient } from "@/lib/axios";
 import { GET_ASSIGNED_BUGS_ROUTE } from "@/lib/routes";
 import { useAppStore } from "@/store/store";
 
-import { Card} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
-import {
-  AlertTriangle,
-
-} from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 import { getUserName } from "@/lib/api";
 import BugCard from "@/components/BugCard";
-
 
 function AssignedMe() {
   const [assignedBugs, setAssignedBugs] = useState([]);
@@ -35,21 +31,22 @@ function AssignedMe() {
     fetchAssignedBugs();
   }, []);
 
-  const uniqueUserIds = Array.from(
-    new Set(
-      assignedBugs
-        .flatMap((issue) => [
-          issue.createdBy,
-          issue.assignedTo,
-          issue.resolvedBy,
-          issue.closedBy,
-        ])
-        .filter(Boolean) // remove null or undefined
-    )
-  );
+  const uniqueUserIds = useMemo(() => {
+    return Array.from(
+      new Set(
+        assignedBugs
+          .flatMap((issue) => [
+            issue.createdBy,
+            issue.assignedTo,
+            issue.resolvedBy,
+            issue.closedBy,
+          ])
+          .filter(Boolean)
+      )
+    );
+  }, [assignedBugs]);
 
   const [userMap, setUserMap] = useState({});
-
 
   useEffect(() => {
     async function fetchUserNames() {
@@ -66,7 +63,7 @@ function AssignedMe() {
     }
 
     fetchUserNames();
-  }, [assignedBugs]);
+  }, [uniqueUserIds]);
 
   return (
     <main className="p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
@@ -86,7 +83,7 @@ function AssignedMe() {
               </Card>
             ) : (
               assignedBugs.map((issue) => (
-                <BugCard key={issue.issueId} issue = {issue} userMap={userMap}/>
+                <BugCard key={issue.issueId} issue={issue} userMap={userMap} />
               ))
             )}
           </div>

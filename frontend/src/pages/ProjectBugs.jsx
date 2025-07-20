@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { apiClient } from "@/lib/axios.js";
 import { useAppStore } from "@/store/store.js";
 import { useParams, Link } from "react-router-dom";
@@ -40,7 +40,6 @@ import BugCard from "@/components/BugCard";
 import IssueFilter from "@/components/IssueFilter";
 import { formatDate } from "@/lib/utils";
 
-
 function ProjectBugs() {
   const { projectId } = useParams();
   const { token } = useAppStore();
@@ -56,21 +55,22 @@ function ProjectBugs() {
   const [loading, setLoading] = useState(true);
 
   //Caching the Users ID's so it will not be fetched again and again
-  const uniqueUserIds = Array.from(
-    new Set(
-      filteredIssues
-        .flatMap((issue) => [
-          issue.createdBy,
-          issue.assignedTo,
-          issue.resolvedBy,
-          issue.closedBy,
-        ])
-        .filter(Boolean) // remove null or undefined
-    )
-  );
+  const uniqueUserIds = useMemo(() => {
+    return Array.from(
+      new Set(
+        filteredIssues
+          .flatMap((issue) => [
+            issue.createdBy,
+            issue.assignedTo,
+            issue.resolvedBy,
+            issue.closedBy,
+          ])
+          .filter(Boolean)
+      )
+    );
+  }, [filteredIssues]);
 
   const [userMap, setUserMap] = useState({});
-  
 
   useEffect(() => {
     const fetchProjectInfo = async () => {
@@ -184,7 +184,6 @@ function ProjectBugs() {
     setFilteredIssues(filtered);
   };
 
-
   if (loading) return <p>Loading bugs...</p>;
 
   return (
@@ -225,7 +224,11 @@ function ProjectBugs() {
           </Card>
         ) : (
           filteredIssues.map((issue) => (
-            <BugCard key={issue.issueId || issue.id} issue={issue} userMap = {userMap} />
+            <BugCard
+              key={issue.issueId || issue.id}
+              issue={issue}
+              userMap={userMap}
+            />
           ))
         )}
       </div>
