@@ -146,7 +146,7 @@ const BugCard = ({ issue, userMap }) => {
                     </span>
                   ) : (
                     <span className="truncate">
-                      CLosed by: {userMap[issue.closedBy] || "Loading ..."}
+                      Closed by: {userMap[issue.closedBy] || "Loading ..."}
                     </span>
                   )}
                 </div>
