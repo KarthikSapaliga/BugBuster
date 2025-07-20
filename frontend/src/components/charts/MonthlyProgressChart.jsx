@@ -61,7 +61,7 @@ export default function MonthlyProgressChart({monthlyData = [
     };
 
     return (
-            <div className="w-full h-[400px] rounded-xl  backdrop-blur-sm shadow-inner">
+            <div className="w-full h-[400px] rounded-xl  backdrop-blur-sm">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         data={monthlyData}

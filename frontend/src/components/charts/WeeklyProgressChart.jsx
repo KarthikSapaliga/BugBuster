@@ -26,7 +26,7 @@ export default function WeeklyProgressChart({ data }) {
   const tooltipBorder = isDark ? "#3f3f46" : "#e5e7eb";
 
   return (
-    <div className="w-full h-[280px]  flex items-center justify-center rounded-xl shadow-inner">
+    <div className="w-full h-[280px]  flex items-center justify-center rounded-xl">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
