@@ -487,7 +487,7 @@ public class BugController {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             Attachment attachment = new Attachment(filename, file.getOriginalFilename(), file.getSize(),
-                    LocalDateTime.now(),null);
+                    LocalDateTime.now(), null);
             return ResponseEntity.ok(attachment);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error uploading file: " + e.getMessage());
@@ -614,7 +614,7 @@ public class BugController {
 
     private int getUrgencyValue(String urgency) {
         int urgencyValue;
-        switch (urgency.toLowerCase()) {
+        switch (urgency.toUpperCase()) {
             case "URGENT":
                 urgencyValue = 4;
                 break;
@@ -635,7 +635,7 @@ public class BugController {
 
     private int getSeverityValue(String severity) {
         int severityValue;
-        switch (severity.toLowerCase()) {
+        switch (severity.toUpperCase()) {
             case "CRITICAL":
                 severityValue = 4;
                 break;
