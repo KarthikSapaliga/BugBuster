@@ -17,7 +17,7 @@ To track and manage software bugs, issues, and feature requests throughout the d
 - 🐞 **Bug submission and tracking**
 - 🚦 **Priority and severity classification**
 - 👥 **Developer assignment & collaboration**
-- 🔗 **Integration with GitHub, GitLab, Bitbucket**
+- 🔗 **Integration with GitHub**
 - 📊 **Reporting and analytics dashboard**
 
 ---
