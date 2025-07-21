@@ -1,4 +1,6 @@
-# 🐞 BugBuster - Bug Tracking Portal
+<div align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Poppins&weight=700&size=30&pause=200&color=5B57C1&center=true&vCenter=true&width=435&lines=Bug+Buster;Bug+Tracking+Portal" alt="Typing SVG" />
+</div>
 
 ## 🚀 Overview
 
