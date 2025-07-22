@@ -6,13 +6,11 @@
 
 **BugBuster** is a full-stack **bug tracking and issue management portal** developed for software teams to streamline the process of reporting, managing, and resolving bugs and feature requests. It enhances collaboration, transparency, and productivity across the software development lifecycle.
 
----
 
 ## 🎯 Purpose
 
 To track and manage software bugs, issues, and feature requests throughout the development lifecycle, improving code quality, team collaboration, and resolution efficiency.
 
----
 
 ## 🧩 Key Features
 
@@ -22,7 +20,6 @@ To track and manage software bugs, issues, and feature requests throughout the d
 - 🔗 **Integration with GitHub**
 - 📊 **Reporting and analytics dashboard**
 
----
 
 ## 🗂️ Module Breakdown
 
@@ -35,7 +32,6 @@ To track and manage software bugs, issues, and feature requests throughout the d
 | **Version Control**       | Syncs with GitHub/GitLab issues, commits, and branches                      |
 | **Reporting Dashboard**   | Visual statistics on bug trends, resolution time, and status distribution   |
 
----
 
 ## 📁 Project Structure
 
@@ -47,7 +43,6 @@ BugBuster/
 ├── README.md            # Project overview
 ````
 
----
 
 ## 🔧 Tech Stack
 
@@ -62,13 +57,11 @@ BugBuster/
 
 ![Alt](https://repobeats.axiom.co/api/embed/9477545ffd7b42c5f0c0b6bed17b5c9c166b37fa.svg "Repobeats analytics image")
 
----
 
 ## 📄 License
 
 Licensed under the [MIT License](./LICENSE).
 
----
 
 ## 📚 Documentation
 
