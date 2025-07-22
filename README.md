@@ -51,7 +51,6 @@ BugBuster/
 * **Database**: MongoDB
 * **DevOps**: Render for hosting
 
----
 
 ## 📈 GitHub Stats
 
