@@ -1,12 +1,16 @@
 package com.bugbuster.model;
 
-import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Document(collection = "bugs")
 @Data
@@ -40,6 +44,12 @@ public class Bug {
     private String reproductionSteps;
     private String expectedOutcome;
     private String actualOutcome;
+
+    private double estimatedHours;
+    private double spentHours;
+
+    private String resolveMessage;
+    private String closeMessage;
 
     @Builder.Default
     private String severity = "LOW";
