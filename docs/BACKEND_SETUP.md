@@ -24,13 +24,25 @@
     mvn clean install
     ```
 
-4. **Run the Spring Boot Application**
+    or
+
+   ```bash
+   ./mvnw clean install
+   ```
+
+5. **Run the Spring Boot Application**
 
     ```bash
     mvn spring-boot:run
     ```
 
-5. **Access the Backend**
+    or
+
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
+7. **Access the Backend**
 
     Once the app is running, it should be accessible at:
 
