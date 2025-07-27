@@ -1,4 +1,5 @@
-import { User, CheckCircle, XCircle } from "lucide-react";
+import { formatDate } from "@/lib/utils";
+import { User, CheckCircle, CheckSquare } from "lucide-react";
 
 function parseMessage(msg, type) {
   const [timestampRaw, content] = msg.split("] ");
@@ -19,6 +20,9 @@ function MessageHistory({ bug }) {
     ...(bug.resolveMessages || []).map((msg) =>
       parseMessage(msg, "resolve")
     ),
+    ...(bug.closeMessages || []).map((msg) =>
+      parseMessage(msg, "closed")
+    ),
   ];
 
   // Sort by timestamp
@@ -32,8 +36,8 @@ function MessageHistory({ bug }) {
           <ul className="space-y-2 pl-4 border-l border-border">
             {combinedMessages.map((msg, idx) => (
               <li key={`${msg.type}-${idx}`} className="text-sm text-muted-foreground">
-                <span className="font-mono text-xs">
-                  {msg.timestamp.toISOString()}
+                <span className="font-mono text-xs ">
+                  {formatDate(msg.timestamp)}
                 </span>{" "}
                 —{" "}
                 {msg.type === "assignment" && (
@@ -44,36 +48,18 @@ function MessageHistory({ bug }) {
                 )}
                 {msg.type === "resolve" && (
                   <>
+                    <CheckSquare className="inline w-3 h-3 mr-1 text-yellow-500" />
+                    {msg.content}
+                  </>
+                )}
+                {msg.type === "closed" && (
+                  <>
                     <CheckCircle className="inline w-3 h-3 mr-1 text-green-500" />
                     {msg.content}
                   </>
                 )}
               </li>
             ))}
-          </ul>
-        </div>
-      )}
-
-      {bug.closeMessages && bug.closeMessages.length > 0 && (
-        <div>
-          <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
-            <XCircle className="w-4 h-4" /> Bug is Closed
-          </h2>
-          <ul className="space-y-2 pl-4 border-l border-border">
-            {bug.closeMessages.map((msg, idx) => {
-              const [time, text] = msg.split("] ");
-              return (
-                <li
-                  key={`close-${idx}`}
-                  className="text-sm text-muted-foreground"
-                >
-                  <span className="font-mono text-xs">
-                    {time.replace("[", "")}
-                  </span>{" "}
-                  — {text}
-                </li>
-              );
-            })}
           </ul>
         </div>
       )}
