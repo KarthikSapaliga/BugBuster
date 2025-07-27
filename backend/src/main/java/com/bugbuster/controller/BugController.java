@@ -356,11 +356,11 @@ public class BugController {
         }
     }
 
-    // TODO: update resolve route to include the resolve message
     // resolve the bug
     @PatchMapping("/resolve/{id}")
     public ResponseEntity<?> resolveBug(
             @PathVariable String id,
+            @RequestParam String resolveMessage,
             @RequestHeader("Authorization") String authHeader) {
         try {
             String userId = extractUserId(authHeader);
@@ -377,12 +377,17 @@ public class BugController {
             }
 
             if (!"IN_PROGRESS".equalsIgnoreCase(bug.getState())) {
-                return ResponseEntity.badRequest().body("Bug must be 'IN_PROGRESS' to be resolved.");
+                return ResponseEntity.badRequest().body("Bug must be IN_PROGRESS to be resolved.");
+            }
+
+            if (resolveMessage == null || resolveMessage.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Resolve message must not be empty.");
             }
 
             bug.setState("RESOLVED");
             bug.setResolvedAt(LocalDateTime.now());
             bug.setResolvedBy(userId);
+            bug.setResolveMessage(resolveMessage);
 
             return ResponseEntity.ok(bugService.updateBug(bug));
 
