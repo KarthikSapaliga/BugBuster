@@ -376,6 +376,7 @@ public class BugController {
             @PathVariable String id,
             @RequestParam String resolveMessage,
             @RequestParam double spentHours,
+            @RequestParam String testerId,
             @RequestHeader("Authorization") String authHeader) {
         try {
             String userId = extractUserId(authHeader);
@@ -410,6 +411,7 @@ public class BugController {
             bug.setResolvedBy(userId);
             bug.getResolveMessages().add(fullMessage);
             bug.setSpentHours(spentHours);
+            bug.setTesterAssignedTo(testerId);
 
             return ResponseEntity.ok(bugService.updateBug(bug));
 
@@ -484,45 +486,7 @@ public class BugController {
                 .filter(bug -> userId.equalsIgnoreCase(bug.getAssignedTo()))
                 .collect(Collectors.toList());
     }
-
-    @PatchMapping("/assign-to-tester/{bugId}")
-    public ResponseEntity<?> assignResolvedBugToTester(
-            @PathVariable String bugId,
-            @RequestParam String testerId,
-            @RequestHeader("Authorization") String authHeader) {
-        try {
-            String developerId = extractUserId(authHeader);
-
-            Optional<Bug> bugOpt = bugService.getBugById(bugId);
-            if (bugOpt.isEmpty()) {
-                return ResponseEntity.status(404).body("Bug not found");
-            }
-
-            Bug bug = bugOpt.get();
-
-            if (!"RESOLVED".equalsIgnoreCase(bug.getState())) {
-                return ResponseEntity.badRequest().body("Only resolved bugs can be assigned to a tester.");
-            }
-
-            if (!developerId.equals(bug.getAssignedTo())) {
-                return ResponseEntity.status(403).body("Only the assigned developer can assign bug to a tester.");
-            }
-
-            List<User> validTesters = userService.getTestersInProject(bug.getProjectId());
-            boolean isValidTester = validTesters.stream().anyMatch(user -> user.getId().equals(testerId));
-            if (!isValidTester) {
-                return ResponseEntity.badRequest().body("Selected tester is not part of the project or not a tester.");
-            }
-
-            bug.setTesterAssignedTo(testerId);
-            bugService.updateBug(bug);
-
-            return ResponseEntity.ok("Bug assigned to tester successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to assign bug to tester: " + e.getMessage());
-        }
-    }
-
+    
     // Upload file
     @PostMapping("/files/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
