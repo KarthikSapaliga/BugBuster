@@ -315,6 +315,7 @@ public class BugController {
             if(bug.getState().equalsIgnoreCase("RESOLVED")){
                 bug.setResolvedAt(null);
                 bug.setResolvedBy(null);
+                bug.setSpentHours(0);
             }
 
             String assignedBy = extractUserId(authHeader);
