@@ -11,6 +11,7 @@ import com.bugbuster.model.Bug;
 import com.bugbuster.model.Comment;
 import com.bugbuster.model.ImportedIssue;
 import com.bugbuster.model.Project;
+import com.bugbuster.model.User;
 import com.bugbuster.repository.ImportedIssueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -259,6 +260,10 @@ public class BugController {
                 return ResponseEntity.badRequest().body("Bug must be in RESOLVED state to be closed.");
             }
 
+            if (!closedBy.equals(bug.getTesterAssignedTo())) {
+                return ResponseEntity.status(403).body("Only the assigned tester can close this bug.");
+            }
+
             if (closeMessage == null || closeMessage.trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Close message must not be empty.");
             }
@@ -478,6 +483,44 @@ public class BugController {
         return bugService.getAllBugs().stream()
                 .filter(bug -> userId.equalsIgnoreCase(bug.getAssignedTo()))
                 .collect(Collectors.toList());
+    }
+
+    @PatchMapping("/assign-to-tester/{bugId}")
+    public ResponseEntity<?> assignResolvedBugToTester(
+            @PathVariable String bugId,
+            @RequestParam String testerId,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String developerId = extractUserId(authHeader);
+
+            Optional<Bug> bugOpt = bugService.getBugById(bugId);
+            if (bugOpt.isEmpty()) {
+                return ResponseEntity.status(404).body("Bug not found");
+            }
+
+            Bug bug = bugOpt.get();
+
+            if (!"RESOLVED".equalsIgnoreCase(bug.getState())) {
+                return ResponseEntity.badRequest().body("Only resolved bugs can be assigned to a tester.");
+            }
+
+            if (!developerId.equals(bug.getAssignedTo())) {
+                return ResponseEntity.status(403).body("Only the assigned developer can assign bug to a tester.");
+            }
+
+            List<User> validTesters = userService.getTestersInProject(bug.getProjectId());
+            boolean isValidTester = validTesters.stream().anyMatch(user -> user.getId().equals(testerId));
+            if (!isValidTester) {
+                return ResponseEntity.badRequest().body("Selected tester is not part of the project or not a tester.");
+            }
+
+            bug.setTesterAssignedTo(testerId);
+            bugService.updateBug(bug);
+
+            return ResponseEntity.ok("Bug assigned to tester successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to assign bug to tester: " + e.getMessage());
+        }
     }
 
     // Upload file
