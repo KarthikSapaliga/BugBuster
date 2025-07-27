@@ -186,9 +186,21 @@ const BugReport = () => {
                   </Badge>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Bug ID: {bug.id}
-              </p>
+              <div className="flex gap-4">
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Bug ID: {bug.id}
+                </p>
+                {bug.estimatedHours && (
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Estimated Hours: {bug.estimatedHours}
+                  </p>
+                )}
+                {bug.spentHours && (
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Spent Hours: {bug.spentHours}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div>
