@@ -63,16 +63,16 @@ const BugReport = () => {
   const [comments, setComments] = useState([]);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchBugInfo = async () => {
-      try {
-        const res = await apiClient.get(`${GET_BUG_BY_ID_ROUTE}/${bugId}`);
-        setBug(res.data);
-      } catch (err) {
-        toast.error("Failed to fetch the Bug Info");
-      }
-    };
+  const fetchBugInfo = async () => {
+    try {
+      const res = await apiClient.get(`${GET_BUG_BY_ID_ROUTE}/${bugId}`);
+      setBug(res.data);
+    } catch (err) {
+      toast.error("Failed to fetch the Bug Info");
+    }
+  };
 
+  useEffect(() => {
     const fetchComments = async () => {
       const res = await apiClient.get(`${GET_COMMENTS_ROUTE}/${bugId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -189,11 +189,11 @@ const BugReport = () => {
                   Bug ID: {bug.id}
                 </p>
                 {!!bug.estimatedHours && (
-                   <Badge
+                  <Badge
                     variant="outline"
                     className={`bg-muted text-xs font-medium whitespace-nowrap`}
                   >
-                    <span className="mr-1"><Clock size={12}/></span>
+                    <span className="mr-1"><Clock size={12} /></span>
                     Estimated Hours: {bug.estimatedHours}
                   </Badge>
                 )}
@@ -202,7 +202,7 @@ const BugReport = () => {
                     variant="outline"
                     className={`bg-muted text-xs font-medium whitespace-nowrap`}
                   >
-                    <span className="mr-1"><Clock size={12}/></span>
+                    <span className="mr-1"><Clock size={12} /></span>
                     Spent Hours: {bug.spentHours}
                   </Badge>
                 )}
@@ -210,7 +210,7 @@ const BugReport = () => {
             </div>
 
             <div>
-              <BugActions bug={bug} />
+              <BugActions bug={bug} onActionComplete={fetchBugInfo} />
             </div>
 
             {/* Messages */}

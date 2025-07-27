@@ -41,7 +41,7 @@ import {
   initOctokit,
 } from "@/lib/VersionControl-Integration/versioncontrol.js";
 
-function BugActions({ bug }) {
+function BugActions({ bug, onActionComplete }) {
   const { user, token } = useAppStore();
   const navigate = useNavigate();
 
@@ -98,6 +98,7 @@ function BugActions({ bug }) {
       });
 
       toast.success("Developer assigned successfully!");
+      onActionComplete?.();
     } catch (err) {
       toast.error(
         err?.response?.data?.message || "Failed to assign developer."
@@ -117,6 +118,7 @@ function BugActions({ bug }) {
       });
 
       toast.success("Bug marked as In Progress!");
+      onActionComplete?.();
     } catch (err) {
       toast.error(err?.response?.data?.message || "Failed to start work.");
     }
@@ -138,6 +140,7 @@ function BugActions({ bug }) {
       });
 
       toast.success("Bug marked as resolved!");
+      onActionComplete?.();
     } catch (err) {
       toast.error(err?.response?.data?.message || "Failed to resolve bug.");
     }
@@ -171,6 +174,7 @@ function BugActions({ bug }) {
       });
 
       toast.success("Bug closed successfully!");
+      onActionComplete?.();
     } catch (err) {
       toast.error(err?.response?.data || "Failed to close bug.");
     }
