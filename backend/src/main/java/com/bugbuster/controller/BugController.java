@@ -239,6 +239,7 @@ public class BugController {
         return ResponseEntity.ok().build();
     }
 
+    // TODO: not completed
     // Close Bug
     @PatchMapping("/close/{id}")
     public ResponseEntity<?> closeBug(@PathVariable String id,
@@ -281,7 +282,9 @@ public class BugController {
     @PatchMapping("/assign/{id}")
     public ResponseEntity<?> assignBugToDeveloper(
             @PathVariable String id,
-            @RequestParam("developerId") String developerId,
+            @RequestParam String developerId,
+            @RequestParam double estimatedHours,
+            @RequestParam String assignMessage,
             @RequestHeader("Authorization") String authHeader) {
 
         try {
@@ -297,7 +300,16 @@ public class BugController {
             Bug bug = bugOpt.get();
 
             if (!(bug.getState().equalsIgnoreCase("OPEN") || bug.getState().equalsIgnoreCase("RESOLVED"))) {
-                return ResponseEntity.status(400).body("Bug can only be assigned if it's in OPEN or RESOLVED state.");
+                return ResponseEntity.status(400).body("Bug can only be assigned if it's in OPEN or can be reassigned if it's in RESOLVED state.");
+            }
+
+            if(assignMessage == null || assignMessage.trim().isEmpty()) {
+                return ResponseEntity.status(400).body("Assign message must not be empty.");
+            }
+
+            String fullMessage = "[" + LocalDateTime.now() + "] " + assignMessage;
+            if (bug.getAssignmentMessages() == null) {
+                bug.setAssignmentMessages(new ArrayList<>());
             }
 
             String assignedBy = extractUserId(authHeader);
@@ -305,10 +317,10 @@ public class BugController {
             bug.setAssignedBy(assignedBy);
             bug.setAssignedAt(LocalDateTime.now());
             bug.setState("IN_PROGRESS");
+            bug.setEstimatedHours(estimatedHours);
+            bug.getAssignmentMessages().add(fullMessage);
 
-            Bug updatedBug = bugService.updateBug(bug);
-
-            return ResponseEntity.ok(updatedBug);
+            return ResponseEntity.ok(bugService.updateBug(bug));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -356,11 +368,13 @@ public class BugController {
         }
     }
 
+    // TODO: not completed
     // resolve the bug
     @PatchMapping("/resolve/{id}")
     public ResponseEntity<?> resolveBug(
             @PathVariable String id,
             @RequestParam String resolveMessage,
+            @RequestParam String spentHours,
             @RequestHeader("Authorization") String authHeader) {
         try {
             String userId = extractUserId(authHeader);
