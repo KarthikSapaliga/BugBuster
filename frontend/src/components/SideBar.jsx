@@ -21,6 +21,7 @@ import {
   PlayCircle,
   Flame,
   Plus,
+  CheckCircle,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -68,6 +69,12 @@ export const bugManagementMenu = [
     url: "/assigned-me",
     icon: User,
     roles: ["DEVELOPER"],
+  },
+  {
+    title: "Close Requests",
+    url: "/close-requests",
+    icon: CheckCircle,
+    roles: ["TESTER"],
   },
   {
     title: "Report New Bug",
