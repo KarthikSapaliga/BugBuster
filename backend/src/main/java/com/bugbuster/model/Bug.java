@@ -48,8 +48,9 @@ public class Bug {
     private double estimatedHours;
     private double spentHours;
 
-    private String resolveMessage;
-    private String closeMessage;
+    private List<String> resolveMessages = new ArrayList<>();
+    private List<String> closeMessages = new ArrayList<>();
+    private List<String> assignmentMessages = new ArrayList<>();
 
     @Builder.Default
     private String severity = "LOW";
