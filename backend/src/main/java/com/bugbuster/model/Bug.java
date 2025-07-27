@@ -37,6 +37,8 @@ public class Bug {
     private String assignedTo;
     private String assignedBy;
 
+    private String testerAssignedTo;
+
     private LocalDateTime resolvedAt;
     private String resolvedBy;
 

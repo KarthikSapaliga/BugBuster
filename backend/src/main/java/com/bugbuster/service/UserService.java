@@ -75,4 +75,11 @@ public class UserService {
         return projectRepo.findByTeamMembersContainingOrCreatedBy(userId, userId);
     }
 
+    public List<User> getTestersInProject(String projectId) {
+        Project project = projectRepo.findById(projectId)
+            .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        List<String> teamMembers = project.getTeamMembers();
+        return userRepo.findTestersInTeam(teamMembers);
+    }
 }

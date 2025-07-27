@@ -16,4 +16,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     @Query("{ 'role': 'DEVELOPER', '_id': { $in: ?0 } }")
     List<User> findDevelopersInTeam(List<String> userIds);
+
+    @Query("{ 'role': 'TESTER', '_id': { $in: ?0 } }")
+    List<User> findTestersInTeam(List<String> userIds);
 }
