@@ -1,12 +1,12 @@
 import {
-	AlertCircle,
-	AlertTriangle,
-	Calendar,
-	CheckCircle,
-	Clock,
-	PlayCircle,
-	User,
-	XCircle,
+  AlertCircle,
+  AlertTriangle,
+  Calendar,
+  CheckCircle,
+  Clock,
+  PlayCircle,
+  User,
+  XCircle,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 
@@ -25,277 +25,368 @@ import { useAppStore } from "@/store/store";
 import { getStatusColor } from "@/lib/colors";
 import { Badge } from "@/components/ui/badge";
 
-
 const getStatusIcon = (status) => {
-	const iconProps = { size: 12, className: "flex-shrink-0" };
+  const iconProps = { size: 12, className: "flex-shrink-0" };
 
-	switch (status.toLowerCase()) {
-		case 'closed':
-			return <CheckCircle {...iconProps} className="text-green-500" />;
-		case 'in_progress':
-			return <PlayCircle {...iconProps} className="text-blue-500" />;
-		case 'assigned':
-			return <Clock {...iconProps} className="text-orange-500" />;
-		case 'open':
-			return <AlertCircle {...iconProps} className="text-red-500" />;
-		case 'resolved':
-			return <XCircle {...iconProps} className="text-yellow-500" />; // Or pick a different icon if you prefer
-		default:
-			return <XCircle {...iconProps} className="text-gray-500" />;
-	}
+  switch (status.toLowerCase()) {
+    case "closed":
+      return <CheckCircle {...iconProps} className="text-green-500" />;
+    case "in_progress":
+      return <PlayCircle {...iconProps} className="text-blue-500" />;
+    case "assigned":
+      return <Clock {...iconProps} className="text-orange-500" />;
+    case "open":
+      return <AlertCircle {...iconProps} className="text-red-500" />;
+    case "resolved":
+      return <XCircle {...iconProps} className="text-yellow-500" />; // Or pick a different icon if you prefer
+    default:
+      return <XCircle {...iconProps} className="text-gray-500" />;
+  }
 };
 
 const BugReport = () => {
-	const { token } = useAppStore()
-	const params = useParams();
-	const bugId = params.id;
+  const { token } = useAppStore();
+  const params = useParams();
+  const bugId = params.id;
 
-	const [bug, setBug] = useState({});
-	const [userMap, setUserMap] = useState({});
-	const [bugStatusLog, setBugStatusLog] = useState([]);
-	const [comments, setComments] = useState([])
+  const [bug, setBug] = useState({});
+  const [userMap, setUserMap] = useState({});
+  const [bugStatusLog, setBugStatusLog] = useState([]);
+  const [comments, setComments] = useState([]);
 
-	useEffect(() => {
-		const fetchBugInfo = async () => {
-			try {
-				const res = await apiClient.get(`${GET_BUG_BY_ID_ROUTE}/${bugId}`);
-				setBug(res.data);
-			} catch (err) {
-				console.log(err);
-				toast.error("Failed to fetch the Bug Info");
-			}
-		};
+  useEffect(() => {
+    const fetchBugInfo = async () => {
+      try {
+        const res = await apiClient.get(`${GET_BUG_BY_ID_ROUTE}/${bugId}`);
+        console.log(res.data);
+        setBug(res.data);
+      } catch (err) {
+        //console.log(err);
+        toast.error("Failed to fetch the Bug Info");
+      }
+    };
 
-		const fetchComments = async () => {
-			const res = await apiClient.get(`${GET_COMMENTS_ROUTE}/${bugId}`, {
-				headers: { Authorization: `Bearer ${token}` },
-			})
-			setComments(res.data)
-		}
-		fetchComments()
+    const fetchComments = async () => {
+      const res = await apiClient.get(`${GET_COMMENTS_ROUTE}/${bugId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setComments(res.data);
+    };
+    fetchComments();
 
-		if (bugId) {
-			fetchBugInfo();
-			fetchComments();
-		}
-	}, [bugId]);
+    if (bugId) {
+      fetchBugInfo();
+      fetchComments();
+    }
+  }, [bugId]);
 
-	useEffect(() => {
-		if (!bug || Object.keys(bug).length === 0) return;
+  useEffect(() => {
+    if (!bug || Object.keys(bug).length === 0) return;
 
-		const userIds = [
-			bug.createdBy,
-			bug.assignedBy,
-			bug.assignedTo,
-			bug.resolvedBy,
-			bug.closedBy,
-		].filter(Boolean);
+    const userIds = [
+      bug.createdBy,
+      bug.assignedBy,
+      bug.assignedTo,
+      bug.resolvedBy,
+      bug.closedBy,
+    ].filter(Boolean);
 
-		async function fetchUserNames() {
-			const newUserMap = {};
+    async function fetchUserNames() {
+      const newUserMap = {};
 
-			await Promise.all(
-				userIds.map(async (userId) => {
-					const name = await getUserName(userId);
-					newUserMap[userId] = name || "Unknown User";
-				})
-			);
+      await Promise.all(
+        userIds.map(async (userId) => {
+          const name = await getUserName(userId);
+          newUserMap[userId] = name || "Unknown User";
+        })
+      );
 
-			setUserMap(newUserMap);
-		}
+      setUserMap(newUserMap);
+    }
 
-		fetchUserNames();
-	}, [bug]);
+    fetchUserNames();
+  }, [bug]);
 
-	useEffect(() => {
-		if (!bug || Object.keys(bug).length === 0) return;
-		if (!userMap || Object.keys(userMap).length === 0) return;
+  useEffect(() => {
+    if (!bug || Object.keys(bug).length === 0) return;
+    if (!userMap || Object.keys(userMap).length === 0) return;
 
-		const statusLog = [];
+    const statusLog = [];
 
-		if (bug.createdBy) {
-			statusLog.push({
-				status: "Open",
-				date: bug.createdAt,
-				by: userMap[bug.createdBy],
-			});
-		}
+    if (bug.createdBy) {
+      statusLog.push({
+        status: "Open",
+        date: bug.createdAt,
+        by: userMap[bug.createdBy],
+      });
+    }
 
-		if (bug.assignedTo) {
-			statusLog.push({
-				status: "Assigned",
-				date: bug.assignedAt,
-				by: userMap[bug.assignedBy],
-			});
-			statusLog.push({
-				status: "In_Progress",
-				date: bug.assignedAt,
-				by: userMap[bug.assignedTo],
-			});
-		}
+    if (bug.assignedTo) {
+      statusLog.push({
+        status: "Assigned",
+        date: bug.assignedAt,
+        by: userMap[bug.assignedBy],
+      });
+      statusLog.push({
+        status: "In_Progress",
+        date: bug.assignedAt,
+        by: userMap[bug.assignedTo],
+      });
+    }
 
-		if (bug.resolvedBy) {
-			statusLog.push({
-				status: "Resolved",
-				date: bug.resolvedAt,
-				by: userMap[bug.resolvedBy],
-			});
-		}
+    if (bug.resolvedBy) {
+      statusLog.push({
+        status: "Resolved",
+        date: bug.resolvedAt,
+        by: userMap[bug.resolvedBy],
+      });
+    }
 
-		if (bug.closedBy) {
-			statusLog.push({
-				status: "Closed",
-				date: bug.closedAt,
-				by: userMap[bug.closedBy],
-			});
-		}
+    if (bug.closedBy) {
+      statusLog.push({
+        status: "Closed",
+        date: bug.closedAt,
+        by: userMap[bug.closedBy],
+      });
+    }
 
-		setBugStatusLog(statusLog);
-	}, [bug, userMap]);
+    setBugStatusLog(statusLog);
+  }, [bug, userMap]);
 
-	return (
-		<main className="min-h-full w-full p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
-			<div className="w-full bg-background dark:sidebar border border-border shadow-md rounded-xl p-6 ">
-				<div className="w-full flex flex-col lg:flex-row gap-6">
-					<div className="flex-1 flex flex-col gap-6">
-						{/* Header */}
+  return (
+    <main className="min-h-full w-full p-4 md:p-8 lg:p-12 flex flex-col gap-6 bg-background">
+      <div className="w-full bg-background dark:sidebar border border-border shadow-md rounded-xl p-6 ">
+        <div className="w-full flex flex-col lg:flex-row gap-6">
+          <div className="flex-1 flex flex-col gap-6">
+            {/* Header */}
 
-						<div>
-							<div className="flex items-center gap-3">
-								<h1 className="text-2xl font-semibold tracking-tight mb-1">
-									Bug: {bug.title}
-								</h1>
-								{bug.state && (
-									<Badge variant="outline" className={`${getStatusColor(bug.state)} text-xs font-medium whitespace-nowrap`}>
-										<span className="mr-1">{getStatusIcon(bug.state)}</span>
-										{bug.state.replace('_', ' ').toUpperCase()}
-									</Badge>
-								)}
-							</div>
-							<p className="text-sm text-muted-foreground leading-relaxed">
-								Bug ID: {bug.id}
-							</p>
-						</div>
+            <div>
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-semibold tracking-tight mb-1">
+                  Bug: {bug.title}
+                </h1>
+                {bug.state && (
+                  <Badge
+                    variant="outline"
+                    className={`${getStatusColor(
+                      bug.state
+                    )} text-xs font-medium whitespace-nowrap`}
+                  >
+                    <span className="mr-1">{getStatusIcon(bug.state)}</span>
+                    {bug.state.replace("_", " ").toUpperCase()}
+                  </Badge>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Bug ID: {bug.id}
+              </p>
+            </div>
 
-						<div>
-							<BugActions bug={bug} />
-						</div>
+            <div>
+              <BugActions bug={bug} />
+            </div>
 
-						{/* Description */}
-						<div>
-							<h2 className="text-lg font-semibold mb-2">Description</h2>
-							<p className="text-sm text-muted-foreground leading-relaxed">
-								{bug.description}
-							</p>
-						</div>
+            {/* Messages */}
+            <div className="space-y-6">
+				<h2 className="text-lg font-semibold mb-2">Messages</h2>
+              {/* Assignment Messages */}
+              {bug.assignmentMessages && bug.assignmentMessages.length > 0 && (
+                <div>
+                  <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
+                    <User className="w-4 h-4" /> Assignment History
+                  </h2>
+                  <ul className="space-y-2 pl-4 border-l border-border">
+                    {bug.assignmentMessages.map((msg, idx) => {
+                      const [time, text] = msg.split("] ");
+                      return (
+                        <li
+                          key={`assign-${idx}`}
+                          className="text-sm text-muted-foreground"
+                        >
+                          <span className="font-mono text-xs">
+                            {time.replace("[", "")}
+                          </span>{" "}
+                          — {text}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
 
-						{/* Steps to Reproduce */}
-						<div>
-							<h2 className="text-lg font-semibold mb-2">Steps to Reproduce</h2>
-							<p className="text-sm text-muted-foreground leading-relaxed">
-								{bug.reproductionSteps}
-							</p>
-						</div>
+              {/* Resolve Messages */}
+              {bug.resolveMessages && bug.resolveMessages.length > 0 && (
+                <div>
+                  <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" /> Resolution History
+                  </h2>
+                  <ul className="space-y-2 pl-4 border-l border-border">
+                    {bug.resolveMessages.map((msg, idx) => {
+                      const [time, text] = msg.split("] ");
+                      return (
+                        <li
+                          key={`resolve-${idx}`}
+                          className="text-sm text-muted-foreground"
+                        >
+                          <span className="font-mono text-xs">
+                            {time.replace("[", "")}
+                          </span>{" "}
+                          — {text}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
 
-						{/* Expected vs Actual Result */}
-						<div className="grid grid-cols-1  md:grid-cols-2 gap-4">
-							<div className="col-span-1">
-								<h2 className="text-lg font-semibold mb-2">Expected Result</h2>
-								<p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
-									{bug.expectedOutcome}
-								</p>
-							</div>
-							<div className="col-span-1">
-								<h2 className="text-lg font-semibold mb-2">Actual Result</h2>
-								<p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
-									{bug.actualOutcome}
-								</p>
-							</div>
-						</div>
+              {/* Close Messages */}
+              {bug.closeMessages && bug.closeMessages.length > 0 && (
+                <div>
+                  <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
+                    <XCircle className="w-4 h-4" /> Closure History
+                  </h2>
+                  <ul className="space-y-2 pl-4 border-l border-border">
+                    {bug.closeMessages.map((msg, idx) => {
+                      const [time, text] = msg.split("] ");
+                      return (
+                        <li
+                          key={`close-${idx}`}
+                          className="text-sm text-muted-foreground"
+                        >
+                          <span className="font-mono text-xs">
+                            {time.replace("[", "")}
+                          </span>{" "}
+                          — {text}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+            </div>
 
-						{/* Attachments */}
-						<AttachmentList attachments={bug.attachments} fromGithub={bug.fromGithub} />
-					</div>
+            {/* Description */}
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Description</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {bug.description}
+              </p>
+            </div>
 
-					{/* Metadata */}
-					<div className="bg-sidebar rounded-xl border border-border flex flex-col p-5 min-w-[35%] gap-3 shadow">
-						<h2 className="text-lg text-foreground font-bold flex items-center gap-2 mb-2">
-							Metadata
-						</h2>
+            {/* Steps to Reproduce */}
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Steps to Reproduce</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {bug.reproductionSteps}
+              </p>
+            </div>
 
-						<div className="mb-2">
-							<p className="text-sm mb-2 font-medium text-muted-foreground flex items-center gap-1">
-								<AlertTriangle className="size-4" />
-								Priority
-							</p>
-							<span
-								className={cn(
-									"py-2 px-3 bg-muted inline-flex items-center text-sm rounded-lg font-medium border border-border "
-								)}
-							>
-								{bug.priority}
-							</span>
-						</div>
+            {/* Expected vs Actual Result */}
+            <div className="grid grid-cols-1  md:grid-cols-2 gap-4">
+              <div className="col-span-1">
+                <h2 className="text-lg font-semibold mb-2">Expected Result</h2>
+                <p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
+                  {bug.expectedOutcome}
+                </p>
+              </div>
+              <div className="col-span-1">
+                <h2 className="text-lg font-semibold mb-2">Actual Result</h2>
+                <p className="text-sm text-muted-foreground leading-relaxed bg-muted rounded-lg p-4">
+                  {bug.actualOutcome}
+                </p>
+              </div>
+            </div>
 
-						<div className="space-y-3">
-							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
-								<p className="text-xs mb-1 font-medium text-muted-foreground">
-									Project ID
-								</p>
-								<h3 className="text-foreground font-semibold">
-									{bug.projectId}
-								</h3>
-							</div>
+            {/* Attachments */}
+            <AttachmentList
+              attachments={bug.attachments}
+              fromGithub={bug.fromGithub}
+            />
+          </div>
 
-							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
-								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
-									<User className="w-3 h-3" />
-									Reporter
-								</p>
-								<h3 className="text-foreground font-semibold">
-									{userMap[bug.createdBy] || "Loading"}
-								</h3>
-							</div>
+          {/* Metadata */}
+          <div className="bg-sidebar rounded-xl border border-border flex flex-col p-5 min-w-[35%] gap-3 shadow">
+            <h2 className="text-lg text-foreground font-bold flex items-center gap-2 mb-2">
+              Metadata
+            </h2>
 
-							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
-								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
-									<User className="w-3 h-3" />
-									Assignee
-								</p>
-								<h3 className="text-foreground font-semibold">
-									{userMap[bug.assignedTo] || "Not Assigned"}
-								</h3>
-							</div>
+            <div className="mb-2">
+              <p className="text-sm mb-2 font-medium text-muted-foreground flex items-center gap-1">
+                <AlertTriangle className="size-4" />
+                Priority
+              </p>
+              <span
+                className={cn(
+                  "py-2 px-3 bg-muted inline-flex items-center text-sm rounded-lg font-medium border border-border "
+                )}
+              >
+                {bug.priority}
+              </span>
+            </div>
 
-							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
-								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
-									<Calendar className="w-3 h-3" />
-									Date Created
-								</p>
-								<h3 className="text-foreground font-semibold">
-									{formatDate(bug.createdAt)}
-								</h3>
-							</div>
+            <div className="space-y-3">
+              <div className="bg-muted/50 rounded-lg p-3 border border-border ">
+                <p className="text-xs mb-1 font-medium text-muted-foreground">
+                  Project ID
+                </p>
+                <h3 className="text-foreground font-semibold">
+                  {bug.projectId}
+                </h3>
+              </div>
 
-							<div className="bg-muted/50 rounded-lg p-3 border border-border ">
-								<p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
-									<Calendar className="w-3 h-3" />
-									Date Resolved
-								</p>
-								<h3 className="text-foreground font-semibold">
-									{formatDate(bug.resolvedAt) || "Not resolved yet"}
-								</h3>
-							</div>
-						</div>
+              <div className="bg-muted/50 rounded-lg p-3 border border-border ">
+                <p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
+                  <User className="w-3 h-3" />
+                  Reporter
+                </p>
+                <h3 className="text-foreground font-semibold">
+                  {userMap[bug.createdBy] || "Loading"}
+                </h3>
+              </div>
 
-						{/* Activity Log */}
-						<ActivityLog statusHistory={bugStatusLog} />
-					</div>
-				</div>
-				<CommentsContainer bugId={bug.id} comments={comments} setComments={setComments} />
-			</div>
-		</main>
-	);
+              <div className="bg-muted/50 rounded-lg p-3 border border-border ">
+                <p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
+                  <User className="w-3 h-3" />
+                  Assignee
+                </p>
+                <h3 className="text-foreground font-semibold">
+                  {userMap[bug.assignedTo] || "Not Assigned"}
+                </h3>
+              </div>
+
+              <div className="bg-muted/50 rounded-lg p-3 border border-border ">
+                <p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  Date Created
+                </p>
+                <h3 className="text-foreground font-semibold">
+                  {formatDate(bug.createdAt)}
+                </h3>
+              </div>
+
+              <div className="bg-muted/50 rounded-lg p-3 border border-border ">
+                <p className="text-xs mb-1 font-medium text-muted-foreground flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  Date Resolved
+                </p>
+                <h3 className="text-foreground font-semibold">
+                  {formatDate(bug.resolvedAt) || "Not resolved yet"}
+                </h3>
+              </div>
+            </div>
+
+            {/* Activity Log */}
+            <ActivityLog statusHistory={bugStatusLog} />
+          </div>
+        </div>
+        <CommentsContainer
+          bugId={bug.id}
+          comments={comments}
+          setComments={setComments}
+        />
+      </div>
+    </main>
+  );
 };
 
 export default BugReport;
