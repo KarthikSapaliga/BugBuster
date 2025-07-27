@@ -16,10 +16,13 @@ import {
 import { useAppStore } from '@/store/store'
 import { useParams } from 'react-router-dom'
 import { checkGithubConnection } from '@/lib/VersionControl-Integration/versioncontrol'
+import { useNavigate } from 'react-router-dom'
 
 function UpdateProjectForm() {
     const params = useParams();
     const projectId = params.projectId;
+
+    const navigate = useNavigate()
 
     const { token } = useAppStore()
     const [formData, setFormData] = useState({
@@ -114,8 +117,8 @@ function UpdateProjectForm() {
                 headers: { Authorization: `Bearer ${token}` }
             })
             toast.success("Project updated successfully!")
+            navigate('/dashboard')
         } catch (err) {
-            console.error(err)
             toast.error(err.response?.data?.message || 'Failed to update project')
         } finally {
             setLoading(false)

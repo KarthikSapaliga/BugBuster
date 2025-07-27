@@ -9,11 +9,13 @@ import { Trash2, X } from 'lucide-react'
 import { apiClient } from '@/lib/axios'
 import { useAppStore } from '@/store/store'
 import { GET_MY_PROJECTS_ROUTE, CREATE_BUG_ROUTE, BUG_UPLOAD_ROUTE } from '@/lib/routes'
+import { useNavigate } from 'react-router-dom'
 
 function BugReportingForm() {
 
     const { user, token } = useAppStore();
     const [projects, setProjects] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -137,6 +139,7 @@ function BugReportingForm() {
                 project: ''
             })
             setAttachments([])
+            navigate('/dashboard');
         } catch (err) {
             console.error(err)
             toast.error("Failed to submit bug. Please try again.")

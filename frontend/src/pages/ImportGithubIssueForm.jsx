@@ -68,8 +68,8 @@ export default function ImportGithubIssueForm({ bug, closePage }) {
                 payload,
                 { headers: { Authorization: `Bearer ${token}` } }
             )
-            toast.success("Imported issue created successfully!")
-            navigate(`projects/vcs/${projectId}`)
+            toast.success("Imported issue successfully!")
+            navigate('/dashboard')
         } catch (err) {
             console.error(err)
             toast.error("Failed to import issue.")

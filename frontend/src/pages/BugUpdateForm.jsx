@@ -9,6 +9,7 @@ import { apiClient } from '@/lib/axios'
 import { useAppStore } from '@/store/store'
 import { useParams } from 'react-router-dom'
 import { GET_MY_PROJECTS_ROUTE, GET_BUG_BY_ID_ROUTE, UPDATE_BUG_ROUTE } from '@/lib/routes'
+import { useNavigate } from 'react-router-dom'
 
 function BugUpdateForm() {
     const params = useParams()
@@ -17,6 +18,8 @@ function BugUpdateForm() {
     const { user, token } = useAppStore()
     const [projects, setProjects] = useState([])
     const [bug, setBug] = useState(null)
+
+    const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
         title: '',
@@ -110,6 +113,7 @@ function BugUpdateForm() {
                 { headers: { Authorization: `Bearer ${token}` } }
             )
             toast.success("Bug updated successfully!")
+            navigate('/dashboard')
         } catch (err) {
             console.error(err)
             toast.error("Failed to update bug. Please try again.")

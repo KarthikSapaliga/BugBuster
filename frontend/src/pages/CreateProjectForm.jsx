@@ -11,6 +11,7 @@ import { apiClient } from '@/lib/axios.js'
 import { CREATE_PROJECT_ROUTE, GET_DEVELOPERS_AND_TESTERS_ROUTE } from '@/lib/routes'
 import { useAppStore } from '@/store/store'
 import { checkGithubConnection } from '@/lib/VersionControl-Integration/versioncontrol'
+import { useNavigate } from 'react-router-dom'
 
 function CreateProjectForm() {
     const { token } = useAppStore()
@@ -26,7 +27,7 @@ function CreateProjectForm() {
     const [userOptions, setUserOptions] = useState([])
     const [usersLoading, setUsersLoading] = useState(true)
 
-
+    const navigate = useNavigate()
 
     // Fetch developers and testers
     useEffect(() => {
@@ -85,6 +86,9 @@ function CreateProjectForm() {
                 githubToken: '',
                 teamMembers: [],
             })
+
+            navigate('/dashboard')
+
         } catch (err) {
             //console.error(err)
             toast.error(err?.response?.data?.message || err.message || 'Something went wrong')
