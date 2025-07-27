@@ -230,7 +230,10 @@ function BugActions({ bug }) {
           {bug.state === "OPEN" ||
             (bug.state === "RESOLVED" && (
               <div className="space-y-3">
-                <h2 className="text-lg font-semibold">Assign To</h2>
+                <h2 className="text-lg font-semibold">
+                  {bug.state === "OPEN" && "Assign To"}
+                  {bug.state === "RESOLVED" && "Re Assign To"}
+                </h2>
                 <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4">
                   <Textarea
                     placeholder="Assignment message"
