@@ -29,42 +29,34 @@ function MessageHistory({ bug }) {
       {/* Interleaved Assignment and Resolve Messages */}
       {combinedMessages.length > 0 && (
         <div>
-          <ul className="space-y-2 pl-4 border-l border-border">
-            {combinedMessages.map((msg, idx) => (
-              <li
-                key={`${msg.type}-${idx}`}
-                className="text-sm text-muted-foreground flex gap-1"
-              >
-                <span className="font-mono text-xs w-40">
-                  {formatDate(msg.timestamp)}
-                </span>
-                <div>
-                  
-                  {msg.type === "assignment" && (
-                    <>
-                    —{" "}
-                      <User className="inline w-3 h-3 mr-1 text-blue-500" />
-                      {msg.content}
-                    </>
-                  )}
-                  {msg.type === "resolve" && (
-                    <>
-                    —{" "}
-                      <CheckSquare className="inline w-3 h-3 mr-1 text-yellow-500" />
-                      {msg.content}
-                    </>
-                  )}
-                  {msg.type === "closed" && (
-                    <>
-                    —{" "}
-                      <CheckCircle className="inline w-3 h-3 mr-1 text-green-500" />
-                      {msg.content}
-                    </>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+
+          <table className="w-full text-sm text-muted-foreground border-collapse">
+            <tbody>
+              {combinedMessages.map((msg, idx) => (
+                <tr
+                  key={`${msg.type}-${idx}`}
+                  className="border-b border-border"
+                >
+                  <td className="px-2 py-1 font-mono text-xs whitespace-nowrap">
+                    {formatDate(msg.timestamp)}
+                  </td>
+                  <td className="px-2 py-1">
+                    {msg.type === "assignment" && (
+                      <User className="w-4 h-4 text-blue-500" />
+                    )}
+                    {msg.type === "resolve" && (
+                      <CheckSquare className="w-4 h-4 text-yellow-500" />
+                    )}
+                    {msg.type === "closed" && (
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    )}
+                  </td>
+                  <td className="px-2 py-1">{msg.content}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
         </div>
       )}
     </>
