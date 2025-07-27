@@ -303,10 +303,6 @@ public class BugController {
                 return ResponseEntity.status(400).body("Bug can only be assigned if it's in OPEN or can be reassigned if it's in RESOLVED state.");
             }
 
-            if(assignMessage == null || assignMessage.trim().isEmpty()) {
-                return ResponseEntity.status(400).body("Assign message must not be empty.");
-            }
-
             String fullMessage = "[" + LocalDateTime.now() + "] " + assignMessage;
             if (bug.getAssignmentMessages() == null) {
                 bug.setAssignmentMessages(new ArrayList<>());
