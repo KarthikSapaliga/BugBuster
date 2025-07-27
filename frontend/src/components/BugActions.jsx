@@ -227,46 +227,50 @@ function BugActions({ bug }) {
             </div>
           </div>
 
-          {bug.state === "OPEN" && (
-            <div className="space-y-3">
-              <h2 className="text-lg font-semibold">Assign To</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <Select onValueChange={setSelectedDev}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select developer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {developers.map((dev) => (
-                      <SelectItem key={dev.id} value={dev.id}>
-                        {dev.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          {bug.state === "OPEN" ||
+            (bug.state === "RESOLVED" && (
+              <div className="space-y-3">
+                <h2 className="text-lg font-semibold">Assign To</h2>
+                <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4">
+                  <Textarea
+                    placeholder="Assignment message"
+                    value={assignMessage}
+                    onChange={(e) => setAssignMessage(e.target.value)}
+                    className="col-span-3"
+                  />
+                    <Select onValueChange={setSelectedDev}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select developer" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {developers.map((dev) => (
+                          <SelectItem key={dev.id} value={dev.id}>
+                            {dev.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                <Input
-                  type="number"
-                  placeholder="Estimated hours"
-                  value={estimatedHours}
-                  onChange={(e) => setEstimatedHours(e.target.value)}
-                />
-
-                <Textarea
-                  placeholder="Assignment message"
-                  value={assignMessage}
-                  onChange={(e) => setAssignMessage(e.target.value)}
-                />
+                    <Input
+                      type="number"
+                      placeholder="Estimated hours"
+                      value={estimatedHours}
+                      onChange={(e) => setEstimatedHours(e.target.value)}
+                    />
+                    <Button
+                      disabled={
+                        !selectedDev || !estimatedHours || !assignMessage
+                      }
+                      onClick={assignUser}
+                      className="bg-primary disabled:bg-gray-400 text-primary-foreground flex items-center gap-2"
+                    >
+                      <UserPlus size={16} />
+                      Assign
+                    </Button>
+                  
+                </div>
               </div>
-              <Button
-                disabled={!selectedDev || !estimatedHours || !assignMessage}
-                onClick={assignUser}
-                className="bg-primary disabled:bg-gray-400 text-primary-foreground mt-2 flex items-center gap-2"
-              >
-                <UserPlus size={16} />
-                Assign
-              </Button>
-            </div>
-          )}
+            ))}
         </>
       )}
 
