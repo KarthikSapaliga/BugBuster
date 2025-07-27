@@ -25,11 +25,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -81,6 +79,7 @@ public class BugController {
         return bugService.createBug(bug);
     }
 
+    // import github issues
     @PostMapping("/github-import")
     public ResponseEntity<Bug> importExternalBug(
             @RequestBody Map<String, Object> payload,
@@ -181,8 +180,6 @@ public class BugController {
             @RequestBody Bug updatedBug,
             @RequestHeader("Authorization") String authHeader) {
         try {
-            System.out.println(updatedBug);
-
             Optional<Bug> existingOpt = bugService.getBugById(id);
             if (existingOpt.isEmpty()) {
                 return ResponseEntity.notFound().build();
@@ -195,47 +192,26 @@ public class BugController {
                 return ResponseEntity.status(403).body("Unauthorized to update this bug.");
             }
 
-            // Merge updated fields
-            if (updatedBug.getTitle() != null)
-                existingBug.setTitle(updatedBug.getTitle());
-            if (updatedBug.getDescription() != null)
-                existingBug.setDescription(updatedBug.getDescription());
-            if (updatedBug.getReproductionSteps() != null)
-                existingBug.setReproductionSteps(updatedBug.getReproductionSteps());
-            if (updatedBug.getExpectedOutcome() != null)
-                existingBug.setExpectedOutcome(updatedBug.getExpectedOutcome());
-            if (updatedBug.getActualOutcome() != null)
-                existingBug.setActualOutcome(updatedBug.getActualOutcome());
-            if (updatedBug.getSeverity() != null)
-                existingBug.setSeverity(updatedBug.getSeverity());
-            if (updatedBug.getUrgency() != null)
-                existingBug.setUrgency(updatedBug.getUrgency());
-            if (updatedBug.getPriority() != null)
-                existingBug.setPriority(updatedBug.getPriority());
-            if (updatedBug.getProjectId() != null)
-                existingBug.setProjectId(updatedBug.getProjectId());
-            if (updatedBug.getState() != null)
-                existingBug.setState(updatedBug.getState());
-            if (updatedBug.getAssignedTo() != null)
-                existingBug.setAssignedTo(updatedBug.getAssignedTo());
-            if (updatedBug.getAssignedBy() != null)
-                existingBug.setAssignedBy(updatedBug.getAssignedBy());
-            if (updatedBug.getAssignedAt() != null)
-                existingBug.setAssignedAt(updatedBug.getAssignedAt());
-            if (updatedBug.getResolvedAt() != null)
-                existingBug.setResolvedAt(updatedBug.getResolvedAt());
-            if (updatedBug.getResolvedBy() != null)
-                existingBug.setResolvedBy(updatedBug.getResolvedBy());
-            if (updatedBug.getClosedAt() != null)
-                existingBug.setClosedAt(updatedBug.getClosedAt());
-            if (updatedBug.getClosedBy() != null)
-                existingBug.setClosedBy(updatedBug.getClosedBy());
-            if (updatedBug.getAttachments() != null)
-                existingBug.setAttachments(updatedBug.getAttachments());
-            if (updatedBug.getComments() != null)
-                existingBug.setComments(updatedBug.getComments());
-            if (updatedBug.isFromGithub())
-                existingBug.setFromGithub(true);
+            if (updatedBug.getTitle() != null) existingBug.setTitle(updatedBug.getTitle());
+            if (updatedBug.getDescription() != null) existingBug.setDescription(updatedBug.getDescription());
+            if (updatedBug.getReproductionSteps() != null) existingBug.setReproductionSteps(updatedBug.getReproductionSteps());
+            if (updatedBug.getExpectedOutcome() != null) existingBug.setExpectedOutcome(updatedBug.getExpectedOutcome());
+            if (updatedBug.getActualOutcome() != null) existingBug.setActualOutcome(updatedBug.getActualOutcome());
+            if (updatedBug.getSeverity() != null) existingBug.setSeverity(updatedBug.getSeverity());
+            if (updatedBug.getUrgency() != null) existingBug.setUrgency(updatedBug.getUrgency());
+            if (updatedBug.getPriority() != null) existingBug.setPriority(updatedBug.getPriority());
+            if (updatedBug.getProjectId() != null) existingBug.setProjectId(updatedBug.getProjectId());
+            if (updatedBug.getState() != null) existingBug.setState(updatedBug.getState());
+            if (updatedBug.getAssignedTo() != null) existingBug.setAssignedTo(updatedBug.getAssignedTo());
+            if (updatedBug.getAssignedBy() != null) existingBug.setAssignedBy(updatedBug.getAssignedBy());
+            if (updatedBug.getAssignedAt() != null) existingBug.setAssignedAt(updatedBug.getAssignedAt());
+            if (updatedBug.getResolvedAt() != null) existingBug.setResolvedAt(updatedBug.getResolvedAt());
+            if (updatedBug.getResolvedBy() != null) existingBug.setResolvedBy(updatedBug.getResolvedBy());
+            if (updatedBug.getClosedAt() != null) existingBug.setClosedAt(updatedBug.getClosedAt());
+            if (updatedBug.getClosedBy() != null) existingBug.setClosedBy(updatedBug.getClosedBy());
+            if (updatedBug.getAttachments() != null) existingBug.setAttachments(updatedBug.getAttachments());
+            if (updatedBug.getComments() != null) existingBug.setComments(updatedBug.getComments());
+            if (updatedBug.isFromGithub()) existingBug.setFromGithub(true);
 
             Bug savedBug = bugService.updateBug(existingBug);
 
@@ -266,7 +242,7 @@ public class BugController {
     // Close Bug
     @PatchMapping("/close/{id}")
     public ResponseEntity<?> closeBug(@PathVariable String id,
-            @RequestParam String closedBy,
+            @RequestParam String closedBy, @RequestParam String closeMessage,
             @RequestHeader("Authorization") String authHeader) {
         try {
             if (!isTester(authHeader)) {
@@ -283,9 +259,14 @@ public class BugController {
                 return ResponseEntity.badRequest().body("Bug must be in 'resolved' state to be closed.");
             }
 
+            if (closeMessage == null || closeMessage.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Close message must not be empty.");
+            }
+
             bug.setState("CLOSED");
             bug.setClosedBy(closedBy);
             bug.setClosedAt(LocalDateTime.now());
+            bug.setCloseMessage(closeMessage);
 
             return ResponseEntity.ok(bugService.updateBug(bug));
 
@@ -295,6 +276,7 @@ public class BugController {
         }
     }
 
+    //TODO: update the assign route to assign the resolved bug to tester
     // Assign and Reassign Bugs
     @PatchMapping("/assign/{id}")
     public ResponseEntity<?> assignBugToDeveloper(
@@ -334,6 +316,47 @@ public class BugController {
         }
     }
 
+    // TODO: update start working route
+    // Start Working Route
+    @PatchMapping("/start-working/{id}")
+    public ResponseEntity<?> startWorkOnBug(
+            @PathVariable String id,
+            @RequestHeader("Authorization") String authHeader) {
+
+        try {
+            if (!isDeveloper(authHeader)) {
+                return ResponseEntity.status(403).body("Only developers can start work on bugs.");
+            }
+
+            Optional<Bug> bugOpt = bugService.getBugById(id);
+            if (bugOpt.isEmpty()) {
+                return ResponseEntity.status(404).body("Bug not found");
+            }
+
+            Bug bug = bugOpt.get();
+
+            if (!bug.getState().equalsIgnoreCase("OPEN")) {
+                return ResponseEntity.badRequest().body("Bug must be in OPEN state to start working on it.");
+            }
+
+            String userId = extractUserId(authHeader);
+
+            bug.setAssignedTo(userId);
+            bug.setAssignedBy(userId);
+            bug.setAssignedAt(LocalDateTime.now());
+            bug.setState("IN_PROGRESS");
+
+            Bug updatedBug = bugService.updateBug(bug);
+
+            return ResponseEntity.ok(updatedBug);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to start bug: " + e.getMessage());
+        }
+    }
+
+    // TODO: update resolve route to include the resolve message
     // resolve the bug
     @PatchMapping("/resolve/{id}")
     public ResponseEntity<?> resolveBug(
@@ -433,45 +456,6 @@ public class BugController {
         return bugService.getAllBugs().stream()
                 .filter(bug -> userId.equalsIgnoreCase(bug.getAssignedTo()))
                 .collect(Collectors.toList());
-    }
-
-    // Start Working Route
-    @PatchMapping("/start-working/{id}")
-    public ResponseEntity<?> startWorkOnBug(
-            @PathVariable String id,
-            @RequestHeader("Authorization") String authHeader) {
-
-        try {
-            if (!isDeveloper(authHeader)) {
-                return ResponseEntity.status(403).body("Only developers can start work on bugs.");
-            }
-
-            Optional<Bug> bugOpt = bugService.getBugById(id);
-            if (bugOpt.isEmpty()) {
-                return ResponseEntity.status(404).body("Bug not found");
-            }
-
-            Bug bug = bugOpt.get();
-
-            if (!bug.getState().equalsIgnoreCase("OPEN")) {
-                return ResponseEntity.badRequest().body("Bug must be in OPEN state to start working on it.");
-            }
-
-            String userId = extractUserId(authHeader);
-
-            bug.setAssignedTo(userId);
-            bug.setAssignedBy(userId);
-            bug.setAssignedAt(LocalDateTime.now());
-            bug.setState("IN_PROGRESS");
-
-            Bug updatedBug = bugService.updateBug(bug);
-
-            return ResponseEntity.ok(updatedBug);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Failed to start bug: " + e.getMessage());
-        }
     }
 
     // Upload file
