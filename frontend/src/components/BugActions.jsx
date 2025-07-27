@@ -223,7 +223,7 @@ function BugActions({ bug }) {
                   <Button
                     onClick={closeBug}
                     disabled={!closeMessage}
-                    className="bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900 dark:text-amber-100 dark:hover:bg-amber-800 flex items-center gap-2"
+                    className="bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-100 dark:hover:bg-green-800 flex items-center gap-2"
                   >
                     <X size={16} />
                     Close Issue
