@@ -7,10 +7,18 @@ import {
   PlayCircle,
   User,
   XCircle,
+  ChevronRight,
+  ChevronDown
 } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { cn, formatDate } from "@/lib/utils";
 
 import BugActions from "@/components/BugActions";
+import MessageHistory from "@/components/MessageHistory";
 
 import CommentsContainer from "@/components/CommentsContainer";
 import ActivityLog from "@/components/BugActivityLog";
@@ -53,6 +61,7 @@ const BugReport = () => {
   const [userMap, setUserMap] = useState({});
   const [bugStatusLog, setBugStatusLog] = useState([]);
   const [comments, setComments] = useState([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchBugInfo = async () => {
@@ -187,83 +196,17 @@ const BugReport = () => {
             </div>
 
             {/* Messages */}
-            <div className="space-y-6">
-				<h2 className="text-lg font-semibold mb-2">Messages</h2>
-              {/* Assignment Messages */}
-              {bug.assignmentMessages && bug.assignmentMessages.length > 0 && (
-                <div>
-                  <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
-                    <User className="w-4 h-4" /> Assignment History
-                  </h2>
-                  <ul className="space-y-2 pl-4 border-l border-border">
-                    {bug.assignmentMessages.map((msg, idx) => {
-                      const [time, text] = msg.split("] ");
-                      return (
-                        <li
-                          key={`assign-${idx}`}
-                          className="text-sm text-muted-foreground"
-                        >
-                          <span className="font-mono text-xs">
-                            {time.replace("[", "")}
-                          </span>{" "}
-                          — {text}
-                        </li>
-                      );
-                    })}
-                  </ul>
+            <Collapsible open={open} onOpenChange={setOpen}>
+              <CollapsibleTrigger>
+                <div className="flex gap-2 items-center">
+                  <h2 className="text-lg font-semibold">Messages</h2>
+                  {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                 </div>
-              )}
-
-              {/* Resolve Messages */}
-              {bug.resolveMessages && bug.resolveMessages.length > 0 && (
-                <div>
-                  <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4" /> Resolution History
-                  </h2>
-                  <ul className="space-y-2 pl-4 border-l border-border">
-                    {bug.resolveMessages.map((msg, idx) => {
-                      const [time, text] = msg.split("] ");
-                      return (
-                        <li
-                          key={`resolve-${idx}`}
-                          className="text-sm text-muted-foreground"
-                        >
-                          <span className="font-mono text-xs">
-                            {time.replace("[", "")}
-                          </span>{" "}
-                          — {text}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
-
-              {/* Close Messages */}
-              {bug.closeMessages && bug.closeMessages.length > 0 && (
-                <div>
-                  <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
-                    <XCircle className="w-4 h-4" /> Closure History
-                  </h2>
-                  <ul className="space-y-2 pl-4 border-l border-border">
-                    {bug.closeMessages.map((msg, idx) => {
-                      const [time, text] = msg.split("] ");
-                      return (
-                        <li
-                          key={`close-${idx}`}
-                          className="text-sm text-muted-foreground"
-                        >
-                          <span className="font-mono text-xs">
-                            {time.replace("[", "")}
-                          </span>{" "}
-                          — {text}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
-            </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <MessageHistory bug={bug} />
+              </CollapsibleContent>
+            </Collapsible>
 
             {/* Description */}
             <div>
