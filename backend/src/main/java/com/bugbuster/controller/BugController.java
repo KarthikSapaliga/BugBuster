@@ -495,7 +495,7 @@ public class BugController {
     public List<Bug> getCloseRequestsForTester(@RequestHeader("Authorization") String authHeader) {
         String userId = extractUserId(authHeader);
         return bugService.getAllBugs().stream()
-                .filter(bug -> userId.equalsIgnoreCase(bug.getTesterAssignedTo()))
+                .filter(bug -> userId.equalsIgnoreCase(bug.getTesterAssignedTo()) && bug.getState().equalsIgnoreCase("RESOLVED"))
                 .collect(Collectors.toList());
     }
 
