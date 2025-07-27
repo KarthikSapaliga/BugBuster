@@ -227,8 +227,7 @@ function BugActions({ bug }) {
             </div>
           </div>
 
-          {bug.state === "OPEN" ||
-            (bug.state === "RESOLVED" && (
+          {(bug.state === "OPEN" || bug.state === "RESOLVED") && (
               <div className="space-y-3">
                 <h2 className="text-lg font-semibold">
                   {bug.state === "OPEN" && "Assign To"}
@@ -273,7 +272,7 @@ function BugActions({ bug }) {
                   
                 </div>
               </div>
-            ))}
+            )}
         </>
       )}
 
