@@ -277,7 +277,6 @@ public class BugController {
         }
     }
 
-    //TODO: update the assign route to assign the resolved bug to tester
     // Assign and Reassign Bugs
     @PatchMapping("/assign/{id}")
     public ResponseEntity<?> assignBugToDeveloper(
@@ -368,13 +367,12 @@ public class BugController {
         }
     }
 
-    // TODO: not completed
     // resolve the bug
     @PatchMapping("/resolve/{id}")
     public ResponseEntity<?> resolveBug(
             @PathVariable String id,
             @RequestParam String resolveMessage,
-            @RequestParam String spentHours,
+            @RequestParam double spentHours,
             @RequestHeader("Authorization") String authHeader) {
         try {
             String userId = extractUserId(authHeader);
@@ -398,10 +396,17 @@ public class BugController {
                 return ResponseEntity.badRequest().body("Resolve message must not be empty.");
             }
 
+            if (bug.getResolveMessages() == null) {
+                bug.setResolveMessages(new ArrayList<>());
+            }
+
+            String fullMessage = "[" + LocalDateTime.now() + "] " + resolveMessage;
+
             bug.setState("RESOLVED");
             bug.setResolvedAt(LocalDateTime.now());
             bug.setResolvedBy(userId);
-            bug.setResolveMessage(resolveMessage);
+            bug.getResolveMessages().add(fullMessage);
+            bug.setSpentHours(spentHours);
 
             return ResponseEntity.ok(bugService.updateBug(bug));
 
