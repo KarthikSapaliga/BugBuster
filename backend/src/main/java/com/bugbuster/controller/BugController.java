@@ -312,6 +312,11 @@ public class BugController {
                 bug.setAssignmentMessages(new ArrayList<>());
             }
 
+            if(bug.getState().equalsIgnoreCase("RESOLVED")){
+                bug.setResolvedAt(null);
+                bug.setResolvedBy(null);
+            }
+
             String assignedBy = extractUserId(authHeader);
             bug.setAssignedTo(developerId);
             bug.setAssignedBy(assignedBy);
@@ -319,11 +324,6 @@ public class BugController {
             bug.setState("IN_PROGRESS");
             bug.setEstimatedHours(estimatedHours);
             bug.getAssignmentMessages().add(fullMessage);
-
-            if(bug.getState().equalsIgnoreCase("RESOLVED")){
-                bug.setResolvedAt(null);
-                bug.setResolvedBy(null);
-            }
 
             return ResponseEntity.ok(bugService.updateBug(bug));
 
