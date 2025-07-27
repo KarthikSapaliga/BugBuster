@@ -9,11 +9,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-import { Edit, X, Trash2, Play, CheckCircle, UserPlus } from "lucide-react";
+import { Edit, X, Trash2, Play, CheckCircle, UserPlus, ChevronRight, ChevronDown } from "lucide-react";
 
 import { useAppStore } from "@/store/store";
 import { apiClient } from "@/lib/axios";
@@ -50,6 +55,7 @@ function BugActions({ bug }) {
   const [resolveMessage, setResolveMessage] = useState("");
   const [spentHours, setSpentHours] = useState("");
   const [closeMessage, setCloseMessage] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (!bug.projectId) return;
@@ -228,51 +234,58 @@ function BugActions({ bug }) {
           </div>
 
           {(bug.state === "OPEN" || bug.state === "RESOLVED") && (
-              <div className="space-y-3">
-                <h2 className="text-lg font-semibold">
-                  {bug.state === "OPEN" && "Assign To"}
-                  {bug.state === "RESOLVED" && "Re Assign To"}
-                </h2>
-                <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4">
+            <Collapsible open={open} onOpenChange={setOpen}>
+              <CollapsibleTrigger>
+                <div className="flex gap-2 items-center">
+                  <h2 className="text-lg font-semibold">
+                    {bug.state === "OPEN" && "Assign To"}
+                    {bug.state === "RESOLVED" && "Re Assign To"}
+                  </h2>
+                  {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 mt-3">
                   <Textarea
                     placeholder="Assignment message"
                     value={assignMessage}
                     onChange={(e) => setAssignMessage(e.target.value)}
                     className="col-span-3"
                   />
-                    <Select onValueChange={setSelectedDev}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select developer" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {developers.map((dev) => (
-                          <SelectItem key={dev.id} value={dev.id}>
-                            {dev.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <Select onValueChange={setSelectedDev}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select developer" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {developers.map((dev) => (
+                        <SelectItem key={dev.id} value={dev.id}>
+                          {dev.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                    <Input
-                      type="number"
-                      placeholder="Estimated hours"
-                      value={estimatedHours}
-                      onChange={(e) => setEstimatedHours(e.target.value)}
-                    />
-                    <Button
-                      disabled={
-                        !selectedDev || !estimatedHours || !assignMessage
-                      }
-                      onClick={assignUser}
-                      className="bg-primary disabled:bg-gray-400 text-primary-foreground flex items-center gap-2"
-                    >
-                      <UserPlus size={16} />
-                      Assign
-                    </Button>
-                  
+                  <Input
+                    type="number"
+                    placeholder="Estimated hours"
+                    value={estimatedHours}
+                    onChange={(e) => setEstimatedHours(e.target.value)}
+                  />
+                  <Button
+                    disabled={
+                      !selectedDev || !estimatedHours || !assignMessage
+                    }
+                    onClick={assignUser}
+                    className="bg-primary disabled:bg-gray-400 text-primary-foreground flex items-center gap-2"
+                  >
+                    <UserPlus size={16} />
+                    Assign
+                  </Button>
+
                 </div>
-              </div>
-            )}
+              </CollapsibleContent>
+            </Collapsible>
+          )}
         </>
       )}
 
