@@ -324,11 +324,11 @@ public class BugController {
         }
     }
 
-    // TODO: update start working route
     // Start Working Route
     @PatchMapping("/start-working/{id}")
     public ResponseEntity<?> startWorkOnBug(
             @PathVariable String id,
+            @RequestParam double estimatedHours,
             @RequestHeader("Authorization") String authHeader) {
 
         try {
@@ -353,6 +353,7 @@ public class BugController {
             bug.setAssignedBy(userId);
             bug.setAssignedAt(LocalDateTime.now());
             bug.setState("IN_PROGRESS");
+            bug.setEstimatedHours(estimatedHours);
 
             Bug updatedBug = bugService.updateBug(bug);
 
