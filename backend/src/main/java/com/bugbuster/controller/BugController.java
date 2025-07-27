@@ -239,7 +239,6 @@ public class BugController {
         return ResponseEntity.ok().build();
     }
 
-    // TODO: not completed
     // Close Bug
     @PatchMapping("/close/{id}")
     public ResponseEntity<?> closeBug(@PathVariable String id,
@@ -257,17 +256,19 @@ public class BugController {
             Bug bug = bugOpt.get();
 
             if (!"RESOLVED".equalsIgnoreCase(bug.getState())) {
-                return ResponseEntity.badRequest().body("Bug must be in 'resolved' state to be closed.");
+                return ResponseEntity.badRequest().body("Bug must be in RESOLVED state to be closed.");
             }
 
             if (closeMessage == null || closeMessage.trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Close message must not be empty.");
             }
 
+            String fullMessage = "[" + LocalDateTime.now() + "] " + closeMessage;
+
             bug.setState("CLOSED");
             bug.setClosedBy(closedBy);
             bug.setClosedAt(LocalDateTime.now());
-            bug.setCloseMessage(closeMessage);
+            bug.getCloseMessages().add(fullMessage);
 
             return ResponseEntity.ok(bugService.updateBug(bug));
 
