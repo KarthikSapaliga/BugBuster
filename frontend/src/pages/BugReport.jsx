@@ -172,7 +172,7 @@ const BugReport = () => {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-semibold tracking-tight mb-1">
-                  Bug: {bug.title}
+                  {bug.title}
                 </h1>
                 {bug.state && (
                   <Badge
