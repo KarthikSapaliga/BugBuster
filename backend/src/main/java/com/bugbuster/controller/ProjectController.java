@@ -76,4 +76,8 @@ public class ProjectController {
     public ResponseEntity<List<User>> getDevelopersInProject(@PathVariable String projectId) {
         return ResponseEntity.ok(projectService.getDevelopersByProjectId(projectId));
     }
+    @GetMapping("/testers/{projectId}")
+    public ResponseEntity<List<User>> getTestersInProject(@PathVariable String projectId) {
+        return ResponseEntity.ok(projectService.getTestersByProjectId(projectId));
+    }
 }
