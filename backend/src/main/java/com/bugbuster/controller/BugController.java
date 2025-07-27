@@ -320,6 +320,11 @@ public class BugController {
             bug.setEstimatedHours(estimatedHours);
             bug.getAssignmentMessages().add(fullMessage);
 
+            if(bug.getState().equalsIgnoreCase("RESOLVED")){
+                bug.setResolvedAt(null);
+                bug.setResolvedBy(null);
+            }
+
             return ResponseEntity.ok(bugService.updateBug(bug));
 
         } catch (Exception e) {
