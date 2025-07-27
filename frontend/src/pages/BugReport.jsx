@@ -199,7 +199,7 @@ const BugReport = () => {
             <Collapsible open={open} onOpenChange={setOpen}>
               <CollapsibleTrigger>
                 <div className="flex gap-2 items-center">
-                  <h2 className="text-lg font-semibold">Activity History</h2>
+                  <h2 className="text-lg font-semibold mb-2">Activity History</h2>
                   {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                 </div>
               </CollapsibleTrigger>
