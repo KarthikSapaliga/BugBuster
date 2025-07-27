@@ -57,7 +57,7 @@ function MessageHistory({ bug }) {
       {bug.closeMessages && bug.closeMessages.length > 0 && (
         <div>
           <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
-            <XCircle className="w-4 h-4" /> Closure History
+            <XCircle className="w-4 h-4" /> Bug is Closed
           </h2>
           <ul className="space-y-2 pl-4 border-l border-border">
             {bug.closeMessages.map((msg, idx) => {
