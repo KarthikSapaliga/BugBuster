@@ -23,6 +23,7 @@ import ProjectBugs from "./pages/ProjectBugs";
 import BugReportingForm from "./pages/BugReportingForm";
 import BugReport from "./pages/BugReport";
 import BugUpdateForm from "./pages/BugUpdateForm";
+import CloseRequests from "./pages/CloseRequests";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <Route path="/in-progress" element={<ProtectedRoute> <InProgress /> </ProtectedRoute>} />
         <Route path="/high-priority" element={<ProtectedRoute> <HighPriority /> </ProtectedRoute>} />
         <Route path="/assigned-me" element={<ProtectedRoute> <AssignedMe /> </ProtectedRoute>} />
+        <Route path="/close-requests" element={<ProtectedRoute> <CloseRequests /> </ProtectedRoute>} />
 
         <Route path="/create-project" element={<ProtectedRoute> <CreateProjectForm /> </ProtectedRoute>} />
         <Route path="projects/bugs/:projectId" element={<ProtectedRoute> <ProjectBugs /> </ProtectedRoute>} />
