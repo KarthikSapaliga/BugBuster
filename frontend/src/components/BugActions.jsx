@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -20,7 +26,7 @@ import {
   RESOLVE_BUG_ROUTE,
   CLOSE_BUG_ROUTE,
   DELETE_BUG_ROUTE,
-  GET_PROJECT_BY_ID_ROUTE
+  GET_PROJECT_BY_ID_ROUTE,
 } from "@/lib/routes";
 
 import {
@@ -87,7 +93,9 @@ function BugActions({ bug }) {
 
       toast.success("Developer assigned successfully!");
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to assign developer.");
+      toast.error(
+        err?.response?.data?.message || "Failed to assign developer."
+      );
     }
   };
 
@@ -118,7 +126,7 @@ function BugActions({ bug }) {
         params: {
           resolveMessage,
           spentHours,
-          testerId: selectedTester, 
+          testerId: selectedTester,
         },
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -183,7 +191,7 @@ function BugActions({ bug }) {
         <>
           <div>
             <h2 className="text-lg font-semibold mb-2">Actions</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Button
                 onClick={updateBugDetails}
                 className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800 flex items-center gap-2"
@@ -192,6 +200,13 @@ function BugActions({ bug }) {
                 Update Details
               </Button>
 
+              <Button
+                onClick={deleteBug}
+                className="bg-rose-100 text-rose-800 hover:bg-rose-200 dark:bg-rose-900 dark:text-rose-100 dark:hover:bg-rose-800 flex items-center gap-2"
+              >
+                <Trash2 size={16} />
+                Delete
+              </Button>
               {bug?.state === "RESOLVED" && (
                 <div className="flex flex-col gap-2 col-span-2">
                   <Textarea
@@ -209,14 +224,6 @@ function BugActions({ bug }) {
                   </Button>
                 </div>
               )}
-
-              <Button
-                onClick={deleteBug}
-                className="bg-rose-100 text-rose-800 hover:bg-rose-200 dark:bg-rose-900 dark:text-rose-100 dark:hover:bg-rose-800 flex items-center gap-2"
-              >
-                <Trash2 size={16} />
-                Delete
-              </Button>
             </div>
           </div>
 
@@ -311,7 +318,7 @@ function BugActions({ bug }) {
                   ))}
                 </SelectContent>
               </Select>
-                
+
               <Button
                 onClick={resolveBug}
                 disabled={!resolveMessage || !spentHours || !selectedTester}
