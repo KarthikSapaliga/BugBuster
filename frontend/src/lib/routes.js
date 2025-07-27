@@ -25,6 +25,7 @@ export const GET_PROJECT_BY_ID_ROUTE = "/api/projects/get-by-id";
 export const CREATE_BUG_ROUTE = "/api/bugs"; // POST - Create a new bug
 export const GET_ALL_BUGS_ROUTE = "/api/bugs/all"; // GET - Get all bugs
 export const GET_ASSIGNED_BUGS_ROUTE = "/api/bugs/assigned"; // GET - Get assigned bugs
+export const GET_CLOSE_REQUESTS_ROUTE = "/api/bugs/close-requests"; // GET - Get close requests
 
 export const GET_BUG_BY_ID_ROUTE = "/api/bugs"; // GET - Append /:id
 export const UPDATE_BUG_ROUTE = "/api/bugs"; // PUT - Append /:id

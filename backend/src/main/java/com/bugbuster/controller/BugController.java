@@ -11,7 +11,6 @@ import com.bugbuster.model.Bug;
 import com.bugbuster.model.Comment;
 import com.bugbuster.model.ImportedIssue;
 import com.bugbuster.model.Project;
-import com.bugbuster.model.User;
 import com.bugbuster.repository.ImportedIssueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -486,7 +485,15 @@ public class BugController {
                 .filter(bug -> userId.equalsIgnoreCase(bug.getAssignedTo()))
                 .collect(Collectors.toList());
     }
-    
+
+    @GetMapping("/close-requests")
+    public List<Bug> getCloseRequestsForTester(@RequestHeader("Authorization") String authHeader) {
+        String userId = extractUserId(authHeader);
+        return bugService.getAllBugs().stream()
+                .filter(bug -> userId.equalsIgnoreCase(bug.getTesterAssignedTo()))
+                .collect(Collectors.toList());
+    }
+
     // Upload file
     @PostMapping("/files/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
