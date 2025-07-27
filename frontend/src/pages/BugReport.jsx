@@ -67,10 +67,8 @@ const BugReport = () => {
     const fetchBugInfo = async () => {
       try {
         const res = await apiClient.get(`${GET_BUG_BY_ID_ROUTE}/${bugId}`);
-        console.log(res.data);
         setBug(res.data);
       } catch (err) {
-        //console.log(err);
         toast.error("Failed to fetch the Bug Info");
       }
     };
@@ -190,15 +188,23 @@ const BugReport = () => {
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Bug ID: {bug.id}
                 </p>
-                {bug.estimatedHours && (
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                {!!bug.estimatedHours && (
+                   <Badge
+                    variant="outline"
+                    className={`bg-muted text-xs font-medium whitespace-nowrap`}
+                  >
+                    <span className="mr-1"><Clock size={12}/></span>
                     Estimated Hours: {bug.estimatedHours}
-                  </p>
+                  </Badge>
                 )}
-                {bug.spentHours && (
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                {!!bug.spentHours && (
+                  <Badge
+                    variant="outline"
+                    className={`bg-muted text-xs font-medium whitespace-nowrap`}
+                  >
+                    <span className="mr-1"><Clock size={12}/></span>
                     Spent Hours: {bug.spentHours}
-                  </p>
+                  </Badge>
                 )}
               </div>
             </div>
