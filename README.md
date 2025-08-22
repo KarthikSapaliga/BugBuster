@@ -32,6 +32,14 @@ To track and manage software bugs, issues, and feature requests throughout the d
 | **Version Control**       | Syncs with GitHub/GitLab issues, commits, and branches                      |
 | **Reporting Dashboard**   | Visual statistics on bug trends, resolution time, and status distribution   |
 
+## 🔑 Roles & Permissions
+
+| Role          | Permissions                                                                                                                                |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Manager**   | - Create and manage projects <br> - Add/remove teammates <br> - Monitor progress and view reports |
+| **Tester**    | - Report new bugs with details & attachments <br> - Assign bugs to developers <br> - Verify and close bugs once resolved                   |
+| **Developer** | - View assigned bugs <br> - Work on resolving bugs <br> - Update bug status and provide resolution details                                 |
+
 
 ## 📁 Project Structure
 
